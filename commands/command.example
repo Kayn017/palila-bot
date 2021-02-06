@@ -1,0 +1,13 @@
+const name
+
+const synthax
+
+const description
+
+const explication
+
+async function execute(message, args) {
+
+}
+
+module.exports = { name, synthax, description, explication, execute };

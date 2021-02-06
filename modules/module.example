@@ -1,0 +1,10 @@
+const Discord = require('discord.js')
+
+const name
+
+const description
+
+function init(client)
+
+
+module.exports = { name, description, init };
