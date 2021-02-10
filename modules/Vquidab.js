@@ -7,7 +7,7 @@ const description = "Incrémente le compteur de V. Tout les 5.000 V, envoie un g
 
 function init(client) {
 
-	client.on('message', async message => {
+	client.on('message', message => {
 
 		const config = require(`../guilds/${message.guild.id}/config.json`);
 
@@ -23,6 +23,9 @@ function init(client) {
 		let bidule = message.content.toLowerCase().split("v");
 		nbre_de_fois_trouve = bidule.length - 1;
 
+		if (nbre_de_fois_trouve < 0)
+			nbre_de_fois_trouve = 0;
+
 		nbV += nbre_de_fois_trouve;
 
 		if (nbV >= nbVLimite) {
@@ -30,7 +33,9 @@ function init(client) {
 			message.channel.send(":v:", { files: ['./resources/Vquidab.gif'] });
 		}
 
-		fs.writeFileSync(`./guilds/${message.guild.id}/nbV.json`, JSON.stringify({ nbV, nbVLimite }));
+		fs.writeFileSync(`./guilds/${message.guild.id}/nbV.json`, JSON.stringify({ nbV: nbV, nbVLimite: nbVLimite }));
+
+		delete require.cache[require.resolve(`../guilds/${message.guild.id}/nbV.json`)];
 
 	});
 }
