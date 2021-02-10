@@ -1,4 +1,3 @@
-const Discord = require('discord.js');
 const fs = require('fs');
 
 const name = "partiel"
@@ -15,7 +14,7 @@ function init(client) {
 
 		const configGlobal = require("../config/partiels_config.json");
 
-		// On vérifie l'existe de partiels_config.json pour ce serveur
+		// On vérifie l'existence de partiels_config.json pour ce serveur
 		if (!fs.readdirSync(`./guilds/${message.guild.id}`).includes('partiels_config.json')) return;
 
 		const configGuild = require(`../guilds/${message.guild.id}/partiels_config.json`);

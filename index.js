@@ -103,7 +103,8 @@ function CreateGuildsFolder() {
 				name: g.name,
 				prefix: config.prefix,
 				adminRoles: null,
-				je_suis: false
+				je_suis: false,
+				Vquidab: false
 			}
 
 			fs.writeFileSync(path.join(__dirname, "guilds", g.id, "config.json"), JSON.stringify(contenuConfigFile));

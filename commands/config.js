@@ -55,7 +55,7 @@ async function execute(message, args) {
 					if (config.adminRoles.includes(role.id)) continue;
 
 					config.adminRoles.push(role.id);
-					console.log(`[${name}.js] Ajout des perms au rôle ${role.name} sur le serveur ${message.guild.name} par ${message.author.tag}`)
+					console.log(`[${name}.js] Ajout des perms au rôle ${role.name} sur le serveur "${message.guild.name}" par ${message.author.tag}`)
 				}
 
 				message.channel.send("Permission accordée !")
@@ -76,7 +76,7 @@ async function execute(message, args) {
 					if (!config.adminRoles.includes(role.id)) continue;
 
 					config.adminRoles.splice(config.adminRoles.indexOf(role.id), 1);
-					console.log(`[${name}.js] Retrait des perms au rôle ${role.name} sur le serveur ${message.guild.name} par ${message.author.tag}`)
+					console.log(`[${name}.js] Retrait des perms au rôle ${role.name} sur le serveur "${message.guild.name}" par ${message.author.tag}`)
 				}
 
 				message.channel.send("Permission supprimée !")
@@ -89,11 +89,14 @@ async function execute(message, args) {
 
 			let desc = "";
 
-			for (let idRole of config.adminRoles) {
-				const role = await message.guild.roles.fetch(idRole);
+			if (config.adminRoles)
+				for (let idRole of config.adminRoles) {
+					const role = await message.guild.roles.fetch(idRole);
 
-				desc += ` - ${role.name}`
-			}
+					desc += ` - ${role.name}`
+				}
+			else
+				desc = "Aucun role n'a les permissions pour configurer le bot. Seul les admins le peuvent"
 
 			const embed = new Discord.MessageEmbed()
 				.setTitle("Listes des rôles pouvant configurer le bot")
@@ -107,7 +110,7 @@ async function execute(message, args) {
 			if (!args[1])
 				return message.channel.send("Veuillez préciser un préfixe pour le serveur");
 
-			console.log(`[${name}.js] Changement du préfixe de ${config.prefix} à ${args[1]} sur le serveur ${message.guild.name} par ${message.author.tag}`)
+			console.log(`[${name}.js] Changement du préfixe de ${config.prefix} à ${args[1]} sur le serveur "${message.guild.name}" par ${message.author.tag}`)
 
 			config.prefix = args[1];
 
@@ -125,9 +128,24 @@ async function execute(message, args) {
 			else
 				config.je_suis = false;
 
-			console.log(`[${name}.js] ${config.je_suis ? 'Activation' : 'Desactivation'} du module je_suis sur le serveur ${message.guild.name} par ${message.author.tag}`);
+			console.log(`[${name}.js] ${config.je_suis ? 'Activation' : 'Desactivation'} du module je_suis sur le serveur "${message.guild.name}" par ${message.author.tag}`);
 
 			message.channel.send(`Module ${config.je_suis ? 'activé' : 'désactivé'} !`);
+
+			break;
+
+		case 'Vquidab':
+			if (!args[1] || (args[1] != 'enabled' && args[1] != 'disabled'))
+				return message.channel.send("Veuillez préciser si vous activez ou non ce module (argument attendu : `enabled` ou `disabled`)");
+
+			if (args[1] == 'enabled')
+				config.Vquidab = true;
+			else
+				config.Vquidab = false;
+
+			console.log(`[${name}.js] ${config.Vquidab ? 'Activation' : 'Desactivation'} du module Vquidab sur le serveur "${message.guild.name}" par ${message.author.tag}`);
+
+			message.channel.send(`Module ${config.Vquidab ? 'activé' : 'désactivé'} !`);
 
 			break;
 

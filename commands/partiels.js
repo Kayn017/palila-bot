@@ -13,11 +13,14 @@ Actions disponibles :
 	- activateChannel : connecte ce channel au canal ou il est inscrit
 	- desactivateChannel : déconnecte ce channel du canal ou il est inscrit
 	- createCanal : créé un nouveau canal
-
-
-
+	- seeChannelCanal : affiche a quel canal est connecté ce channel
+	- deleteChannel : déconnecte ce channel de tout canal
 `;
 
+
+// TODO 
+// - faire les vérifs des fichiers de conf systématiquement
+// - faire la commande destroyCanal
 
 async function execute(message, args) {
 	const config = require(`../guilds/${message.guild.id}/config.json`);
@@ -93,6 +96,12 @@ async function execute(message, args) {
 			break;
 		case 'seeChannelCanal':
 			return message.channel.send(`Ce channel est inscrit sur le canal ${partielGuild[message.channel.name].canal}`);
+		case 'deleteChannel':
+			partielGlobal[partielGuild[message.channel.name].canal].splice(partielGlobal[partielGuild[message.channel.name].canal].indexOf(message.channel.id), 1);
+			delete partielGuild[message.channel.name];
+			console.log(`[${name}.js] Suppression du channel ${message.channel.name} sur le serveur ${message.guild.name} des fichiers de configuration par ${message.author.tag}`);
+			message.channel.send("Channel déconnecté");
+			break;
 		default:
 			return message.channel.send("Je ne connais pas cette opération...");
 
