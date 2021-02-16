@@ -14,6 +14,7 @@ Options disponibles :
 	- removePermRoles : retire la permissions
 	- seePermRoles : affiche la liste des rôles ayant les permissions de modifier la configuration du bot
 	- changePrefix : change le préfixe pour activer le bot par le(s) caractère(s) passé en arguments
+	- whitelist : gère les channels sur lesquelles le bot prend en compte les commandes
 `
 
 async function execute(message, args) {
@@ -152,6 +153,112 @@ async function execute(message, args) {
 
 			break;
 
+		case 'whitelist':
+			if (!config.whitelist)
+				config.whitelist = false;
+
+			if (!args[1])
+				return message.channel.send("Veuillez préciser une action. Attendu : `enabled`,`disabled`, `delete`, `set` ou `show`");
+
+			if (args[1] === 'set') {
+
+				let whitelist;
+
+				if (!fs.readdirSync(`./guilds/${message.guild.id}`).includes('whitelist.json'))
+					whitelist = { channels: [] };
+				else
+					whitelist = require(`../guilds/${message.guild.id}/whitelist.json`);
+
+				whitelist.channels.push(message.channel.id);
+
+				fs.writeFileSync(`./guilds/${message.guild.id}/whitelist.json`, JSON.stringify(whitelist));
+
+				delete require.cache[require.resolve(`../guilds/${message.guild.id}/whitelist.json`)];
+
+				message.channel.send(`Channel ajouté à la whitelist`);
+
+			}
+			else if (args[1] === 'delete') {
+				if (!fs.readdirSync(`./guilds/${message.guild.id}`).includes('whitelist.json'))
+					return message.channel.send(`Aucun channel n'est sur la whitelist`);
+
+				let whitelist = require(`../guilds/${message.guild.id}/whitelist.json`);
+
+				if (!whitelist.channels[0])
+					return message.channel.send(`Aucun channel n'est sur la whitelist`);
+
+				if (!whitelist.channels.includes(message.channel.id))
+					return message.channel.send(`Ce channel n'est pas sur la whitelist`);
+
+				whitelist.channels.splice(whitelist.channels.indexOf(message.channel.id), 1);
+
+				delete require.cache[require.resolve(`../guilds/${message.guild.id}/whitelist.json`)];
+
+				fs.writeFileSync(`./guilds/${message.guild.id}/whitelist.json`, JSON.stringify(whitelist));
+
+				message.channel.send(`Channel enlevé de la whitelist`);
+
+			}
+			else if (args[1] === 'show') {
+				if (!fs.readdirSync(`./guilds/${message.guild.id}`).includes('whitelist.json'))
+					return message.channel.send(`Aucun channel n'est sur la whitelist`);
+
+				let whitelist = require(`../guilds/${message.guild.id}/whitelist.json`);
+
+				if (!whitelist.channels[0])
+					return message.channel.send(`Aucun channel n'est sur la whitelist`);
+
+				const title = `Whitelist du serveur ${message.guild.name}`
+
+				let desc = "";
+
+				for (const id of whitelist.channels) {
+					let chan = await message.client.channels.fetch(id);
+					desc += ` - ${chan.name}\n`
+				}
+
+				const embed = new Discord.MessageEmbed()
+					.setTitle(title)
+					.setColor(0x1e80d6)
+					.setDescription(desc);
+
+				message.channel.send(embed);
+
+				delete require.cache[require.resolve(`../guilds/${message.guild.id}/whitelist.json`)];
+
+			}
+			else if (args[1] === 'enabled') {
+
+				if (!fs.readdirSync(`./guilds/${message.guild.id}`).includes('whitelist.json'))
+					return message.channel.send(`Aucun channel n'est sur la whitelist`);
+
+				let whitelist = require(`../guilds/${message.guild.id}/whitelist.json`);
+
+				if (!whitelist.channels[0])
+					return message.channel.send(`Aucun channel n'est sur la whitelist`);
+
+				if (config.whitelist)
+					return message.channel.send(`Whitelist déjà activée`);
+
+				config.whitelist = true;
+
+				console.log(`[${name}.js] Activation de la whitelist sur le serveur "${message.guild.name}" par ${message.author.tag}`);
+				message.channel.send(`Activation de la whitelist !`);
+			}
+			else if (args[1] === 'disabled') {
+
+				if (!config.whitelist)
+					return message.channel.send(`Whitelist déjà désactivée`);
+
+				config.whitelist = false;
+				console.log(`[${name}.js] Désactivation de la whitelist sur le serveur "${message.guild.name}" par ${message.author.tag}`);
+				message.channel.send(`Désactivation de la whitelist !`);
+			}
+			else {
+				return message.channel.send("Veuillez préciser une action valide. Attendu : `enabled`,`disabled`, `delete`, `set` ou `show`");
+			}
+
+			break;
 		default:
 			return message.channel.send(`Cette option m'est inconnue... \`${config.prefix}help ${name}\` pour plus d'informations.`);
 
@@ -160,6 +267,10 @@ async function execute(message, args) {
 
 	fs.writeFileSync(`./guilds/${message.guild.id}/config.json`, JSON.stringify(config));
 
+
+	delete require.cache[require.resolve(`../guilds/${message.guild.id}/config.json`)];
+
 }
 
 module.exports = { name, synthax, description, explication, execute };
+

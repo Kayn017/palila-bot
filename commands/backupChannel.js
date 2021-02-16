@@ -10,7 +10,7 @@ const explication = "Cette commande permet de télécharger toutes les images et
 
 async function execute(message, args) {
 
-	const worker = new Worker(`${__dirname}/../resources/downloader.js`);
+	const worker = new Worker(`${__dirname}/../worker/downloader.js`);
 
 	worker.on('online', () => {
 

@@ -264,17 +264,17 @@ function download(url, dest, cb) {
 
 function twitterDownload(url, dest) {
 	if (process.platform == "win32")
-		execSync(`"${__dirname}\\..\\resources\\youtube-dl.exe" -q -o "${dest}" ${url}`);
+		execSync(`"${__dirname}\\..\\bin\\youtube-dl.exe" -q -o "${dest}" ${url}`);
 	else if (process.platform == "linux")
-		execSync(`${__dirname}/../resources/youtube-dl -q -o "${dest}" ${url}`);
+		execSync(`${__dirname}/../bin/youtube-dl -q -o "${dest}" ${url}`);
 }
 
 function youtubeDownload(url, dest) {
 
 	if (process.platform == "win32")
-		execSync(`"${__dirname}\\..\\resources\\youtube-dl.exe" -q -o "${dest}/%(title)s.%(ext)s" ${url}`);
+		execSync(`"${__dirname}\\..\\bin\\youtube-dl.exe" -q -o "${dest}/%(title)s.%(ext)s" ${url}`);
 	else if (process.platform == "linux")
-		execSync(`${__dirname}/../resources/youtube-dl -q -o "${dest}/%(title)s.%(ext)s" ${url}`);
+		execSync(`${__dirname}/../bin/youtube-dl -q -o "${dest}/%(title)s.%(ext)s" ${url}`);
 }
 
 if (worker.isMainThread) {

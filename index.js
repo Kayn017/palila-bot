@@ -39,9 +39,17 @@ client.on('message', message => {
 
 	//on vérifie le préfixe du bot sur le serveur
 	let prefix = config.prefix;
+	let whitelist = false;
 
-	if (message.channel.type !== 'dm')
+	if (message.channel.type !== 'dm') {
 		prefix = require(`./guilds/${message.guild.id}/config.json`).prefix;
+		whitelist = require(`./guilds/${message.guild.id}/config.json`).whitelist;
+	}
+
+	if (whitelist)
+		if (!require(`./guilds/${message.guild.id}/whitelist.json`).channels.includes(message.channel.id)) return;
+
+
 
 	// si le message ne commence pas par le préfixe du bot ou si c'est un bot qui parle, osef
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -54,7 +62,6 @@ client.on('message', message => {
 	if (!client.commands.has(commandName)) return;
 
 	const commande = client.commands.get(commandName);
-
 
 	commande.execute(message, args)
 		.catch(error => {
@@ -104,7 +111,8 @@ function CreateGuildsFolder() {
 				prefix: config.prefix,
 				adminRoles: null,
 				je_suis: false,
-				Vquidab: false
+				Vquidab: false,
+				whitelist: false
 			}
 
 			fs.writeFileSync(path.join(__dirname, "guilds", g.id, "config.json"), JSON.stringify(contenuConfigFile));
