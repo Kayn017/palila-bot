@@ -16,9 +16,9 @@ function init(client) {
 
 			let reponse = "";
 			if (message.content.toLowerCase().split('je suis')[1])
-				reponse = message.content.toLowerCase().split('je suis')[1];
+				reponse = message.content.toLowerCase().split('je suis')[1].substring(1, 1000);
 			else
-				reponse = message.content.toLowerCase().split('je suis')[0];
+				reponse = message.content.toLowerCase().split('je suis')[0].substring(1, 1000);
 
 			message.reply(`enchanté *${reponse.trim()}*, je suis ${client.user.username} ! :D`);
 		}
@@ -26,9 +26,9 @@ function init(client) {
 
 			let reponse = "";
 			if (message.content.toLowerCase().split('c\'est')[1])
-				reponse = message.content.toLowerCase().split('c\'est')[1];
+				reponse = message.content.toLowerCase().split('c\'est')[1].substring(1, 1000);
 			else
-				reponse = message.content.toLowerCase().split('c\'est')[0];
+				reponse = message.content.toLowerCase().split('c\'est')[0].substring(1, 1000);
 
 			let autre_juste_avant = await message.channel.messages.fetch({ before: message.id, limit: 1 });
 
