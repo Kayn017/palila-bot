@@ -95,8 +95,14 @@ async function execute(message, args) {
 
 			break;
 		case 'seeChannelCanal':
+			if (!partielGuild[message.channel.name].canal)
+				return message.channel.send("Ce channel n'est inscrit dans aucun canal");
+
 			return message.channel.send(`Ce channel est inscrit sur le canal ${partielGuild[message.channel.name].canal}`);
 		case 'deleteChannel':
+			if (!partielGuild[message.channel.name].canal)
+				return message.channel.send("Ce channel n'est inscrit dans aucun canal");
+
 			partielGlobal[partielGuild[message.channel.name].canal].splice(partielGlobal[partielGuild[message.channel.name].canal].indexOf(message.channel.id), 1);
 			delete partielGuild[message.channel.name];
 			console.log(`[${name}.js] Suppression du channel ${message.channel.name} sur le serveur ${message.guild.name} des fichiers de configuration par ${message.author.tag}`);
