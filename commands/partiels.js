@@ -95,12 +95,12 @@ async function execute(message, args) {
 
 			break;
 		case 'seeChannelCanal':
-			if (!partielGuild[message.channel.name].canal)
+			if (!partielGuild[message.channel.name])
 				return message.channel.send("Ce channel n'est inscrit dans aucun canal");
 
 			return message.channel.send(`Ce channel est inscrit sur le canal ${partielGuild[message.channel.name].canal}`);
 		case 'deleteChannel':
-			if (!partielGuild[message.channel.name].canal)
+			if (!partielGuild[message.channel.name])
 				return message.channel.send("Ce channel n'est inscrit dans aucun canal");
 
 			partielGlobal[partielGuild[message.channel.name].canal].splice(partielGlobal[partielGuild[message.channel.name].canal].indexOf(message.channel.id), 1);
