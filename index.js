@@ -108,7 +108,7 @@ function CreateGuildsFolder() {
 			}
 
 			fs.writeFileSync(path.join(__dirname, "guilds", g.id, "config.json"), JSON.stringify(contenuConfigFile));
-			console.log(`[index.js] UpdateGuildsFolder() : Fichier de configuration créé`);
+			console.log(`[index.js] UpdateGuildsFolder() : Fichier de configuration de la guilde ${g.name} créé`);
 
 		}
 	}

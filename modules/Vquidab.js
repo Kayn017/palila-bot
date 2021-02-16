@@ -9,6 +9,8 @@ function init(client) {
 
 	client.on('message', message => {
 
+		if (message.channel.type === 'dm') return;
+
 		const config = require(`../guilds/${message.guild.id}/config.json`);
 
 		if (!config.Vquidab) return;
