@@ -32,7 +32,7 @@ function init(client) {
 
 			let autre_juste_avant = await message.channel.messages.fetch({ before: message.id, limit: 1 });
 
-			message.reply(`bah non c'est pas*${reponse.trim()}*, c'est ${autre_juste_avant.array()[0].author.username} :thinking:`);
+			message.reply(`bah non c'est pas *${reponse.trim()}*, c'est ${autre_juste_avant.array()[0].author.username} :thinking:`);
 		}
 
 	});
