@@ -3,6 +3,29 @@ const fs = require('fs');
 const path = require('path');
 const Discogs = require('disconnect');
 
+const fileConfig = {
+	config: {
+		discord: {
+			token: null
+		},
+		discogs: {
+			consumerKey: null,
+			consumerSecret: null
+		},
+		prefix: ","
+	},
+	partiels_config: {},
+	presence: {
+		status: "online",
+		activity: {
+			name: "September",
+			type: "LISTENING"
+		}
+	}
+
+}
+
+CreateFilesConfig();
 
 // récupération du fichier de configuration du bot
 const config = require(`${__dirname}/config/config.json`);
@@ -133,4 +156,16 @@ function CreateGuildsFolder() {
 
 		}
 	}
+}
+
+function CreateFilesConfig() {
+
+	for (const [fileName, fileContent] of Object.entries(fileConfig)) {
+		if (!fs.existsSync(`${__dirname}/config/${fileName}.json`)) {
+			fs.writeFileSync(`${__dirname}/config/${fileName}.json`, JSON.stringify(fileContent));
+			console.log(`[index.js] Création du fichier de configuration ${fileName}.json`);
+		}
+
+	}
+
 }
