@@ -13,7 +13,7 @@ let discord_link = true;
 
 async function downloadChan(message) {
 
-	// return message.channel.send("Cette fonctionnalité est pour l'instant désactivée.");
+	return message.channel.send("Cette fonctionnalité est pour l'instant désactivée.");
 
 	message.channel.send(`Lancement de la backup du channel en cours... Merci de ne plus envoyer de messages ici avant la fin du scan du channel :eyes:`);
 	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] Lancement de la backup par ${message.author.tag}`)
