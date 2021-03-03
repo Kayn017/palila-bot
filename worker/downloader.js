@@ -5,11 +5,15 @@ const https = require('https');
 const execSync = require('child_process').execSync;
 const worker = require('worker_threads');
 
-const config = require('../config/config.json')
+const config = require('../config/config.json');
+
+let ytb_vids = true;
+let twitter_vids = true;
+let discord_link = true;
 
 async function downloadChan(message) {
 
-	return message.channel.send("Cette fonctionnalité est pour l'instant désactivée.");
+	// return message.channel.send("Cette fonctionnalité est pour l'instant désactivée.");
 
 	message.channel.send(`Lancement de la backup du channel en cours... Merci de ne plus envoyer de messages ici avant la fin du scan du channel :eyes:`);
 	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] Lancement de la backup par ${message.author.tag}`)
@@ -44,13 +48,13 @@ async function downloadChan(message) {
 	tout.forEach(msg => {
 
 		// images et vidéos discord
-		if (msg.attachments.array().length > 0) {
+		if (msg.attachments.array().length > 0 && discord_link) {
 			msg_img.push(msg.attachments);
 		}
 
 
 		// vidéos youtubes
-		if (msg.content.includes(`https://www.youtube.com/watch`)) {
+		if (msg.content.includes(`https://www.youtube.com/watch`) && ytb_vids) {
 			let items = msg.content.split(' ');
 
 			for (let item of items) {
@@ -61,7 +65,7 @@ async function downloadChan(message) {
 
 		}
 
-		if (msg.content.includes(`https://youtu.be/`)) {
+		if (msg.content.includes(`https://youtu.be/`) && ytb_vids) {
 			let items = msg.content.split(' ');
 
 			for (let item of items) {
@@ -73,7 +77,7 @@ async function downloadChan(message) {
 
 
 		//vidéos twitter
-		if (msg.content.includes(`https://twitter.com/`)) {
+		if (msg.content.includes(`https://twitter.com/`) && twitter_vids) {
 			let items = msg.content.split(' ');
 
 			for (let item of items) {
@@ -83,7 +87,7 @@ async function downloadChan(message) {
 			}
 		}
 
-		if (msg.content.includes(`https://t.co`)) {
+		if (msg.content.includes(`https://t.co`) && twitter_vids) {
 			let items = msg.content.split(' ');
 
 			for (let item of items) {
@@ -111,10 +115,10 @@ async function downloadChan(message) {
 
 	await message.channel.send(embed);
 
-
 	let today = new Date();
 	let folderName = `Backup_${message.guild.name}_${message.channel.name}_${today.getDate()}_${today.getMonth() + 1}_${today.getFullYear()}`
 	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Création du dossier ${folderName}...`);
+
 
 	try {
 		let dir = `./guilds/${message.guild.id}/${folderName}`;
@@ -264,17 +268,17 @@ function download(url, dest, cb) {
 
 function twitterDownload(url, dest) {
 	if (process.platform == "win32")
-		execSync(`"${__dirname}\\..\\bin\\youtube-dl.exe" -q -o "${dest}" ${url}`);
+		execSync(`"${__dirname}\\..\\bin\\youtube-dl.exe" --no-warnings -q -o "${dest}" ${url}`);
 	else if (process.platform == "linux")
-		execSync(`${__dirname}/../bin/youtube-dl -q -o "${dest}" ${url}`);
+		execSync(`${__dirname}/../bin/youtube-dl --no-warnings -q -o "${dest}" ${url}`);
 }
 
 function youtubeDownload(url, dest) {
 
 	if (process.platform == "win32")
-		execSync(`"${__dirname}\\..\\bin\\youtube-dl.exe" -q -o "${dest}/%(title)s.%(ext)s" ${url}`);
+		execSync(`"${__dirname}\\..\\bin\\youtube-dl.exe" --no-warnings -q -o "${dest}/%(title)s.%(ext)s" ${url}`);
 	else if (process.platform == "linux")
-		execSync(`${__dirname}/../bin/youtube-dl -q -o "${dest}/%(title)s.%(ext)s" ${url}`);
+		execSync(`${__dirname}/../bin/youtube-dl --no-warnings -q -o "${dest}/%(title)s.%(ext)s" ${url}`);
 }
 
 if (worker.isMainThread) {
@@ -299,6 +303,11 @@ else {
 		if (message === undefined)
 			console.error('[downloader.js] Erreur : message est vide');
 		else {
+
+			ytb_vids = !param.arguments.includes("no-ytb-link");
+			twitter_vids = !param.arguments.includes("no-twitter-link");
+			discord_link = !param.arguments.includes("no-attachement");
+
 			await downloadChan(message);
 
 			client.destroy();

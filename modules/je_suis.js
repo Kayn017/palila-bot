@@ -20,7 +20,13 @@ function init(client) {
 			else
 				reponse = message.content.toLowerCase().split('je suis')[0].substring(1, 1000);
 
-			message.reply(`enchanté *${reponse.trim()}*, je suis ${client.user.username} ! :D`);
+			try {
+				message.reply(`enchanté *${reponse.trim()}*, je suis ${client.user.username} ! :D`);
+			}
+			catch (error) {
+				console.error(`[${name}.js] Erreur : Impossible de répondre.`);
+				console.error(error.stack);
+			}
 		}
 		else if (message.content.toLowerCase().includes("c'est")) {
 
@@ -32,9 +38,14 @@ function init(client) {
 
 			let autre_juste_avant = await message.channel.messages.fetch({ before: message.id, limit: 1 });
 
-			message.reply(`bah non c'est pas *${reponse.trim()}*, c'est ${autre_juste_avant.array()[0] ? autre_juste_avant.array()[0].author.username : "moi (enfin je crois)"} :thinking:`);
+			try {
+				message.reply(`bah non c'est pas *${reponse.trim()}*, c'est ${autre_juste_avant.array()[0] ? autre_juste_avant.array()[0].author.username : "moi (enfin je crois)"} :thinking:`);
+			}
+			catch (error) {
+				console.error(`[${name}.js] Erreur : Impossible de répondre.`);
+				console.error(error.stack);
+			}
 		}
-
 	});
 }
 

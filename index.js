@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 const path = require('path');
+const Discogs = require('disconnect');
+
 
 // récupération du fichier de configuration du bot
 const config = require(`${__dirname}/config/config.json`);
@@ -9,9 +11,19 @@ const config = require(`${__dirname}/config/config.json`);
 const client = new Discord.Client();
 
 client.on('ready', () => {
-	console.log(`[index.js] Connecté en tant que ${client.user.tag}`);
+	console.log(`[index.js] Connecté à Discord en tant que ${client.user.tag}`);
 	CreateGuildsFolder()
 })
+
+// connexion aux serveurs de discogs
+const discClient = new Discogs.Client({
+	consumerKey: config.discogs.consumerKey,
+	consumerSecret: config.discogs.consumerSecret
+});
+
+client.discogs = discClient;
+
+console.log(`[index.js] Client Discogs connecté`);
 
 // on importe toutes les commandes 
 client.commands = new Discord.Collection();
@@ -112,7 +124,8 @@ function CreateGuildsFolder() {
 				adminRoles: null,
 				je_suis: false,
 				Vquidab: false,
-				whitelist: false
+				whitelist: false,
+				music_channel: null
 			}
 
 			fs.writeFileSync(path.join(__dirname, "guilds", g.id, "config.json"), JSON.stringify(contenuConfigFile));
