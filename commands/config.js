@@ -20,7 +20,7 @@ Options disponibles :
 
 async function execute(message, args) {
 
-	const config = require(`../guilds/${message.guild.id}/config.json`);
+	const config = JSON.parse(fs.writeFileSync(`./guilds/${message.guild.id}/config.json`));
 
 	// on vérifie les permissions
 	if (!message.member.hasPermission('ADMINISTRATOR') && message.author.id != '371285073191895072') {
