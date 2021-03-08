@@ -1,6 +1,6 @@
 {
 	"name": "palila-bot",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Le palila bot est un bot super cool",
 	"main": "index.js",
 	"scripts": {
@@ -9,7 +9,6 @@
 	"author": "Tanguy Gimenez",
 	"license": "ISC",
 	"dependencies": {
-		"disconnect": "^1.2.2",
 		"discord.js": "^12.5.1"
 	}
 }

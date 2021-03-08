@@ -38,7 +38,11 @@ async function execute(message, args) {
 		.setColor(0x1e80d6)
 		.setDescription(desc);
 
-	message.channel.send(embed);
+	message.channel.send(embed).catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
 }
 
 module.exports = { name, synthax, description, explication, execute };
+
+function err(text, msg, err) {
+	require('../utils').logError(text, name, msg ?? null, err ? err.stack : null)
+}

@@ -17,7 +17,7 @@ function init(client) {
 
 		if (!fs.readdirSync(`./guilds/${message.guild.id}`).includes('nbV.json')) {
 			fs.writeFileSync(`./guilds/${message.guild.id}/nbV.json`, JSON.stringify({ nbV: 0, nbVLimite: 500 }));
-			console.log(`[${name}.js] Création du fichier de configuration pour le nombre de V pour le serveur ${message.guild.name}`);
+			log(`Création du fichier de configuration pour le nombre de V`, message);
 		}
 
 		let { nbV, nbVLimite } = require(`../guilds/${message.guild.id}/nbV.json`);
@@ -32,7 +32,7 @@ function init(client) {
 
 		if (nbV >= nbVLimite) {
 			nbV = nbV % nbVLimite;
-			message.channel.send(":v:", { files: ['./resources/Vquidab.gif'] });
+			message.channel.send(":v:", { files: ['./resources/Vquidab.gif'] }).catch(e => err("Impossible d'envoyer le message sur le channel.", message, e));
 		}
 
 		fs.writeFileSync(`./guilds/${message.guild.id}/nbV.json`, JSON.stringify({ nbV: nbV, nbVLimite: nbVLimite }));
@@ -45,3 +45,11 @@ function init(client) {
 
 
 module.exports = { name, description, init };
+
+function log(text, msg) {
+	require('../utils').logStdout(text, name, msg ?? null);
+}
+
+function err(text, msg, err) {
+	require('../utils').logError(text, name, msg ?? null, err ? err.stack : null)
+}

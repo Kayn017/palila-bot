@@ -9,12 +9,13 @@ const description = "Met en commun plusieurs channels pour les partiels";
 
 const explication = `Cette commande permet de mettre en commun les messages de divers channels sur divers serveurs pour l'entraide \"avant\" les partiels
 Actions disponibles :
-	- setChannel : inscrit ce channel dans un canal et le désincrit de l'ancien canal s'il existe
+	- setCanal : inscrit ce channel dans un canal et le désincrit de l'ancien canal s'il existe
 	- activateChannel : connecte ce channel au canal ou il est inscrit
 	- desactivateChannel : déconnecte ce channel du canal ou il est inscrit
 	- createCanal : créé un nouveau canal
 	- seeChannelCanal : affiche a quel canal est connecté ce channel
-	- deleteChannel : déconnecte ce channel de tout canal
+	- disconnectChannel : déconnecte ce channel de tout canal
+	- listCanal : renvoie la liste des canaux existants
 `;
 
 
@@ -27,18 +28,18 @@ async function execute(message, args) {
 
 	// on vérifie s'il y a des arguments
 	if (!args[0])
-		return message.channel.send(`Syntaxe incorret. \`${config.prefix}help ${name}\` pour plus d'informations.`);
+		return message.channel.send(`Syntaxe incorret. \`${config.prefix}help ${name}\` pour plus d'informations.`).catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
 
 	if (!fs.readdirSync(`./guilds/${message.guild.id}`).includes('partiels_config.json')) {
 		fs.writeFileSync(`./guilds/${message.guild.id}/partiels_config.json`, JSON.stringify({}));
-		console.log(`[${name}.js] Création du fichier de configuration pour les partiels pour le serveur ${message.guild.name}`);
+		log(`Création du fichier de configuration pour les partiels`, message);
 	}
 
 	let partielGlobal = require('../config/partiels_config.json');
 	let partielGuild = require(`../guilds/${message.guild.id}/partiels_config.json`);
 
 	switch (args[0]) {
-		case 'setChannel':
+		case 'setCanal':
 
 			if (!args[1] || !partielGlobal[args[1]]) {
 				let listeCanal = "";
@@ -47,14 +48,14 @@ async function execute(message, args) {
 					listeCanal += ` - ${canal}\n`;
 				}
 
-				await message.channel.send("Veuillez spécifier un canal pour ce channel");
+				message.channel.send("Veuillez spécifier un canal pour ce channel").catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
 
 				const embed = new Discord.MessageEmbed()
 					.setTitle("Liste des canaux disponibles")
 					.setColor(0x1e80d6)
 					.setDescription(listeCanal);
 
-				return message.channel.send(embed);
+				return message.channel.send(embed).catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
 			}
 
 			if (partielGuild[message.channel.name]) {
@@ -69,47 +70,60 @@ async function execute(message, args) {
 
 			partielGlobal[args[1]].push(message.channel.id);
 
-			console.log(`[${name}.js] Ajout du channel ${message.channel.name} sur le serveur ${message.guild.name} au canal ${args[1]} par ${message.author.tag}`);
+			log(`Ajout du channel au canal ${args[1]} par ${message.author.tag}`, message);
 
-			message.channel.send("Ce channel fait désormais parti du canal " + args[1])
+			message.channel.send("Ce channel fait désormais parti du canal " + args[1]).catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
 
 			break;
 		case 'activateChannel':
-			message.channel.send("Vous êtes connecté au canal " + partielGuild[message.channel.name].canal)
+			message.channel.send("Vous êtes connecté au canal " + partielGuild[message.channel.name].canal).catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error))
 			partielGuild[message.channel.name].activated = true;
 			break;
 		case 'desactivateChannel':
-			message.channel.send("Vous êtes déconnecté au canal " + partielGuild[message.channel.name].canal)
+			message.channel.send("Vous êtes déconnecté au canal " + partielGuild[message.channel.name].canal).catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error))
 			partielGuild[message.channel.name].activated = false;
 			break;
 		case 'createCanal':
 			if (!args[1]) {
-				return message.channel.send("Veuillez préciser le nom du canal en argument");
+				return message.channel.send("Veuillez préciser le nom du canal en argument").catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
 			}
 
 			partielGlobal[args[1]] = [];
 
-			console.log(`[${name}.js] Creation du canal ${args[1]} par ${message.author.tag}`);
+			log(`Creation du canal ${args[1]} par ${message.author.tag}`, message);
 
-			message.channel.send("Canal " + args[1] + " créé !");
+			message.channel.send("Canal " + args[1] + " créé !").catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
 
 			break;
 		case 'seeChannelCanal':
 			if (!partielGuild[message.channel.name])
-				return message.channel.send("Ce channel n'est inscrit dans aucun canal");
+				return message.channel.send("Ce channel n'est inscrit dans aucun canal").catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
 
-			return message.channel.send(`Ce channel est inscrit sur le canal ${partielGuild[message.channel.name].canal}`);
-		case 'deleteChannel':
+			return message.channel.send(`Ce channel est inscrit sur le canal ${partielGuild[message.channel.name].canal}`).catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
+		case 'disconnectChannel':
 			if (!partielGuild[message.channel.name])
-				return message.channel.send("Ce channel n'est inscrit dans aucun canal");
+				return message.channel.send("Ce channel n'est inscrit dans aucun canal").catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
 
 			partielGlobal[partielGuild[message.channel.name].canal].splice(partielGlobal[partielGuild[message.channel.name].canal].indexOf(message.channel.id), 1);
 			delete partielGuild[message.channel.name];
-			console.log(`[${name}.js] Suppression du channel ${message.channel.name} sur le serveur ${message.guild.name} des fichiers de configuration par ${message.author.tag}`);
-			message.channel.send("Channel déconnecté");
+			log(`Suppression du channel des fichiers de configuration par ${message.author.tag}`, message);
+			message.channel.send("Channel déconnecté").catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
 			break;
+		case 'listCanal':
+			let listeCanal = "";
+
+			for (let canal in partielGlobal) {
+				listeCanal += ` - ${canal}\n`;
+			}
+
+			const embed = new Discord.MessageEmbed()
+				.setTitle("Liste des canaux disponibles")
+				.setColor(0x1e80d6)
+				.setDescription(listeCanal);
+
+			return message.channel.send(embed).catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
 		default:
-			return message.channel.send("Je ne connais pas cette opération...");
+			return message.channel.send("Je ne connais pas cette opération...").catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
 
 	}
 
@@ -119,3 +133,11 @@ async function execute(message, args) {
 }
 
 module.exports = { name, synthax, description, explication, execute };
+
+function log(text, msg) {
+	require('../utils').logStdout(text, name, msg ?? null);
+}
+
+function err(text, msg, err) {
+	require('../utils').logError(text, name, msg ?? null, err ? err.stack : null)
+}

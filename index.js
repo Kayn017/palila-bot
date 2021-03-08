@@ -1,16 +1,11 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const Discogs = require('disconnect');
 
 const fileConfig = {
 	config: {
 		discord: {
 			token: null
-		},
-		discogs: {
-			consumerKey: null,
-			consumerSecret: null
 		},
 		prefix: ","
 	},
@@ -22,7 +17,6 @@ const fileConfig = {
 			type: "LISTENING"
 		}
 	}
-
 }
 
 CreateFilesConfig();
@@ -34,19 +28,10 @@ const config = require(`${__dirname}/config/config.json`);
 const client = new Discord.Client();
 
 client.on('ready', () => {
-	console.log(`[index.js] Connecté à Discord en tant que ${client.user.tag}`);
+	log(`Connecté à Discord en tant que ${client.user.tag}`);
 	CreateGuildsFolder()
-})
-
-// connexion aux serveurs de discogs
-const discClient = new Discogs.Client({
-	consumerKey: config.discogs.consumerKey,
-	consumerSecret: config.discogs.consumerSecret
 });
 
-client.discogs = discClient;
-
-console.log(`[index.js] Client Discogs connecté`);
 
 // on importe toutes les commandes 
 client.commands = new Discord.Collection();
@@ -105,8 +90,7 @@ client.on('message', message => {
 				.setTitle("Erreur interne")
 				.setDescription(error.stack)
 			);
-			console.error(`[${commandName}.js] Erreur`);
-			console.error(error.stack);
+			err(`L'execution de la commande ${commandName} a échoué.`, message, error);
 		})
 
 
@@ -114,7 +98,7 @@ client.on('message', message => {
 
 
 client.on('guildCreate', guild => {
-	console.log(`[index.js] Arrivée du bot sur le serveur ${guild.name}`);
+	log(`Arrivée du bot sur le serveur ${guild.name}`);
 	CreateGuildsFolder();
 })
 
@@ -133,11 +117,10 @@ function CreateGuildsFolder() {
 			// création du dossier de la guilde
 			try {
 				fs.mkdirSync(path.join(__dirname, "guilds", g.id));
-				console.log(`[index.js] UpdateGuildsFolder() : Dossier de la guilde ${g.name} créé`)
+				log(`Dossier de la guilde ${g.name} créé`);
 			}
 			catch (e) {
-				console.error(`[index.js] UpdateGuildsFolder() : Impossible de créer le dossier de la guilde ${g.name}`)
-				console.error(e.stack);
+				err(`Impossible de créer le dossier de la guilde ${g.name}`, null, e);
 			}
 
 			// création du fichier de configuration
@@ -151,8 +134,13 @@ function CreateGuildsFolder() {
 				music_channel: null
 			}
 
-			fs.writeFileSync(path.join(__dirname, "guilds", g.id, "config.json"), JSON.stringify(contenuConfigFile));
-			console.log(`[index.js] UpdateGuildsFolder() : Fichier de configuration de la guilde ${g.name} créé`);
+			try {
+				fs.writeFileSync(path.join(__dirname, "guilds", g.id, "config.json"), JSON.stringify(contenuConfigFile));
+				log(`Fichier de configuration de la guilde ${g.name} créé`);
+			}
+			catch (e) {
+				err(`Impossible de créer le fichier de configuration de la guilde ${g.name}`, null, e);
+			}
 
 		}
 	}
@@ -162,10 +150,23 @@ function CreateFilesConfig() {
 
 	for (const [fileName, fileContent] of Object.entries(fileConfig)) {
 		if (!fs.existsSync(`${__dirname}/config/${fileName}.json`)) {
-			fs.writeFileSync(`${__dirname}/config/${fileName}.json`, JSON.stringify(fileContent));
-			console.log(`[index.js] Création du fichier de configuration ${fileName}.json`);
-		}
+			try {
+				fs.writeFileSync(`${__dirname}/config/${fileName}.json`, JSON.stringify(fileContent));
+			}
+			catch (error) {
+				err(`Impossible de créer le fichier ${__dirname}/config/${fileName}.json`, null, error);
+			}
 
+			log(`Création du fichier de configuration ${fileName}.json`);
+		}
 	}
 
+}
+
+function log(text) {
+	require('./utils').logStdout(text, "index", null);
+}
+
+function err(text, msg, err) {
+	require('./utils').logError(text, "index", msg ?? null, err ? err.stack : null)
 }

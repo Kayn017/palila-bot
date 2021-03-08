@@ -32,7 +32,12 @@ function init(client) {
 		for (let channelId of canals) {
 			if (channelCache[configGuild[message.channel.name].canal][channelId]) continue;
 
-			channelCache[configGuild[message.channel.name].canal][channelId] = await client.channels.fetch(channelId);
+			try {
+				channelCache[configGuild[message.channel.name].canal][channelId] = await client.channels.fetch(channelId);
+			}
+			catch (e) {
+				err("Impossible de fetch le channel", null, e);
+			}
 		}
 
 		// pour chaque channel du canal, on vérifie s'ils sont activé ou non
@@ -50,7 +55,7 @@ function init(client) {
 		for (let chan of chanActif) {
 			if (chan.id === message.channel.id) continue;
 
-			chan.send(`${message.author.username} : ${message.content}`, message.attachments.array());
+			chan.send(`${message.author.username} : ${message.content}`, message.attachments.array()).catch(e => err("Impossible d'envoyer un message sur ce channel", message, e));
 		}
 
 
@@ -59,3 +64,7 @@ function init(client) {
 
 
 module.exports = { name, description, init };
+
+function err(text, msg, err) {
+	require('../utils').logError(text, name, msg ?? null, err ? err.stack : null)
+}

@@ -13,10 +13,10 @@ let discord_link = true;
 
 async function downloadChan(message) {
 
-	return message.channel.send("Cette fonctionnalité est pour l'instant désactivée.");
+	// return message.channel.send("Cette fonctionnalité est pour l'instant désactivée.").catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
 
-	message.channel.send(`Lancement de la backup du channel en cours... Merci de ne plus envoyer de messages ici avant la fin du scan du channel :eyes:`);
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] Lancement de la backup par ${message.author.tag}`)
+	message.channel.send(`Lancement de la backup du channel en cours... Merci de ne plus envoyer de messages ici avant la fin du scan du channel :eyes:`).catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
+	log(`Lancement de la backup par ${message.author.tag}`, message);
 
 	//on déclare les tableaux qui vont contenir tout les messages analysés
 	let tout = [];
@@ -98,11 +98,11 @@ async function downloadChan(message) {
 		}
 	});
 
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Fin du scan`);
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Messages trouvées : ${tout.length}`);
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Messages avec attachements trouvés : ${msg_img.length}`);
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Vidéos YouTube trouvées : ${youtube_url.length}`);
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Vidéos Twitter trouvées : ${twitter_url.length}`);
+	log(`Fin du scan`, message);
+	log(`Messages trouvées : ${tout.length}`, message);
+	log(`Messages avec attachements trouvés : ${msg_img.length}`, message);
+	log(`Vidéos YouTube trouvées : ${youtube_url.length}`, message);
+	log(`Vidéos Twitter trouvées : ${twitter_url.length}`, message);
 
 	const embed = new Discord.MessageEmbed()
 		.setTitle("Fin du scan")
@@ -113,30 +113,40 @@ async function downloadChan(message) {
 		Vidéos YouTube trouvées : ${youtube_url.length}
 		Vidéos Twitter trouvées : ${twitter_url.length}`);
 
-	await message.channel.send(embed);
+	try {
+		await message.channel.send(embed);
+	}
+	catch (e) {
+		err("Impossible d'envoyer un message sur ce channel.", message, e);
+	}
 
 	let today = new Date();
 	let folderName = `Backup_${message.guild.name}_${message.channel.name}_${today.getDate()}_${today.getMonth() + 1}_${today.getFullYear()}`
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Création du dossier ${folderName}...`);
+	log(`Création du dossier ${folderName}...`, message);
 
 
 	try {
 		let dir = `./guilds/${message.guild.id}/${folderName}`;
 		if (!fs.existsSync(dir)) {
 			fs.mkdirSync(dir);
-			console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Dossier créé.`);
+			log(`Dossier créé.`, message);
 		}
 		else {
-			console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Le dossier existe déjà.`)
+			log(`Le dossier existe déjà.`, message)
 		}
 	}
 	catch (error) {
-		console.error(`[downloader.js][${message.guild.name}][${message.channel.name}] : ${error}`);
+		err("Impossible de créer le dossier.", message, error)
 	}
 
-	await message.channel.send("Début du téléchargement");
+	try {
+		await message.channel.send("Début du téléchargement");
+	}
+	catch (e) {
+		err("Impossible d'envoyer un message sur ce channel.", message, e);
+	}
 
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Début du telechargement`);
+	log(`Début du telechargement`, message);
 	let compt = 1;
 
 	//on dl chaque image/video
@@ -154,7 +164,7 @@ async function downloadChan(message) {
 				await download(img.url, `${__dirname}/../guilds/${message.guild.id}//${folderName}/${img.name}`);
 			}
 			catch (error) {
-				console.error(`[downloader.js][${message.guild.name}][${message.channel.name}] : ${error}`);
+				err("Impossible de télécharger cette image", message, error);
 			}
 
 		}
@@ -163,9 +173,9 @@ async function downloadChan(message) {
 
 	}
 
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Backup des images et des videos terminé`);
+	log(`Backup des images et des videos terminé`, message);
 
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Début du téléchargement des vidéos YouTube`);
+	log(`Début du téléchargement des vidéos YouTube`, message);
 	compt = 1;
 
 	//on dl chaque vidéo youtube
@@ -175,17 +185,17 @@ async function downloadChan(message) {
 			youtubeDownload(videoURL, `${__dirname}/../guilds/${message.guild.id}/${folderName}`);
 		}
 		catch (error) {
-			console.error(`[downloader.js][${message.guild.name}][${message.channel.name}] : ${error}`);
+			err("Impossible de télécharger cette vidéo YouTube.", message, error);
 		}
 
 
 		compt++;
 	}
 
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Vidéos YouTube téléchargés`);
+	log(`Vidéos YouTube téléchargés`, message);
 
 
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Début du téléchargement des vidéos Twitter`);
+	log(`Début du téléchargement des vidéos Twitter`, message);
 
 	compt = 1;
 
@@ -201,16 +211,16 @@ async function downloadChan(message) {
 			twitterDownload(videoURL, `${__dirname}/../guilds/${message.guild.id}/${folderName}/${videoName}`);
 		}
 		catch (error) {
-			console.error(`[downloader.js][${message.guild.name}][${message.channel.name}] : ${error}`);
+			err("Impossible de télécharger cette vidéo Twitter.", message, error)
 		}
 
 		compt++;
 	}
 
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Vidéos Twitter téléchargés`);
-	console.log(`[downloader.js][${message.guild.name}][${message.channel.name}] : Backup terminée`);
+	log(`Vidéos Twitter téléchargés`, message);
+	log(`Backup terminée`, message);
 
-	await message.channel.send("Backup terminée ! Demandez à Kayn#2859 pour qu'il vous passe l'archive !");
+	await message.channel.send("Backup terminée ! Demandez à Kayn#2859 pour qu'il vous passe l'archive !").catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
 
 }
 
@@ -282,11 +292,11 @@ function youtubeDownload(url, dest) {
 }
 
 if (worker.isMainThread) {
-	console.error("[downloader.js] Erreur : ce script ne peut fonctionner indépendamment");
+	err("ce script ne peut fonctionner indépendamment");
 	return;
 }
 else {
-	console.log("[downloader.js] Execution du nouveau thread");
+	log("Execution du nouveau thread");
 
 	let param = worker.receiveMessageOnPort(worker.parentPort).message;
 
@@ -294,14 +304,14 @@ else {
 
 
 	client.on('ready', async () => {
-		console.log("[downloader.js] Nouveau client connecté");
+		log("Nouveau client connecté");
 
 		const chan = await client.channels.fetch(param.channelID);
 
 		const message = await chan.messages.fetch(param.msgID);
 
 		if (message === undefined)
-			console.error('[downloader.js] Erreur : message est vide');
+			err('message est vide');
 		else {
 
 			ytb_vids = !param.arguments.includes("no-ytb-link");
@@ -319,3 +329,10 @@ else {
 	client.login(config.discord.token);
 }
 
+function log(text, msg) {
+	require('../utils').logStdout(text, "downloader", msg ?? null);
+}
+
+function err(text, msg, err) {
+	require('../utils').logError(text, "downloader", msg ?? null, err ? err.stack : null)
+}

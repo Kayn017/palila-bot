@@ -25,11 +25,19 @@ async function execute(message, args) {
 
 	worker.on('exit', code => {
 		if (code !== 0)
-			console.error(`[${name}.js] Erreur : le thread de download a retourné le code ${code}`);
+			err(`Erreur : le thread de download a retourné le code ${code}`);
 		else
-			console.log(`[${name}.js] Le thread s'est correctement arrété`);
+			log(`Le thread s'est correctement arrété`);
 	});
 
 }
 
 module.exports = { name, synthax, description, explication, execute };
+
+function log(text, msg) {
+	require('../utils').logStdout(text, name, msg ?? null);
+}
+
+function err(text, msg, err) {
+	require('../utils').logError(text, name, msg ?? null, err ? err.stack : null)
+}
