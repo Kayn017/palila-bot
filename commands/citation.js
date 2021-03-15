@@ -7,7 +7,9 @@ const synthax = `${name} [<personne>]`
 
 const description = "Lance une citation très philosophique d'une personne dans la bdd"
 
-const explication = `C`
+const explication = `Cette commande vous renvoie une citation prise hors contexte !
+Si le nom d'une personne est spécifié (en 1 mot), cherche une citation de cette personne
+Si vous envoyez une citation (en image) avec le nom d'une personne (en 1 mot), l'ajoute a la base de données`
 
 async function execute(message, args) {
 
