@@ -1,9 +1,8 @@
 const Discord = require('discord.js');
 const fs = require('fs');
-const http = require('http');
-const https = require('https');
 const execSync = require('child_process').execSync;
 const worker = require('worker_threads');
+const download = require('../utils').download;
 
 const config = require('../config/config.json');
 
@@ -13,7 +12,7 @@ let discord_link = true;
 
 async function downloadChan(message) {
 
-	// return message.channel.send("Cette fonctionnalité est pour l'instant désactivée.").catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
+	return message.channel.send("Cette fonctionnalité est pour l'instant désactivée.").catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
 
 	message.channel.send(`Lancement de la backup du channel en cours... Merci de ne plus envoyer de messages ici avant la fin du scan du channel :eyes:`).catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
 	log(`Lancement de la backup par ${message.author.tag}`, message);
@@ -121,7 +120,11 @@ async function downloadChan(message) {
 	}
 
 	let today = new Date();
-	let folderName = `Backup_${message.guild.name}_${message.channel.name}_${today.getDate()}_${today.getMonth() + 1}_${today.getFullYear()}`
+	let folderName = `Backup_${message.guild.name}_${message.channel.name}_${today.getDate()}_${today.getMonth() + 1}_${today.getFullYear()}`;
+	folderName = folderName.replaceAll('/', '_')
+		.replaceAll('\\', '_')
+		.replaceAll(' ', '_');
+
 	log(`Création du dossier ${folderName}...`, message);
 
 
@@ -161,7 +164,7 @@ async function downloadChan(message) {
 			}
 
 			try {
-				await download(img.url, `${__dirname}/../guilds/${message.guild.id}//${folderName}/${img.name}`);
+				await download(img.url, `${__dirname}/../guilds/${message.guild.id}/${folderName}/${img.name}`);
 			}
 			catch (error) {
 				err("Impossible de télécharger cette image", message, error);
@@ -222,58 +225,6 @@ async function downloadChan(message) {
 
 	await message.channel.send("Backup terminée ! Demandez à Kayn#2859 pour qu'il vous passe l'archive !").catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
 
-}
-
-function download(url, dest, cb) {
-
-	return new Promise((resolve, reject) => {
-		// on créé un stream d'écriture qui nous permettra
-		// d'écrire au fur et à mesure que les données sont téléchargées
-		const file = fs.createWriteStream(dest);
-		let httpMethod;
-
-		// afin d'utiliser le bon module on vérifie si notre url
-		// utilise http ou https
-		if (url.indexOf(('https://')) !== -1) httpMethod = https;
-		else httpMethod = http;
-
-		// on lance le téléchargement
-		const request = httpMethod.get(url, (response) => {
-			// on vérifie la validité du code de réponse HTTP
-			if (response.statusCode !== 200) {
-				return cb('Response status was ' + response.statusCode);
-			}
-
-			// écrit directement le fichier téléchargé
-			response.pipe(file);
-
-			// lorsque le téléchargement est terminé
-			// on appelle le callback
-			file.on('finish', () => {
-				// close étant asynchrone,
-				// le cb est appelé lorsque close a terminé
-				file.close(cb);
-				resolve("1");
-			});
-
-			// check for request error too
-			response.on('error', (err) => {
-				fs.unlink(dest);
-				cb(err.message);
-				reject("0");
-			});
-
-			// si on rencontre une erreur lors de l'écriture du fichier
-			// on efface le fichier puis on passe l'erreur au callback
-			file.on('error', (err) => {
-				// on efface le fichier sans attendre son effacement
-				// on ne vérifie pas non plus les erreur pour l'effacement
-				fs.unlink(dest);
-				cb(err.message);
-				reject("0");
-			});
-		});
-	});
 }
 
 function twitterDownload(url, dest) {

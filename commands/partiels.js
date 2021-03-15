@@ -35,8 +35,8 @@ async function execute(message, args) {
 		log(`Création du fichier de configuration pour les partiels`, message);
 	}
 
-	let partielGlobal = require('../config/partiels_config.json');
-	let partielGuild = require(`../guilds/${message.guild.id}/partiels_config.json`);
+	let partielGlobal = JSON.parse(fs.readFileSync('./config/partiels_config.json'));
+	let partielGuild = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/partiels_config.json`));
 
 	switch (args[0]) {
 		case 'setCanal':

@@ -16,7 +16,8 @@ const fileConfig = {
 			name: "September",
 			type: "LISTENING"
 		}
-	}
+	},
+	citation_rules: {}
 }
 
 CreateFilesConfig();
@@ -130,8 +131,7 @@ function CreateGuildsFolder() {
 				adminRoles: null,
 				je_suis: false,
 				Vquidab: false,
-				whitelist: false,
-				music_channel: null
+				whitelist: false
 			}
 
 			try {
@@ -152,12 +152,12 @@ function CreateFilesConfig() {
 		if (!fs.existsSync(`${__dirname}/config/${fileName}.json`)) {
 			try {
 				fs.writeFileSync(`${__dirname}/config/${fileName}.json`, JSON.stringify(fileContent));
+				log(`Création du fichier de configuration ${fileName}.json`);
 			}
 			catch (error) {
 				err(`Impossible de créer le fichier ${__dirname}/config/${fileName}.json`, null, error);
 			}
 
-			log(`Création du fichier de configuration ${fileName}.json`);
 		}
 	}
 
