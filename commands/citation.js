@@ -49,7 +49,7 @@ async function execute(message, args) {
         if (args[0])
             formatted = args[0].charAt(0).toUpperCase().concat(args[0].charAt(1) ? args[0].substring(1, args[0].length).toLowerCase() : "");
 
-        const quotes = fs.readdirSync(`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}`).filter(file => file.startsWith(args[0] ? formatted : firstLetter.concat(secondLetter)));
+        const quotes = fs.readdirSync(`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}`).filter(file => args[0] ? file.charAt(0).toUpperCase().concat(file.substring(1, file.length).toLowerCase()).startsWith(formatted) : firstLetter.concat(secondLetter));
 
         if (quotes.length === 0)
             return message.channel.send("Je n'ai aucune citation pour cette personne").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
