@@ -21,6 +21,9 @@ async function execute(message, args) {
 
     if (message.attachments.array().length === 0) {
         if (args[0]) {
+            if (args[0].includes(`.`))
+                return message.channel.send("Je n'ai aucune citation pour cette personne").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
+
             firstLetter = args[0].charAt(0).toUpperCase();
 
             if (args[0].charAt(1) && args[0].charAt(1).match(/[a-z]/i))
@@ -61,6 +64,10 @@ async function execute(message, args) {
     else {
         if (!args[0])
             return message.channel.send("Il me faut l'identité de cette personne (en 1 mot)").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
+
+        if (args[0].includes(`.`))
+            return message.channel.send("Je ne peux pas accepter ça :eyes:").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
+
 
         if (!fs.existsSync(`./resources/citations/${args[0].charAt(0).toUpperCase()}`)) {
             try {
