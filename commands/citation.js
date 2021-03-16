@@ -68,6 +68,7 @@ async function execute(message, args) {
         if (args[0].includes(`.`))
             return message.channel.send("Je ne peux pas accepter ça :eyes:").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
 
+        args[0] = args.join("");
 
         if (!fs.existsSync(`./resources/citations/${args[0].charAt(0).toUpperCase()}`)) {
             try {
