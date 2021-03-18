@@ -18,11 +18,6 @@ Actions disponibles :
 	- listCanal : renvoie la liste des canaux existants
 `;
 
-
-// TODO 
-// - faire les vérifs des fichiers de conf systématiquement
-// - faire la commande destroyCanal
-
 async function execute(message, args) {
 	const config = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/config.json`));
 
@@ -30,17 +25,21 @@ async function execute(message, args) {
 	if (!args[0])
 		return message.channel.send(`Syntaxe incorret. \`${config.prefix}help ${name}\` pour plus d'informations.`).catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
 
+	// si le fichier de configuration du module canal n'existe pas, on le créé
 	if (!fs.readdirSync(`./guilds/${message.guild.id}`).includes('canals_config.json')) {
 		fs.writeFileSync(`./guilds/${message.guild.id}/canals_config.json`, JSON.stringify({}));
 		log(`Création du fichier de configuration pour les canaux`, message);
 	}
 
+	// on récupère les configurations
 	let partielGlobal = JSON.parse(fs.readFileSync('./config/canals_config.json'));
 	let partielGuild = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/canals_config.json`));
 
 	switch (args[0]) {
+		// associe le channel à un canal
 		case 'setCanal':
 
+			// s'il n'y a pas de nom de canals ou un nom invalide, 
 			if (!args[1] || !partielGlobal[args[1]]) {
 				let listeCanal = "";
 

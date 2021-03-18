@@ -16,28 +16,37 @@ async function execute(message, args) {
     if (!fs.readdirSync("./resources/citations"))
         return err("Le dossier resources de citations n'existe pas", null, null);
 
+    // 1er et 2e lettre de la personne dont on veut la citation
     let firstLetter;
     let secondLetter;
 
+    // s'il n'y a pas d'attachments, on renvoie une citation
     if (message.attachments.array().length === 0) {
+        // si on cherche une personne en particulier
         if (args[0]) {
+            // si un point est dans le nom de la personne, on evite (pour éviter de récuperer des fichiers du bot)
             if (args[0].includes(`.`))
                 return message.channel.send("Je n'ai aucune citation pour cette personne").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
 
+            // on récup la 1er lettre de la personne en Maj
             firstLetter = args[0].charAt(0).toUpperCase();
 
+            // s'il y a une deuxieme lettre, on la recup
             if (args[0].charAt(1) && args[0].charAt(1).match(/[a-z]/i))
                 secondLetter = args[0].charAt(1).toLowerCase();
             else
                 secondLetter = "";
 
+            //s'il n'existe aucun dossier pour ces 2 premieres lettres => tant pis
             if (!fs.existsSync(`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}`))
                 return message.channel.send("Je n'ai aucune citation pour cette personne").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
         }
         else {
             do {
+                // on génére une premiere lettre au hasard
                 firstLetter = String.fromCharCode(65 + getRandomInt(25));
 
+                //si un dossier avec cette première lettre existe, on en récupère le contenu et on chope un dossier au hasard
                 if (fs.existsSync(`./resources/citations/${firstLetter}`)) {
                     let folderContent = fs.readdirSync(`./resources/citations/${firstLetter}`);
 
@@ -47,20 +56,80 @@ async function execute(message, args) {
             } while (!fs.existsSync(`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}`));
         }
 
+        // on formatte la recherche correctement
         let formatted;
 
-        if (args[0])
-            formatted = args[0].charAt(0).toUpperCase().concat(args[0].charAt(1) ? args[0].substring(1, args[0].length).toLowerCase() : "");
+        if (args[0]) {
+            // la premiere lettre en majuscule
+            firstLetter = args[0].charAt(0).toUpperCase();
 
-        const quotes = fs.readdirSync(`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}`).filter(file => args[0] ? file.charAt(0).toUpperCase().concat(file.substring(1, file.length).toLowerCase()).startsWith(formatted) : firstLetter.concat(secondLetter));
 
+            //la seconde en minuscule si elle existe
+            if (args[0].charAt(1))
+                formatted = firstLetter.concat(args[0].substring(1, args[0].length).toLowerCase());
+            else
+                formatted = firstLetter;
+        }
+
+        const folderContent = fs.readdirSync(`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}`);
+
+        // on récupère le fichier avec toutes les citaitons qui matchent avec la recherche
+        let quotes;
+
+        if (args[0]) {
+            // on formate le nom du fichier de la meme manière que le nom de la personne recherchée
+            quotes = folderContent.filter(file =>
+                file.charAt(0).toUpperCase()                            // la première lettre en majuscule
+                    .concat(file.substring(1, file.length).toLowerCase())   // les autres lettres en minuscules
+                    .startsWith(formatted))                                 // on filtre toutes les citations dont le nom commence par la recherche
+        }
+        else {
+            quotes = folderContent.filter(file =>
+                file.charAt(0).toUpperCase() === firstLetter
+                &&
+                file.charAt(1).toLowerCase() === secondLetter
+            )
+        }
+
+        // si on ne trouve aucune citation
         if (quotes.length === 0)
             return message.channel.send("Je n'ai aucune citation pour cette personne").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
 
+        // on chope la citation a envoyer et on l'envoie
         const fileToSend = quotes[getRandomInt(quotes.length)];
 
-        return message.channel.send({ files: [`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`] }).catch(e => err("Impossible d'envoyer un message sur ce channel", message, e));
+        // on envoie le message
+        let sendedMessages = await message.channel.send({ files: [`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`] }).catch(e => err("Impossible d'envoyer un message sur ce channel", message, e));
+
+        // on ajoute une reaction pour virer la citation
+        await sendedMessages.react('🚽');
+
+        // on attend les reactions 🚽
+        // au bout de 8 reactions en moins de 24h, on retire le message et la citation
+        // sinon on retire simplement les reactions
+        sendedMessages.awaitReactions((reaction, user) => reaction.emoji.name === '🚽', { max: 8, time: 24 * 60 * 60 * 1000, errors: ['time'] })
+            .then(collected => {
+                log(`Suppression du fichier ./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`);
+
+                // on supprime le fichier qui a été report
+                try {
+                    fs.unlinkSync(`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`);
+                }
+                catch (e) {
+                    err(`Impossible de supprimer le fichier ./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`, null, e);
+                }
+
+                // on supprime le message
+                sendedMessages.delete();
+                message.channel.send("La citation a été supprimée ! Merci du signalement")
+            })
+            .catch(error => {
+                sendedMessages.reactions.removeAll().catch(e => err("Impossible de clear les reactions", null, e));
+            })
+
     }
+
+    // s'il y a un attachment, on regarde si on la télécharge
     else {
         if (!args[0])
             return message.channel.send("Il me faut l'identité de cette personne (en 1 mot)").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
@@ -68,19 +137,26 @@ async function execute(message, args) {
         if (args[0].includes(`.`))
             return message.channel.send("Je ne peux pas accepter ça :eyes:").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
 
+        //on met tout en 1 mot
         args[0] = args.join("");
 
-        if (!fs.existsSync(`./resources/citations/${args[0].charAt(0).toUpperCase()}`)) {
+        const firstLetter = args[0].charAt(0).toUpperCase();
+
+        // on créé le dossier avec la premiere lettre de la personne si besoin
+        if (!fs.existsSync(`./resources/citations/${firstLetter}`)) {
             try {
-                fs.mkdirSync(`./resources/citations/${args[0].charAt(0).toUpperCase()}`);
-                log(`Création du dossier ./resources/citations/${args[0].charAt(0).toUpperCase()}`);
+                fs.mkdirSync(`./resources/citations/${firstLetter}`);
+                log(`Création du dossier ./resources/citations/${firstLetter}`);
             }
             catch (e) {
-                err(`Impossible de créer le dossier ./resources/citations/${args[0].charAt(0).toUpperCase()}`, null, e);
+                err(`Impossible de créer le dossier ./resources/citations/${firstLetter}`, null, e);
             }
         }
 
-        let folderName = `./resources/citations/${args[0].charAt(0).toUpperCase()}/${args[0].charAt(0).toUpperCase().concat(args[0].charAt(1).toLowerCase() ?? "")}`
+        // on créé le dossier avec la seconde lettre (ou sans) si besoin
+        const secondLetter = args[0].charAt(1).toLowerCase() ?? "";
+
+        const folderName = `./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}`
 
         if (!fs.existsSync(folderName)) {
             try {
@@ -92,18 +168,26 @@ async function execute(message, args) {
             }
         }
 
+
         let imgName;
 
         for (attachments of message.attachments.array()) {
 
+            // on récupère le format de l'attachment
             const imgFormat = attachments.name.split(".")[attachments.name.split(".").length - 1];
-            imgName = `${args[0].charAt(0).toUpperCase()}${args[0].charAt(1) ? args[0].substring(1, args[0].length).toLowerCase() : ""}.${imgFormat}`;
 
-            if (fs.existsSync(`${folderName}/${imgName}`)) {
-                const nbFiles = fs.readdirSync(folderName).filter(file => file.startsWith(`${args[0].charAt(0).toUpperCase()}${args[0].charAt(1) ? args[0].substring(1, args[0].length).toLowerCase() : ""}`)).length;
-                imgName = imgName.split(".")[0].concat(`${nbFiles - 1}.`).concat(imgName.split(".")[1]);
-            }
+            //on formatte le nom du fichier
+            const formattedNameFile = firstLetter.concat(secondLetter !== "" ?
+                args[0].substring(1, args[0].length).toLowerCase()
+                : "");
 
+            //on récupère le nombre de fichiers ayant deja le meme nom 
+            const nbFiles = fs.readdirSync(folderName).filter(file => file.startsWith(`${formattedNameFile}`)).length;
+
+            //on formatte tout ca correctement
+            imgName = `${formattedNameFile}${nbFiles}.${imgFormat}`;
+
+            // et on télécharge
             try {
                 await download(attachments.url, `${folderName}/${imgName}`);
             }
