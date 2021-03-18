@@ -85,11 +85,13 @@ async function execute(message, args) {
         }
         else {
             quotes = folderContent.filter(file =>
-                file.charAt(0).toUpperCase() === firstLetter
-                &&
-                file.charAt(1).toLowerCase() === secondLetter
+                firstLetter.concat(secondLetter)
             )
         }
+
+        console.log(firstLetter)
+        console.log(secondLetter)
+        console.log(folderContent)
 
         // si on ne trouve aucune citation
         if (quotes.length === 0)
@@ -101,8 +103,11 @@ async function execute(message, args) {
         // on envoie le message
         let sendedMessages = await message.channel.send({ files: [`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`] }).catch(e => err("Impossible d'envoyer un message sur ce channel", message, e));
 
+        if (!sendedMessages)
+            return;
+
         // on ajoute une reaction pour virer la citation
-        await sendedMessages.react('🚽');
+        await sendedMessages.react('🚽').catch(e => err("Impossible de reagir a ce message", sendedMessages, e));
 
         // on attend les reactions 🚽
         // au bout de 8 reactions en moins de 24h, on retire le message et la citation
@@ -121,7 +126,7 @@ async function execute(message, args) {
 
                 // on supprime le message
                 sendedMessages.delete();
-                message.channel.send("La citation a été supprimée ! Merci du signalement")
+                message.channel.send("La citation a été supprimée ! Merci du signalement").catch(e => err("Impossible d'envoyer un message sur ce channel", message, e));
             })
             .catch(error => {
                 sendedMessages.reactions.removeAll().catch(e => err("Impossible de clear les reactions", null, e));
