@@ -14,7 +14,7 @@ function logError(erreur, fileName, message = null, stack = null) {
 
     let maintenant = new Date();
 
-    let affichage = `[${maintenant.getHours()}:${maintenant.getMinutes()}:${maintenant.getSeconds()}][${fileName}.js]`;
+    let affichage = `[${maintenant.getDate()}/${maintenant.getMonth() + 1}/${maintenant.getFullYear()}][${maintenant.getHours()}:${maintenant.getMinutes()}:${maintenant.getSeconds()}][${fileName}.js]`;
 
     if (message) {
         if (message.guild)
@@ -50,7 +50,7 @@ function logError(erreur, fileName, message = null, stack = null) {
 function logStdout(text, fileName, message = null) {
     let maintenant = new Date();
 
-    let affichage = `[${maintenant.getHours()}:${maintenant.getMinutes()}:${maintenant.getSeconds()}][${fileName}.js]`;
+    let affichage = `[${maintenant.getDate()}/${maintenant.getMonth() + 1}/${maintenant.getFullYear()}][${maintenant.getHours()}:${maintenant.getMinutes()}:${maintenant.getSeconds()}][${fileName}.js]`;
 
     if (message) {
         if (message.guild)

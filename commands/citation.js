@@ -89,10 +89,6 @@ async function execute(message, args) {
             )
         }
 
-        console.log(firstLetter)
-        console.log(secondLetter)
-        console.log(folderContent)
-
         // si on ne trouve aucune citation
         if (quotes.length === 0)
             return message.channel.send("Je n'ai aucune citation pour cette personne").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
