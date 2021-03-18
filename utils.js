@@ -1,6 +1,7 @@
 const http = require('http');
 const https = require('https');
-const fs = require('fs')
+const fs = require('fs');
+const os = require('os');
 
 /** Affiche une erreur dans les logs correctement
  * 
@@ -28,6 +29,17 @@ function logError(erreur, fileName, message = null, stack = null) {
 
     if (stack)
         console.error(stack);
+
+    const stream = fs.createWriteStream("./log/error.txt", { 'flags': 'a' });
+    stream.once('open', fd => {
+        stream.write(affichage + os.EOL);
+
+        if (stack)
+            stream.write(stack + os.EOL);
+
+        stream.close();
+    })
+
 }
 
 /** affiche un message dans les logs correctement
@@ -50,6 +62,13 @@ function logStdout(text, fileName, message = null) {
     affichage += ` ${text}`;
 
     console.log(affichage);
+
+    const stream = fs.createWriteStream("./log/log.txt", { 'flags': 'a' });
+    stream.once('open', fd => {
+        stream.write(affichage + os.EOL);
+
+        stream.close();
+    })
 }
 
 function download(url, dest, cb) {

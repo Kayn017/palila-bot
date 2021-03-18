@@ -20,7 +20,8 @@ const fileConfig = {
 			type: "LISTENING"
 		}
 	},
-	citation_rules: {}
+	citation_rules: {},
+	blacklist: []
 }
 
 CreateFilesConfig();
@@ -60,6 +61,10 @@ for (const file of modulesFiles) {
 
 //reactions a chaque message
 client.on('message', message => {
+
+	const blacklist = JSON.parse(fs.readFileSync(`./config/blacklist.json`));
+
+	if (blacklist.includes(message.author.id)) return;
 
 	//on vérifie le préfixe du bot sur le serveur
 	let prefix = config.prefix;

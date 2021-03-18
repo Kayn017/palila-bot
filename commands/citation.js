@@ -92,10 +92,12 @@ async function execute(message, args) {
             }
         }
 
+        let imgName;
+
         for (attachments of message.attachments.array()) {
 
             const imgFormat = attachments.name.split(".")[attachments.name.split(".").length - 1];
-            let imgName = `${args[0].charAt(0).toUpperCase()}${args[0].charAt(1) ? args[0].substring(1, args[0].length).toLowerCase() : ""}.${imgFormat}`;
+            imgName = `${args[0].charAt(0).toUpperCase()}${args[0].charAt(1) ? args[0].substring(1, args[0].length).toLowerCase() : ""}.${imgFormat}`;
 
             if (fs.existsSync(`${folderName}/${imgName}`)) {
                 const nbFiles = fs.readdirSync(folderName).filter(file => file.startsWith(`${args[0].charAt(0).toUpperCase()}${args[0].charAt(1) ? args[0].substring(1, args[0].length).toLowerCase() : ""}`)).length;
@@ -110,7 +112,7 @@ async function execute(message, args) {
             }
         }
 
-        log(`${message.attachments.array().length} ${message.attachments.array().length ? "Citation ajoutée" : "Citations ajoutées"} pour ${args[0]} par ${message.author.username}`);
+        log(`${message.attachments.array().length} ${message.attachments.array().length ? "Citation ajoutée" : "Citations ajoutées"} pour ${args[0]} par ${message.author.username} (${imgName})`);
 
         return message.channel.send(`${message.attachments.array().length ? "Citation ajoutée" : "Citations ajoutées"} à la base de données !`).catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
     }
