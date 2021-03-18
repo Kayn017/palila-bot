@@ -2,6 +2,9 @@ const Discord = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 
+// template des fichiers de configurations globaux
+// chaque clé => le nom du fichier de config
+// chaque objet => contenu du fichier
 const fileConfig = {
 	config: {
 		discord: {
@@ -9,7 +12,7 @@ const fileConfig = {
 		},
 		prefix: ","
 	},
-	partiels_config: {},
+	canals_config: {},
 	presence: {
 		status: "online",
 		activity: {
@@ -36,39 +39,42 @@ client.on('ready', () => {
 
 // on importe toutes les commandes 
 client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync(path.join(__dirname, "commands")).filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync(`${__dirname}/commands`).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 
-	const cmd = require(path.join(__dirname, "commands", file));
+	const cmd = require(`${__dirname}/commands/${file}`);
 	client.commands.set(cmd.name, cmd);
 }
 
 
-// puis on importe tout les modules autre
-const modulesFiles = fs.readdirSync(path.join(__dirname, "modules")).filter(file => file.endsWith('.js'));
+// puis on importe tout les modules
+const modulesFiles = fs.readdirSync(`${__dirname}/modules`).filter(file => file.endsWith('.js'));
 
 for (const file of modulesFiles) {
 
-	const mod = require(path.join(__dirname, "modules", file));
+	const mod = require(`${__dirname}/modules/${file}`);
 	mod.init(client);
 }
 
 
-
+//reactions a chaque message
 client.on('message', message => {
 
 	//on vérifie le préfixe du bot sur le serveur
 	let prefix = config.prefix;
 	let whitelist = false;
 
+	// si le message a été envoyé dans une guild, on prend la configuration de cette guild
 	if (message.channel.type !== 'dm') {
-		prefix = require(`./guilds/${message.guild.id}/config.json`).prefix;
-		whitelist = require(`./guilds/${message.guild.id}/config.json`).whitelist;
+		const configGuidldsFile = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/config.json`));
+		prefix = configGuidldsFile.prefix;
+		whitelist = configGuidldsFile.whitelist;
 	}
 
+	//si le channel est whitelisté, on s'arrete la
 	if (whitelist)
-		if (!require(`./guilds/${message.guild.id}/whitelist.json`).channels.includes(message.channel.id)) return;
+		if (!JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/whitelist.json`)).channels.includes(message.channel.id)) return;
 
 
 
@@ -107,25 +113,29 @@ client.on('guildCreate', guild => {
 // on se connecte a discord 
 client.login(config.discord.token);
 
-/** créé les fichiers de configurations pour chaque serveur s'il n'existe pas
+/** créé les fichiers et dossiers de configurations pour chaque serveur s'il n'existe pas
  */
 function CreateGuildsFolder() {
-	const folderExistants = fs.readdirSync(path.join(__dirname, "guilds"));
+	//on récupère chaque dossier existant
+	const existantFolders = fs.readdirSync(`${__dirname}/guilds`);
 
+	//pour chaque guilds dans lequel le bot est présent
 	for (let g of client.guilds.cache.values()) {
 
-		if (!folderExistants.includes(g.id)) {
+		//si le dossier de la guild n'existe pas
+		if (!existantFolders.includes(g.id)) {
+
 			// création du dossier de la guilde
 			try {
-				fs.mkdirSync(path.join(__dirname, "guilds", g.id));
+				fs.mkdirSync(`${__dirname}/guilds/${g.id}`);
 				log(`Dossier de la guilde ${g.name} créé`);
 			}
 			catch (e) {
 				err(`Impossible de créer le dossier de la guilde ${g.name}`, null, e);
 			}
 
-			// création du fichier de configuration
-			const contenuConfigFile = {
+			// création du fichier de configuration de la guild
+			const configFileContent = {
 				name: g.name,
 				prefix: config.prefix,
 				adminRoles: null,
@@ -135,7 +145,7 @@ function CreateGuildsFolder() {
 			}
 
 			try {
-				fs.writeFileSync(path.join(__dirname, "guilds", g.id, "config.json"), JSON.stringify(contenuConfigFile));
+				fs.writeFileSync(`${__dirname}/guilds/${g.id}/config.json`, JSON.stringify(configFileContent));
 				log(`Fichier de configuration de la guilde ${g.name} créé`);
 			}
 			catch (e) {
@@ -146,8 +156,12 @@ function CreateGuildsFolder() {
 	}
 }
 
+/**
+ * créé les fichiers de configurations globaux absents 
+ */
 function CreateFilesConfig() {
 
+	// pour chaque template, on créé un fichier de config, s'il manque
 	for (const [fileName, fileContent] of Object.entries(fileConfig)) {
 		if (!fs.existsSync(`${__dirname}/config/${fileName}.json`)) {
 			try {
@@ -163,10 +177,20 @@ function CreateFilesConfig() {
 
 }
 
+/**
+ * Logs simplifié
+ * @param {*} text : texte a afficher
+ */
 function log(text) {
 	require('./utils').logStdout(text, "index", null);
 }
 
+/**
+ * logs d'erreurs simplifié
+ * @param {*} text : texte a afficher
+ * @param {*} msg : message qui a provoqué l'erreur
+ * @param {*} err : l'erreur en elle meme
+ */
 function err(text, msg, err) {
 	require('./utils').logError(text, "index", msg ?? null, err ? err.stack : null)
 }

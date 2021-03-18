@@ -12,12 +12,12 @@ function init(client) {
 
 		if (message.author.bot || message.channel.type === 'dm') return;
 
-		const configGlobal = require("../config/partiels_config.json");
+		const configGlobal = JSON.parse(fs.readFileSync("./config/canals_config.json"));
 
-		// On vérifie l'existence de partiels_config.json pour ce serveur
-		if (!fs.readdirSync(`./guilds/${message.guild.id}`).includes('partiels_config.json')) return;
+		// On vérifie l'existence de canals_config.json pour ce serveur
+		if (!fs.readdirSync(`./guilds/${message.guild.id}`).includes('canals_config.json')) return;
 
-		const configGuild = require(`../guilds/${message.guild.id}/partiels_config.json`);
+		const configGuild = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/canals_config.json`));
 
 		// on vérifie si le message a été envoyé dans un channel setup et activé
 		if (!configGuild[message.channel.name] || !configGuild[message.channel.name].activated) return;
@@ -45,7 +45,7 @@ function init(client) {
 
 		for (let chanID in channelCache[configGuild[message.channel.name].canal]) {
 			let chan = channelCache[configGuild[message.channel.name].canal][chanID];
-			let actif = require(`../guilds/${chan.guild.id}/partiels_config.json`)[chan.name].activated;
+			let actif = JSON.parse(fs.readFileSync(`./guilds/${chan.guild.id}/canals_config.json`))[chan.name].activated;
 
 			if (actif)
 				chanActif.push(chan);

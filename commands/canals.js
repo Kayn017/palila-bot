@@ -1,13 +1,13 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 
-const name = "partiels";
+const name = "canals";
 
 const synthax = `${name} <action> <argument(s)>`;
 
-const description = "Met en commun plusieurs channels pour les partiels";
+const description = "Met en commun plusieurs channels dans des canaux";
 
-const explication = `Cette commande permet de mettre en commun les messages de divers channels sur divers serveurs pour l'entraide \"avant\" les partiels
+const explication = `Cette commande permet de mettre en commun les messages de divers channels sur divers serveurs autour d'une meme thématique par exemple
 Actions disponibles :
 	- setCanal : inscrit ce channel dans un canal et le désincrit de l'ancien canal s'il existe
 	- activateChannel : connecte ce channel au canal ou il est inscrit
@@ -24,19 +24,19 @@ Actions disponibles :
 // - faire la commande destroyCanal
 
 async function execute(message, args) {
-	const config = require(`../guilds/${message.guild.id}/config.json`);
+	const config = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/config.json`));
 
 	// on vérifie s'il y a des arguments
 	if (!args[0])
 		return message.channel.send(`Syntaxe incorret. \`${config.prefix}help ${name}\` pour plus d'informations.`).catch(error => err("Impossible d'envoyer un message sur ce channel.", message, error));
 
-	if (!fs.readdirSync(`./guilds/${message.guild.id}`).includes('partiels_config.json')) {
-		fs.writeFileSync(`./guilds/${message.guild.id}/partiels_config.json`, JSON.stringify({}));
-		log(`Création du fichier de configuration pour les partiels`, message);
+	if (!fs.readdirSync(`./guilds/${message.guild.id}`).includes('canals_config.json')) {
+		fs.writeFileSync(`./guilds/${message.guild.id}/canals_config.json`, JSON.stringify({}));
+		log(`Création du fichier de configuration pour les canaux`, message);
 	}
 
-	let partielGlobal = JSON.parse(fs.readFileSync('./config/partiels_config.json'));
-	let partielGuild = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/partiels_config.json`));
+	let partielGlobal = JSON.parse(fs.readFileSync('./config/canals_config.json'));
+	let partielGuild = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/canals_config.json`));
 
 	switch (args[0]) {
 		case 'setCanal':
@@ -127,8 +127,8 @@ async function execute(message, args) {
 
 	}
 
-	fs.writeFileSync(`./config/partiels_config.json`, JSON.stringify(partielGlobal));
-	fs.writeFileSync(`./guilds/${message.guild.id}/partiels_config.json`, JSON.stringify(partielGuild));
+	fs.writeFileSync(`./config/canals_config.json`, JSON.stringify(partielGlobal));
+	fs.writeFileSync(`./guilds/${message.guild.id}/canals_config.json`, JSON.stringify(partielGuild));
 
 }
 
