@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const name = "je_suis";
 
 const description = "Fait la meilleure vanne du monde";
@@ -5,10 +7,13 @@ const description = "Fait la meilleure vanne du monde";
 function init(client) {
 	client.on('message', async message => {
 
+		// on ne réagit pas si le message a été envoyé en dm
 		if (message.channel.type === 'dm') return;
 
-		const config = require(`../guilds/${message.guild.id}/config.json`);
+		// on lit le fichier de conf du serv
+		const config = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/config.json`));
 
+		// si le module n'est pas activé ou si l'author du message est un bot => osef
 		if (message.author.bot || !config.je_suis) return;
 
 		if (message.content.toLowerCase().includes("je suis")

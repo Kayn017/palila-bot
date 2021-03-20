@@ -11,6 +11,7 @@ function init(client) {
 
     let configPresence = JSON.parse(fs.readFileSync(configFilePresence));
 
+    // si le fichier est modifié, on update la presence du bot 
     fs.watchFile(configFilePresence, (curr, prev) => {
         configPresence = JSON.parse(fs.readFileSync(configFilePresence));
         client.user.setPresence(configPresence);

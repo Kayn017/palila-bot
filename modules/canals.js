@@ -23,17 +23,18 @@ function init(client) {
 		if (!configGuild[message.channel.name] || !configGuild[message.channel.name].activated) return;
 
 		// on récupère tout les channels du canal
-		let canals = configGlobal[configGuild[message.channel.name].canal];
+		const canal = configGuild[message.channel.name].canal;
+		let channels = configGlobal[canal];
 
 		//mise en cache si besoin
-		if (!channelCache[configGuild[message.channel.name].canal])
-			channelCache[configGuild[message.channel.name].canal] = {};
+		if (!channelCache[canal])
+			channelCache[canal] = {};
 
-		for (let channelId of canals) {
-			if (channelCache[configGuild[message.channel.name].canal][channelId]) continue;
+		for (const channelId of channels) {
+			if (channelCache[canal][channelId]) continue;
 
 			try {
-				channelCache[configGuild[message.channel.name].canal][channelId] = await client.channels.fetch(channelId);
+				channelCache[canal][channelId] = await client.channels.fetch(channelId);
 			}
 			catch (e) {
 				err("Impossible de fetch le channel", null, e);
@@ -43,9 +44,9 @@ function init(client) {
 		// pour chaque channel du canal, on vérifie s'ils sont activé ou non
 		let chanActif = [];
 
-		for (let chanID in channelCache[configGuild[message.channel.name].canal]) {
-			let chan = channelCache[configGuild[message.channel.name].canal][chanID];
-			let actif = JSON.parse(fs.readFileSync(`./guilds/${chan.guild.id}/canals_config.json`))[chan.name].activated;
+		for (const chanID in channelCache[canal]) {
+			let chan = channelCache[canal][chanID];
+			const actif = JSON.parse(fs.readFileSync(`./guilds/${chan.guild.id}/canals_config.json`))[chan.name].activated;
 
 			if (actif)
 				chanActif.push(chan);
