@@ -99,16 +99,17 @@ async function execute(message, args) {
         // on envoie le message
         let sendedMessages = await message.channel.send({ files: [`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`] }).catch(e => err("Impossible d'envoyer un message sur ce channel", message, e));
 
+        // si on n'a pas réussi a envoyer le message, on s'en fout du message
         if (!sendedMessages)
             return;
 
         // on ajoute une reaction pour virer la citation
-        await sendedMessages.react('🚽').catch(e => err("Impossible de reagir a ce message", sendedMessages, e));
+        let reaction = await sendedMessages.react('🚽').catch(e => err("Impossible de reagir a ce message", sendedMessages, e));
 
         // on attend les reactions 🚽
         // au bout de 8 reactions en moins de 24h, on retire le message et la citation
         // sinon on retire simplement les reactions
-        sendedMessages.awaitReactions((reaction, user) => reaction.emoji.name === '🚽', { max: 8, time: 24 * 60 * 60 * 1000, errors: ['time'] })
+        sendedMessages.awaitReactions((reaction, user) => reaction.emoji.name === '🚽', { max: 8, time: /*24 * 60 * 60*/ 10 * 1000, errors: ['time'] })
             .then(collected => {
                 log(`Suppression du fichier ./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`);
 
@@ -125,7 +126,7 @@ async function execute(message, args) {
                 message.channel.send("La citation a été supprimée ! Merci du signalement").catch(e => err("Impossible d'envoyer un message sur ce channel", message, e));
             })
             .catch(error => {
-                sendedMessages.reactions.removeAll().catch(e => err("Impossible de clear les reactions", null, e));
+                reaction.remove().catch(e => err("Impossible de clear les reactions", null, e));
             })
 
     }
