@@ -119,6 +119,7 @@ async function downloadChan(message) {
 		err("Impossible d'envoyer un message sur ce channel.", message, e);
 	}
 
+	// on créé le dossier dans lequel on va mettre la backup
 	let today = new Date();
 	let folderName = `Backup_${message.guild.name}_${message.channel.name}_${today.getDate()}_${today.getMonth() + 1}_${today.getFullYear()}`;
 	folderName = folderName.replaceAll('/', '_')
@@ -158,6 +159,7 @@ async function downloadChan(message) {
 		for (let bidule of att) {
 			img = bidule[1];
 
+			// si le fichier existe deja, on adapte le nom
 			if (fs.existsSync(`./guilds/${message.guild.id}/${folderName}/${img.name}`)) {
 				let nbFiles = fs.readdirSync(`./guilds/${message.guild.id}/${folderName}`).filter(file => file.startsWith(img.name.split(".")[0])).length;
 				img.name = img.name.split(".")[0].concat(`-${nbFiles}.`).concat(img.name.split(".")[1]);
