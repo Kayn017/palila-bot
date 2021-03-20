@@ -15,9 +15,11 @@ const no = '❎'
 
 async function execute(message, args) {
 
+    // s'il n'y a pas d'intitulé, erreur
     if (!args[0])
         return message.channel.send("Il me faut un intitulé pour ce sondage").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
 
+    // si une durée est définie, on la prend
     if (args.includes("duree:")) {
         let option = args[args.indexOf("duree:") + 1];
 
@@ -38,22 +40,29 @@ async function execute(message, args) {
         args.splice(args.indexOf("duree:"), 2);
     }
 
+    // on prépare le message
     const embed = new Discord.MessageEmbed()
         .setTitle(args.join(' '))
         .setColor(0x1e80d6)
         .setDescription(`Fin du sondage : ${new Date(Date.now() + duration + (60 * 60 * 1000)).toUTCString()}`) //décalage horaire
         .setFooter(`Sondage par ${message.author.username}`);
 
+    // on l'envoie
     const sendedMessage = await message.channel.send(embed).catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
 
     let chan = message.channel;
+
+    // on supprime le message de base
     message.delete().catch(e => err("Impossible de supprimer ce message", message, e));
 
+    // on ajoute les reactions au message
     await sendedMessage.react(yes);
     await sendedMessage.react(no);
 
+    // on récupère les reactions
     let collected = await sendedMessage.awaitReactions(reaction => reaction.emoji.name === yes || reaction.emoji.name === no, { time: duration });
 
+    // on envoie les réponses du sondage
     const results = new Discord.MessageEmbed()
         .setTitle(args.join(' '))
         .setColor(0x1e80d6)

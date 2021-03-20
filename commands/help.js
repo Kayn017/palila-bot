@@ -1,4 +1,5 @@
 const Discord = require('discord.js')
+const fs = require('fs')
 
 const name = 'help';
 
@@ -10,7 +11,7 @@ const explication = "Cette commande affiche l'aide du bot et les explications de
 
 async function execute(message, args) {
 
-	const { prefix } = require(`../guilds/${message.guild.id}/config.json`)
+	const { prefix } = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/config.json`));
 
 	let desc = "";
 	let title = "";

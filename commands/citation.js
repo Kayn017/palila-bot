@@ -24,6 +24,10 @@ async function execute(message, args) {
     if (message.attachments.array().length === 0) {
         // si on cherche une personne en particulier
         if (args[0]) {
+
+            //on met tout en 1 mot
+            args[0] = args.join("");
+
             // si un point est dans le nom de la personne, on evite (pour éviter de récuperer des fichiers du bot)
             if (args[0].includes(`.`))
                 return message.channel.send("Je n'ai aucune citation pour cette personne").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
@@ -60,9 +64,9 @@ async function execute(message, args) {
         let formatted;
 
         if (args[0]) {
+
             // la premiere lettre en majuscule
             firstLetter = args[0].charAt(0).toUpperCase();
-
 
             //la seconde en minuscule si elle existe
             if (args[0].charAt(1))
@@ -187,7 +191,7 @@ async function execute(message, args) {
             const nbFiles = fs.readdirSync(folderName).filter(file => file.startsWith(`${formattedNameFile}`)).length;
 
             //on formatte tout ca correctement
-            imgName = `${formattedNameFile}${nbFiles}.${imgFormat}`;
+            imgName = `${formattedNameFile}${nbFiles}-${message.author.id}.${imgFormat}`;
 
             // et on télécharge
             try {

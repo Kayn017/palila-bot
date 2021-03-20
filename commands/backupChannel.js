@@ -14,8 +14,11 @@ Arguments :
 
 async function execute(message, args) {
 
+	// on execute le worker dans un nouveau thread pour ne pas monopoliser le thread principal
 	const worker = new Worker(`${__dirname}/../worker/downloader.js`);
 
+	// une fois le thread prêt, on lui envoie l'id du message de la commande, l'id du channel a backup
+	// la guilde dont le channel fait parti et les eventuels arguments
 	worker.on('online', () => {
 
 		const param = { msgID: message.id, channelID: message.channel.id, guildID: message.guild.id, arguments: args ? args.join() : null }
@@ -23,6 +26,7 @@ async function execute(message, args) {
 		worker.postMessage(param);
 	});
 
+	// une fois l'execution du thread terminée, on vérifie si tout s'est bien passé ou non
 	worker.on('exit', code => {
 		if (code !== 0)
 			err(`Erreur : le thread de download a retourné le code ${code}`);
