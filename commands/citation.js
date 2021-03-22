@@ -115,6 +115,12 @@ async function execute(message, args) {
         // sinon on retire simplement les reactions
         sendedMessages.awaitReactions((reaction, user) => reaction.emoji.name === '🚽', { max: 8, time: 24 * 60 * 60 * 1000, errors: ['time'] })
             .then(collected => {
+
+                if (collected.array().length < 8) {
+                    reaction.remove().catch(e => err("Impossible de clear les reactions", null, e));
+                    return;
+                }
+
                 log(`Suppression du fichier ./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`);
 
                 // on supprime le fichier qui a été report
