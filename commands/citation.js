@@ -36,7 +36,7 @@ async function execute(message, args) {
             firstLetter = args[0].charAt(0).toUpperCase();
 
             // s'il y a une deuxieme lettre, on la recup
-            if (args[0].charAt(1) && args[0].charAt(1).match(/[a-z]/i))
+            if (args[0].charAt(1))
                 secondLetter = args[0].charAt(1).toLowerCase();
             else
                 secondLetter = "";
@@ -46,18 +46,21 @@ async function execute(message, args) {
                 return message.channel.send("Je n'ai aucune citation pour cette personne").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
         }
         else {
-            do {
-                // on génére une premiere lettre au hasard
-                firstLetter = String.fromCharCode(65 + getRandomInt(25));
+            // on génére une premiere lettre au hasard
 
-                //si un dossier avec cette première lettre existe, on en récupère le contenu et on chope un dossier au hasard
-                if (fs.existsSync(`./resources/citations/${firstLetter}`)) {
-                    let folderContent = fs.readdirSync(`./resources/citations/${firstLetter}`);
+            const FirstLetterFolderContent = fs.readdirSync(`./resources/citations`);
 
-                    secondLetter = folderContent[getRandomInt(folderContent.length)].charAt(1);
-                }
+            firstLetter = FirstLetterFolderContent[getRandomInt(FirstLetterFolderContent.length)].charAt(0);
 
-            } while (!fs.existsSync(`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}`));
+
+            //si un dossier avec cette première lettre existe, on en récupère le contenu et on chope un dossier au hasard
+
+            const SecondLetterFolderContent = fs.readdirSync(`./resources/citations/${firstLetter}`);
+
+            secondLetter = SecondLetterFolderContent[getRandomInt(SecondLetterFolderContent.length)].charAt(1);
+
+
+
         }
 
         // on formatte la recherche correctement
