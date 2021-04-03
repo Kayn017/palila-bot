@@ -41,14 +41,20 @@ async function execute(message, args) {
     }
 
     // on prépare le message
+    const endDate = new Date(Date.now() + duration);
+    const endDateString = `${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear()} à ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}`;
+
     const embed = new Discord.MessageEmbed()
         .setTitle(args.join(' '))
         .setColor(0x1e80d6)
-        .setDescription(`Fin du sondage : ${new Date(Date.now() + duration + (60 * 60 * 1000)).toUTCString()}`) //décalage horaire
+        .setDescription(`Fin du sondage : ${endDateString}`) //décalage horaire
         .setFooter(`Sondage par ${message.author.username}`);
 
     // on l'envoie
     const sendedMessage = await message.channel.send(embed).catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
+
+    if (!sendedMessage)
+        return;
 
     let chan = message.channel;
 
@@ -56,20 +62,45 @@ async function execute(message, args) {
     message.delete().catch(e => err("Impossible de supprimer ce message", message, e));
 
     // on ajoute les reactions au message
-    await sendedMessage.react(yes);
-    await sendedMessage.react(no);
+    await sendedMessage.react(yes).catch(e => err("Impossible de reagir a ce message", sendedMessage, e));
+    await sendedMessage.react(no).catch(e => err("Impossible de reagir a ce message", sendedMessage, e));
 
     // on récupère les reactions
-    let collected = await sendedMessage.awaitReactions(reaction => reaction.emoji.name === yes || reaction.emoji.name === no, { time: duration });
+    const filter = reaction => reaction.emoji.name === yes || reaction.emoji.name === no;
 
-    // on envoie les réponses du sondage
-    const results = new Discord.MessageEmbed()
-        .setTitle(args.join(' '))
-        .setColor(0x1e80d6)
-        .setDescription(`Résultat du sondage : \n${collected.get(yes) ? collected.get(yes).count - 1 : 0} personnes ont voté ${yes}\n${collected.get(no) ? collected.get(no).count - 1 : 0} personnes ont voté ${no}`)
-        .setFooter(`Sondage par ${message.author.username}`);
+    const collector = sendedMessage.createReactionCollector(filter, { time: duration, dispose: true });
 
-    chan.send(results).catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
+    let nbYes = 0;
+    let nbNo = 0;
+
+    collector.on('collect', r => {
+        if (r.emoji.name === yes)
+            nbYes++;
+        else if (r.emoji.name === no)
+            nbNo++;
+    })
+
+    collector.on('remove', r => {
+        if (r.emoji.name === yes)
+            nbYes--;
+        else if (r.emoji.name === no)
+            nbNo--;
+    })
+
+    collector.on('end', collected => {
+
+        // on envoie les réponses du sondage
+        const results = new Discord.MessageEmbed()
+            .setTitle(args.join(' '))
+            .setColor(0x1e80d6)
+            .setDescription(`Résultat du sondage : \n${nbYes} personnes ont voté ${yes}\n${nbNo} personnes ont voté ${no}`)
+            .setFooter(`Sondage par ${message.author.username}`);
+
+        chan.send(results).catch(e => err("Impossible d'envoyer un message sur ce channel", message, e));
+    })
+
+
+
 
 }
 

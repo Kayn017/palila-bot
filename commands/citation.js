@@ -104,43 +104,49 @@ async function execute(message, args) {
         const fileToSend = quotes[getRandomInt(quotes.length)];
 
         // on envoie le message
-        let sendedMessages = await message.channel.send({ files: [`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`] }).catch(e => err("Impossible d'envoyer un message sur ce channel", message, e));
+        let sendedMessage = await message.channel.send({ files: [`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`] }).catch(e => err("Impossible d'envoyer un message sur ce channel", message, e));
 
         // si on n'a pas réussi a envoyer le message, on s'en fout du message
-        if (!sendedMessages)
+        if (!sendedMessage || message.channel.type === 'dm')
             return;
 
         // on ajoute une reaction pour virer la citation
-        let reaction = await sendedMessages.react('🚽').catch(e => err("Impossible de reagir a ce message", sendedMessages, e));
+        const reaction = await sendedMessage.react('🚽').catch(e => err("Impossible de reagir a ce message", sendedMessage, e));
 
         // on attend les reactions 🚽
         // au bout de 8 reactions en moins de 24h, on retire le message et la citation
         // sinon on retire simplement les reactions
-        sendedMessages.awaitReactions((reaction, user) => reaction.emoji.name === '🚽', { max: 8, time: 24 * 60 * 60 * 1000, errors: ['time'] })
-            .then(collected => {
+        const filter = (reaction, user) => reaction.emoji.name === '🚽';
+        const collector = sendedMessage.createReactionCollector(filter, { time: 24 * 60 * 60 * 1000, max: 8, dispose: true });
 
-                if (collected.array().length < 8) {
-                    reaction.remove().catch(e => err("Impossible de clear les reactions", null, e));
-                    return;
-                }
+        collector.on('collect', r => {
 
-                log(`Suppression du fichier ./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`);
+            if (collector.total < 8)
+                return;
 
-                // on supprime le fichier qui a été report
-                try {
-                    fs.unlinkSync(`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`);
-                }
-                catch (e) {
-                    err(`Impossible de supprimer le fichier ./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`, null, e);
-                }
+            log(`Suppression du fichier ./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`);
 
-                // on supprime le message
-                sendedMessages.delete();
-                message.channel.send("La citation a été supprimée ! Merci du signalement").catch(e => err("Impossible d'envoyer un message sur ce channel", message, e));
-            })
-            .catch(error => {
+            // on supprime le fichier qui a été report
+            try {
+                fs.unlinkSync(`./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`);
+            }
+            catch (e) {
+                err(`Impossible de supprimer le fichier ./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}/${fileToSend}`, null, e);
+            }
+
+            // on supprime le message
+            sendedMessages.delete();
+            message.channel.send("La citation a été supprimée ! Merci du signalement").catch(e => err("Impossible d'envoyer un message sur ce channel", message, e));
+
+        });
+
+        collector.on('end', c => {
+
+            if (collector.total < 8) {
                 reaction.remove().catch(e => err("Impossible de clear les reactions", null, e));
-            })
+                return;
+            }
+        });
 
     }
 
