@@ -1,5 +1,6 @@
 const fs = require('fs')
 const download = require('../utils').download;
+const rules = require('../config/citation_rules.json');
 
 const name = "citation"
 
@@ -22,6 +23,9 @@ async function execute(message, args) {
 
     // s'il n'y a pas d'attachments, on renvoie une citation
     if (message.attachments.array().length === 0) {
+        // personne recherchée
+        let person;
+
         // si on cherche une personne en particulier
         if (args[0]) {
 
@@ -32,12 +36,19 @@ async function execute(message, args) {
             if (args[0].includes(`.`))
                 return message.channel.send("Je n'ai aucune citation pour cette personne").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
 
+            // on change le nom de la personne en fonction des règles et alias défini
+            person = respectRules(args[0]);
+
+            if (!person)
+                return message.channel.send("Je n'ai aucune citation pour cette personne").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
+
+
             // on récup la 1er lettre de la personne en Maj
-            firstLetter = args[0].charAt(0).toUpperCase();
+            firstLetter = person.charAt(0).toUpperCase();
 
             // s'il y a une deuxieme lettre, on la recup
-            if (args[0].charAt(1))
-                secondLetter = args[0].charAt(1).toLowerCase();
+            if (person.charAt(1))
+                secondLetter = person.charAt(1).toLowerCase();
             else
                 secondLetter = "";
 
@@ -47,7 +58,6 @@ async function execute(message, args) {
         }
         else {
             // on génére une premiere lettre au hasard
-
             const FirstLetterFolderContent = fs.readdirSync(`./resources/citations`);
 
             firstLetter = FirstLetterFolderContent[getRandomInt(FirstLetterFolderContent.length)].charAt(0);
@@ -66,14 +76,14 @@ async function execute(message, args) {
         // on formatte la recherche correctement
         let formatted;
 
-        if (args[0]) {
+        if (person) {
 
             // la premiere lettre en majuscule
-            firstLetter = args[0].charAt(0).toUpperCase();
+            firstLetter = person.charAt(0).toUpperCase();
 
             //la seconde en minuscule si elle existe
-            if (args[0].charAt(1))
-                formatted = firstLetter.concat(args[0].substring(1, args[0].length).toLowerCase());
+            if (person.charAt(1))
+                formatted = firstLetter.concat(person.substring(1, person.length).toLowerCase());
             else
                 formatted = firstLetter;
         }
@@ -83,7 +93,7 @@ async function execute(message, args) {
         // on récupère le fichier avec toutes les citaitons qui matchent avec la recherche
         let quotes;
 
-        if (args[0]) {
+        if (person) {
             // on formate le nom du fichier de la meme manière que le nom de la personne recherchée
             quotes = folderContent.filter(file =>
                 file.charAt(0).toUpperCase()                            // la première lettre en majuscule
@@ -148,20 +158,30 @@ async function execute(message, args) {
             }
         });
 
+        message.channel.delete().catch(e => err("Impossible de supprimer ce message", message, e));
+
     }
 
     // s'il y a un attachment, on regarde si on la télécharge
     else {
+
         if (!args[0])
             return message.channel.send("Il me faut l'identité de cette personne (en 1 mot)").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
-
-        if (args[0].includes(`.`))
-            return message.channel.send("Je ne peux pas accepter ça :eyes:").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
 
         //on met tout en 1 mot
         args[0] = args.join("");
 
-        const firstLetter = args[0].charAt(0).toUpperCase();
+        if (args[0].includes(`.`))
+            return message.channel.send("Je ne peux pas accepter ça :eyes:").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
+
+        // on change le nom de la personne en fonction des règles et alias défini
+        person = respectRules(args[0]);
+
+        if (!person)
+            return message.channel.send("Impossible de télécharger cette citation").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
+
+
+        const firstLetter = person.charAt(0).toUpperCase();
 
         // on créé le dossier avec la premiere lettre de la personne si besoin
         if (!fs.existsSync(`./resources/citations/${firstLetter}`)) {
@@ -175,7 +195,7 @@ async function execute(message, args) {
         }
 
         // on créé le dossier avec la seconde lettre (ou sans) si besoin
-        const secondLetter = args[0].charAt(1).toLowerCase() ?? "";
+        const secondLetter = person.charAt(1).toLowerCase() ?? "";
 
         const folderName = `./resources/citations/${firstLetter}/${firstLetter.concat(secondLetter)}`
 
@@ -199,7 +219,7 @@ async function execute(message, args) {
 
             //on formatte le nom du fichier
             const formattedNameFile = firstLetter.concat(secondLetter !== "" ?
-                args[0].substring(1, args[0].length).toLowerCase()
+                person.substring(1, person.length).toLowerCase()
                 : "");
 
             //on récupère le nombre de fichiers ayant deja le meme nom 
@@ -217,7 +237,7 @@ async function execute(message, args) {
             }
         }
 
-        log(`${message.attachments.array().length} ${message.attachments.array().length ? "Citation ajoutée" : "Citations ajoutées"} pour ${args[0]} par ${message.author.username} (${imgName})`);
+        log(`${message.attachments.array().length} ${message.attachments.array().length ? "Citation ajoutée" : "Citations ajoutées"} pour ${person} par ${message.author.username} (${imgName})`);
 
         return message.channel.send(`${message.attachments.array().length ? "Citation ajoutée" : "Citations ajoutées"} à la base de données !`).catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
     }
@@ -234,9 +254,35 @@ function err(text, msg, err) {
     require('../utils').logError(text, name, msg ?? null, err ? err.stack : null)
 }
 
+/** retourne un entier aleatoire compris entre 0 et max
+ * 
+ * @param {number} max 
+ * @returns {number}
+ */
 function getRandomInt(max) {
     if (!max)
         throw new Exception("getRandomInt prend un paramètre");
 
     return Math.floor(Math.random() * Math.floor(max));
+}
+
+
+/** formate le nom de la personne de manière a respecter les règles
+ * 
+ * @param {string} person 
+ * @returns {string | boolean} renvoie false si la personne ne doit pas apparaitre parmi les 
+ */
+function respectRules(person) {
+
+    person = person.toLowerCase();
+
+    if (!rules[person])
+        return person;
+    else {
+        if (rules[person] === "")
+            return false;
+        else
+            return rules[person];
+    }
+
 }
