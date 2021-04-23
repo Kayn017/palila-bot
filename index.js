@@ -8,7 +8,8 @@ const path = require('path');
 const fileConfig = {
 	config: {
 		discord: {
-			token: null
+			token: null,
+			gods: []
 		},
 		prefix: ","
 	},
@@ -48,6 +49,9 @@ for (const file of commandFiles) {
 	client.commands.set(cmd.name, cmd);
 }
 
+
+
+client.db = require('./models');
 
 // puis on importe tout les modules
 const modulesFiles = fs.readdirSync(`${__dirname}/modules`).filter(file => file.endsWith('.js'));
@@ -107,7 +111,6 @@ client.on('message', message => {
 
 
 });
-
 
 client.on('guildCreate', guild => {
 	log(`Arrivée du bot sur le serveur ${guild.name}`);
@@ -187,7 +190,7 @@ function CreateFilesConfig() {
  * @param {*} text : texte a afficher
  */
 function log(text) {
-	require('./utils').logStdout(text, "index", null);
+	require('./services/log').logStdout(text, "index", null);
 }
 
 /**
@@ -196,6 +199,6 @@ function log(text) {
  * @param {*} msg : message qui a provoqué l'erreur
  * @param {*} err : l'erreur en elle meme
  */
-function err(text, msg, err) {
-	require('./utils').logError(text, "index", msg ?? null, err ? err.stack : null)
+function err(text, msg, e) {
+	require('./services/log').logError(text, "index", msg ?? null, e ? e.stack : null)
 }

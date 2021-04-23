@@ -38,10 +38,10 @@ async function execute(message, args) {
 
 module.exports = { name, synthax, description, explication, execute };
 
-function log(text, msg) {
-	require('../utils').logStdout(text, name, msg ?? null);
+function log(text) {
+	require('../services/log').logStdout(text, name, null);
 }
 
-function err(text, msg, err) {
-	require('../utils').logError(text, name, msg ?? null, err ? err.stack : null)
+function err(text, msg, e) {
+	require('../services/log').logError(text, name, msg ?? null, e ? e.stack : null)
 }
