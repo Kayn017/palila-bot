@@ -1,8 +1,8 @@
 const Discord = require('discord.js');
 const fs = require('fs');
-const execSync = require('child_process').execSync;
+const { execSync } = require('child_process');
 const worker = require('worker_threads');
-const download = require('../utils').download;
+const { download } = require('../services/http');
 
 const config = require('../config/config.json');
 
@@ -157,7 +157,7 @@ async function downloadChan(message) {
 	for (let att of msg_img) {
 
 		for (let bidule of att) {
-			img = bidule[1];
+			let img = bidule[1];
 
 			// si le fichier existe deja, on adapte le nom
 			if (fs.existsSync(`./guilds/${message.guild.id}/${folderName}/${img.name}`)) {
@@ -286,6 +286,6 @@ function log(text, msg) {
 	require('../utils').logStdout(text, "downloader", msg ?? null);
 }
 
-function err(text, msg, err) {
-	require('../utils').logError(text, "downloader", msg ?? null, err ? err.stack : null)
+function err(text, msg, e) {
+	require('../utils').logError(text, "downloader", msg ?? null, e ? e.stack : null)
 }
