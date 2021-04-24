@@ -106,20 +106,21 @@ async function sendCitation(message, args) {
 
 	let sendedMessage = null;
 
-	const filePath = `./resources/citations/${firstFolder}/${secondFolder}/${quotes[getRandomInt(quotes.length)]}`;
-
 	if (quotes.length === 0)
 		return message.channel.send("Je n'ai aucune citation pour cette personne").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
-	else {
-		try {
-			sendedMessage = await message.channel.send({
-				files: [filePath]
-			})
-		}
-		catch (e) {
-			err("Impossible d'envoyer un message sur ce channel", message, e);
-		}
+
+	const filePath = `./resources/citations/${firstFolder}/${secondFolder}/${quotes[getRandomInt(quotes.length)]}`;
+
+
+	try {
+		sendedMessage = await message.channel.send({
+			files: [filePath]
+		})
 	}
+	catch (e) {
+		err("Impossible d'envoyer un message sur ce channel", message, e);
+	}
+
 
 	if (!sendedMessage || message.channel.type === 'dm')
 		return;
