@@ -118,12 +118,15 @@ async function sendCitation(message, args) {
 		}
 	}
 
-	message.delete();
-
 	if (!sendedMessage || message.channel.type === 'dm')
 		return;
-	else
-		createDeleteReactions(sendedMessage, message, filePath);
+	else {
+		await createDeleteReactions(sendedMessage, message, filePath);
+		message.delete();
+	}
+
+
+
 
 }
 
