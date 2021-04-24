@@ -48,9 +48,9 @@ function respectRules(person) {
 
 	const rules = JSON.parse(fs.readFileSync(`./config/citation_rules.json`))
 
-	if (string.match(person, Object.keys(rules))) {
+	if (Object.keys(rules).includes(person.toLowerCase())) {
 
-		person = string.normalize(person);
+		person = person.toLowerCase();
 
 		if (rules[person] === null)
 			return false;
@@ -98,6 +98,9 @@ async function sendCitation(message, args) {
 		person = secondFolder;
 	}
 
+	if (!fs.existsSync(`./resources/citations/${firstFolder}/${secondFolder}`))
+		return message.channel.send("Je n'ai aucune citation pour cette personne").catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
+
 	const quotes = fs.readdirSync(`./resources/citations/${firstFolder}/${secondFolder}`)
 		.filter(filename => filename.toLowerCase().startsWith(person.toLowerCase()))
 
@@ -122,7 +125,7 @@ async function sendCitation(message, args) {
 		return;
 	else {
 		await createDeleteReactions(sendedMessage, message, filePath);
-		message.delete();
+		message.delete().catch(e => err("Impossible de supprimer ce message", message, e));
 	}
 
 
@@ -237,6 +240,8 @@ async function downloadCitation(message, args) {
 		log(`1 Citation ajoutée pour ${person} par ${message.author.username} (${filename})`);
 	}
 
-	message.delete()
-	return message.channel.send(`${message.attachments.array().length ? "Citation ajoutée" : "Citations ajoutées"} à la base de données !`).catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
+	await message.channel.send(`${message.attachments.array().length ? "Citation ajoutée" : "Citations ajoutées"} à la base de données !`).catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
+
+	if (message.channel.type !== 'dm')
+		message.delete().catch(e => err("Impossible de supprimer ce message", message, e));
 }
