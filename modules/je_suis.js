@@ -46,6 +46,7 @@ function init(client) {
 
 module.exports = { name, description, init };
 
+
 function err(text, msg, err) {
-	require('../utils').logError(text, name, msg ?? null, err ? err.stack : null)
+	require('../services/log').logError(text, name, msg ?? null, err ? err.stack : null)
 }

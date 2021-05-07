@@ -11,7 +11,12 @@ const explication = "Cette commande affiche l'aide du bot et les explications de
 
 async function execute(message, args) {
 
-	const { prefix } = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/config.json`));
+	let prefix;
+
+	if (message.channel.type === 'dm')
+		prefix = JSON.parse(fs.readFileSync(`./config/config.json`)).prefix
+	else
+		prefix = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/config.json`));
 
 	let desc = "";
 	let title = "";
@@ -45,5 +50,5 @@ async function execute(message, args) {
 module.exports = { name, synthax, description, explication, execute };
 
 function err(text, msg, err) {
-	require('../utils').logError(text, name, msg ?? null, err ? err.stack : null)
+	require('../services/log').logError(text, name, msg ?? null, err ? err.stack : null)
 }
