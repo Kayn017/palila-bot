@@ -13,5 +13,5 @@ async function execute(message, args) {
 module.exports = { name, synthax, description, explication, execute };
 
 function err(text, msg, err) {
-	require('../utils').logError(text, name, msg ?? null, err ? err.stack : null)
+	require('../services/log').logError(text, name, msg ?? null, err ? err.stack : null)
 }

@@ -11,17 +11,17 @@
  * @param {*} config 
  */
 function je_suis(message, args, config) {
-    if (!args[1] || (args[1] != 'enabled' && args[1] != 'disabled'))
-        return message.channel.send("Veuillez préciser si vous activez ou non ce module (argument attendu : `enabled` ou `disabled`)").catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));;
+	if (!args[1] || (args[1] != 'enabled' && args[1] != 'disabled'))
+		return message.channel.send("Veuillez préciser si vous activez ou non ce module (argument attendu : `enabled` ou `disabled`)").catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));;
 
-    if (args[1] == 'enabled')
-        config.je_suis = true;
-    else
-        config.je_suis = false;
+	if (args[1] == 'enabled')
+		config.je_suis = true;
+	else
+		config.je_suis = false;
 
-    log(`${config.je_suis ? 'Activation' : 'Desactivation'} du module je_suis par ${message.author.tag}`, message);
+	log(`${config.je_suis ? 'Activation' : 'Desactivation'} du module je_suis par ${message.author.tag}`, message);
 
-    message.channel.send(`Module ${config.je_suis ? 'activé' : 'désactivé'} !`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
+	message.channel.send(`Module ${config.je_suis ? 'activé' : 'désactivé'} !`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 
 }
 
@@ -29,9 +29,9 @@ function je_suis(message, args, config) {
 module.exports = { je_suis }
 
 function log(text, msg) {
-    require('../../utils').logStdout(text, "config", msg ?? null);
+	require('../../services/log').logStdout(text, "config", msg ?? null);
 }
 
 function err(text, msg, err) {
-    require('../../utils').logError(text, "config", msg ?? null, err ? err.stack : null)
+	require('../../services/log').logError(text, "config", msg ?? null, err ? err.stack : null)
 }
