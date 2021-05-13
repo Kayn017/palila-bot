@@ -55,4 +55,31 @@ async function download(url, dest, cb) {
 	});
 }
 
-module.exports = { download }
+function fetch(url) {
+
+	return new Promise((resolve, reject) => {
+
+		const httpMethod = url.startsWith('https://') ? https : http;
+
+		httpMethod.get(url, res => {
+
+			let bufs = [];
+
+			res.on('data', d => {
+				bufs.push(d);
+			})
+
+			res.on('end', () => {
+				resolve(Buffer.concat(bufs))
+			})
+
+
+		}).on('error', e => {
+			reject(e);
+		})
+
+	})
+}
+
+
+module.exports = { download, fetch }
