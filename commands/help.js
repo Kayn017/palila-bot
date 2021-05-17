@@ -16,7 +16,7 @@ async function execute(message, args) {
 	if (message.channel.type === 'dm')
 		prefix = JSON.parse(fs.readFileSync(`./config/config.json`)).prefix
 	else
-		prefix = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/config.json`));
+		prefix = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/config.json`)).prefix;
 
 	let desc = "";
 	let title = "";
