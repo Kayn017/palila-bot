@@ -8,6 +8,8 @@ const description = "créer un sondage"
 
 const explication = "Permet de créer un sondage pour une certaine durée."
 
+const author = "Kayn"
+
 // une minute par défaut
 let duration = 60000;
 const yes = '✅'
@@ -104,7 +106,7 @@ async function execute(message, args) {
 
 }
 
-module.exports = { name, synthax, description, explication, execute };
+module.exports = { name, synthax, description, explication, author, execute };
 
 function err(text, msg, err) {
 	require('../services/log').logError(text, name, msg ?? null, err ? err.stack : null)

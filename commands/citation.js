@@ -16,6 +16,8 @@ const explication = `Cette commande vous renvoie une citation prise hors context
 Si le nom d'une personne est spécifié (en 1 mot), cherche une citation de cette personne
 Si vous envoyez une citation (en image) avec le nom d'une personne (en 1 mot), l'ajoute a la base de données`
 
+const author = "Kayn"
+
 async function execute(message, args) {
 
 	if (!fs.readdirSync("./resources/citations"))
@@ -28,7 +30,7 @@ async function execute(message, args) {
 
 }
 
-module.exports = { name, synthax, description, explication, execute };
+module.exports = { name, synthax, description, explication, author, execute };
 
 
 function log(text) {

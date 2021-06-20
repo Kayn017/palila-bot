@@ -6,8 +6,10 @@ const description
 
 const explication
 
+const author
+
 async function execute(message, args) {
 
 }
 
-module.exports = { name, synthax, description, explication, execute };
+module.exports = { name, synthax, description, explication, author, execute };

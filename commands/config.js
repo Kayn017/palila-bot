@@ -17,12 +17,14 @@ const description = "change la configuration du bot pour ce serveur"
 const explication =
 	`Cette commande sert a configurer le bot sur ce serveur. Par défaut, seuls les personnes avec des permissions administrateurs peuvent utiliser cette commande.
 Options disponibles : 
-	- addPermRoles : donne la permission aux gens possédant le rôle passé en argument de configurer le bot
-	- removePermRoles : retire la permissions
-	- seePermRoles : affiche la liste des rôles ayant les permissions de modifier la configuration du bot
-	- changePrefix : change le préfixe pour activer le bot par le(s) caractère(s) passé en arguments
-	- whitelist : gère les channels sur lesquelles le bot prend en compte les commandes
+	- **addPermRoles** : donne la permission aux gens possédant le rôle passé en argument de configurer le bot
+	- **removePermRoles** : retire la permissions
+	- **seePermRoles** : affiche la liste des rôles ayant les permissions de modifier la configuration du bot
+	- **changePrefix** : change le préfixe pour activer le bot par le(s) caractère(s) passé en arguments
+	- **whitelist** : gère les channels sur lesquelles le bot prend en compte les commandes
 `
+
+const author = "Kayn";
 
 async function execute(message, args) {
 
@@ -92,7 +94,7 @@ async function execute(message, args) {
 
 }
 
-module.exports = { name, synthax, description, explication, execute };
+module.exports = { name, synthax, description, explication, author, execute };
 
 function log(text, msg) {
 	require('../services/log').logStdout(text, name, msg ?? null);

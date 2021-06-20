@@ -51,7 +51,6 @@ for (const file of commandFiles) {
 
 
 
-// client.db = require('./models');
 
 // puis on importe tout les modules
 const modulesFiles = fs.readdirSync(`${__dirname}/modules`).filter(file => file.endsWith('.js'));

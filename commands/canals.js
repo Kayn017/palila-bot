@@ -18,6 +18,8 @@ Actions disponibles :
 	- listCanal : renvoie la liste des canaux existants
 `;
 
+const author = "Kayn"
+
 async function execute(message, args) {
 
 	//on récupère le fichier de configuration de la guilde
@@ -71,7 +73,7 @@ async function execute(message, args) {
 
 }
 
-module.exports = { name, synthax, description, explication, execute };
+module.exports = { name, synthax, description, explication, author, execute };
 
 function log(text, msg) {
 	require('../services/log').logStdout(text, name, msg ?? null);
