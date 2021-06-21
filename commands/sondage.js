@@ -50,7 +50,7 @@ async function execute(message, args) {
 		.setTitle(args.join(' '))
 		.setColor(0x1e80d6)
 		.setDescription(`Fin du sondage : ${endDateString}`) //décalage horaire
-		.setFooter(`Sondage par ${message.author.username}`);
+		.setAuthor(message.author.username, message.author.displayAvatarURL());
 
 	// on l'envoie
 	const sendedMessage = await message.channel.send(embed).catch(e => err("Impossible d'envoyer un essage sur ce channel", message, e));
@@ -96,7 +96,7 @@ async function execute(message, args) {
 			.setTitle(args.join(' '))
 			.setColor(0x1e80d6)
 			.setDescription(`Résultat du sondage : \n${nbYes} personnes ont voté ${yes}\n${nbNo} personnes ont voté ${no}`)
-			.setFooter(`Sondage par ${message.author.username}`);
+			.setAuthor(message.author.username, message.author.displayAvatarURL());
 
 		chan.send(results).catch(e => err("Impossible d'envoyer un message sur ce channel", message, e));
 	})
