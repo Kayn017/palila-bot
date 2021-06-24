@@ -46,7 +46,16 @@ function init(client) {
 
 		for (const chanID in channelCache[canal]) {
 			let chan = channelCache[canal][chanID];
-			const actif = JSON.parse(fs.readFileSync(`./guilds/${chan.guild.id}/canals_config.json`))[chan.name].activated;
+			let actif;
+
+			try {
+				actif = JSON.parse(fs.readFileSync(`./guilds/${chan.guild.id}/canals_config.json`))[chan.name].activated;
+			}
+			catch (e) {
+				err(`Impossible de vérifier si le channel est actif`, message, e);
+				actif = false;
+			}
+
 
 			if (actif)
 				chanActif.push(chan);
