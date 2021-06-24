@@ -12,7 +12,7 @@ let discord_link = true;
 
 async function downloadChan(message) {
 
-	return message.channel.send("Cette fonctionnalité est pour l'instant désactivée.").catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
+	// return message.channel.send("Cette fonctionnalité est pour l'instant désactivée.").catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
 
 	message.channel.send(`Lancement de la backup du channel en cours... Merci de ne plus envoyer de messages ici avant la fin du scan du channel :eyes:`).catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
 	log(`Lancement de la backup par ${message.author.tag}`, message);
@@ -24,24 +24,30 @@ async function downloadChan(message) {
 	let twitter_url = [];
 	let last_id;
 
-	while (true) {
-		//on récupère tout les messages du channel
-		let options = { limit: 100 };
-		if (last_id)
-			options.before = last_id;
+	try {
+		while (true) {
+			//on récupère tout les messages du channel
+			let options = { limit: 100 };
+			if (last_id)
+				options.before = last_id;
 
-		let messages = await message.channel.messages.fetch(options);
+			let messages = await message.channel.messages.fetch(options);
 
-		//on les met tous dans le tableau tout
-		messages.forEach(msg => {
-			tout.push(msg);
-		});
+			//on les met tous dans le tableau tout
+			messages.forEach(msg => {
+				tout.push(msg);
+			});
 
-		last_id = messages.array()[messages.array().length - 1].id;
+			last_id = messages.array()[messages.array().length - 1].id;
 
-		if (messages.array().length != 100)
-			break;
+			if (messages.array().length != 100)
+				break;
 
+		}
+	}
+	catch (error) {
+		err("Impossible de télécharger tout les messages.", null, error)
+		return;
 	}
 
 	tout.forEach(msg => {

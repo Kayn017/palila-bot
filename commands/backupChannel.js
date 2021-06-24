@@ -12,6 +12,8 @@ Arguments :
  - no-twitter-link : ne télécharge pas les vidéos Twitter
  - no-attachement : ne télécharge pas les images et vidéos Discord`
 
+const author = "Kayn"
+
 async function execute(message, args) {
 
 	// on execute le worker dans un nouveau thread pour ne pas monopoliser le thread principal
@@ -36,7 +38,7 @@ async function execute(message, args) {
 
 }
 
-module.exports = { name, synthax, description, explication, execute };
+module.exports = { name, synthax, description, explication, author, execute };
 
 function log(text) {
 	require('../services/log').logStdout(text, name, null);
