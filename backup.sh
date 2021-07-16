@@ -8,9 +8,10 @@ then
 	exit 1
 fi
 
-BACKUP_PATH=$1
+BACKUP_PATH=$(realpath $1)
+WD=$(pwd)
 
-if [ ! -d $BACKUP_PATH ]
+if [ ! -d "$BACKUP_PATH" ]
 then
 	echo "The given folder doesn't exist"
 	exit 1
@@ -18,7 +19,7 @@ fi
 
 echo "Backup destination: $BACKUP_PATH"
 
-if [ ! -d $BACKUP_PATH/temp ]
+if [ ! -d "$BACKUP_PATH/temp" ]
 then
 	mkdir "$BACKUP_PATH/temp"
 
@@ -35,7 +36,7 @@ echo "Start backup"
 for folder in ${FOLDERS_TO_SAVE[@]}
 do
 	echo " - $folder"
-	cp -r $folder $BACKUP_PATH/temp/$folder
+	cp -r "$folder" "$BACKUP_PATH/temp/$folder"
 
 	if [ $? -ne 0 ]
 	then
@@ -50,7 +51,8 @@ NOW=$(date +"%H-%M-%d-%m-%y")
 ZIP_NAME="$BACKUP_PATH/backup_palilabot_$NOW.zip"
 echo "Backup filename : $ZIP_NAME"
 
-zip -qr $ZIP_NAME $BACKUP_PATH/temp
+cd "$BACKUP_PATH/temp"
+zip -qr "$ZIP_NAME" *
 
 if [ $? -ne 0 ]
 then
@@ -58,6 +60,7 @@ then
 	exit 1
 fi
 
-rm -r $BACKUP_PATH/temp
+cd "$WD"
+rm -r "$BACKUP_PATH/temp"
 echo "Done"
 exit 0
