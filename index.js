@@ -22,7 +22,11 @@ const fileConfig = {
 		}
 	},
 	citation_rules: {},
-	blacklist: []
+	blacklist: [],
+	lynch: {
+		channelID: "UCDLD_zxiuyh1IMasq9nbjrA",
+		channels: {}
+	}
 }
 
 CreateFilesConfig();
@@ -148,7 +152,8 @@ function CreateGuildsFolder() {
 				adminRoles: null,
 				je_suis: false,
 				Vquidab: false,
-				whitelist: false
+				whitelist: false,
+				lynch: false
 			}
 
 			try {

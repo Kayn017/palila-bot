@@ -7,6 +7,7 @@ const prefixConfig = require('./config_subcommands/prefix');
 const je_suisConfig = require('./config_subcommands/je_suis');
 const VquidabConfig = require('./config_subcommands/Vquidab');
 const whitelistConfig = require('./config_subcommands/whitelist');
+const lynch = require('./config_subcommands/lynch')
 
 const name = "config";
 
@@ -22,6 +23,7 @@ Options disponibles :
 	- **seePermRoles** : affiche la liste des rôles ayant les permissions de modifier la configuration du bot
 	- **changePrefix** : change le préfixe pour activer le bot par le(s) caractère(s) passé en arguments
 	- **whitelist** : gère les channels sur lesquelles le bot prend en compte les commandes
+	- **lynch** : configure le module lynch
 `
 
 const author = "Kayn";
@@ -29,9 +31,10 @@ const author = "Kayn";
 async function execute(message, args) {
 
 	const config = JSON.parse(fs.readFileSync(`./guilds/${message.guild.id}/config.json`));
+	const gods = JSON.parse(fs.readFileSync('./config/config.json')).discord.gods
 
 	// on vérifie les permissions
-	if (!message.member.hasPermission('ADMINISTRATOR') && message.author.id != '371285073191895072') {
+	if (!message.member.hasPermission('ADMINISTRATOR') && !gods.includes(message.author.id)) {
 
 		let hasPerm = false;
 
@@ -84,6 +87,11 @@ async function execute(message, args) {
 		case 'whitelist':
 			whitelistConfig.whitelist(message, args, config);
 			break;
+
+		case 'lynch':
+			lynch.lynch(message, config, args)
+			break;
+
 		default:
 			return message.channel.send(`Cette option m'est inconnue... \`${config.prefix}help ${name}\` pour plus d'informations.`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 
