@@ -102,7 +102,7 @@ async function askForResult(message, channels) {
 
 				updateScores(guild, todayResult);
 				sendRank(guild, todayResult);
-				cleanVotes(message.guild.id)
+				cleanVotes(guild.id)
 			}
 
 			allMessageCollectors.forEach(mc => mc.stop());
@@ -135,7 +135,7 @@ function updateScores(guild, todayResponse) {
 
 
 	// pour chaque winner, augmenter le nombre de points de 1
-	for (const person of latestVotes[number.numberToEmoji(todayResponse)]) {
+	for (const person of latestVotes[todayResponse]) {
 		if (scores[person])
 			scores[person]++;
 		else
@@ -274,18 +274,12 @@ async function sendVotesMessage(channel) {
 
 	const reactionCollector = message.createReactionCollector(responseFilter, { dispose: true })
 
-	const usersVote = {};
+	const usersVote = [];
 
-	usersVote[emojis.one] = [];
-	usersVote[emojis.two] = [];
-	usersVote[emojis.three] = [];
-	usersVote[emojis.four] = [];
-	usersVote[emojis.five] = [];
-	usersVote[emojis.six] = [];
-	usersVote[emojis.seven] = [];
-	usersVote[emojis.eight] = [];
-	usersVote[emojis.nine] = [];
-	usersVote[emojis.ten] = [];
+	for (let i = 1; i <= 10; i++) {
+		usersVote[i] = [];
+	}
+
 
 	reactionCollector.on('collect', r => {
 
@@ -293,7 +287,7 @@ async function sendVotesMessage(channel) {
 
 		r.users.cache.each(user => {
 
-			if (usersVote[r.emoji.name].includes(user.id))
+			if (usersVote[number.emojiToNumber(r.emoji.name)].includes(user.id))
 				return;
 
 			if (!checkUniqueVote(usersVote, user.id)) {
@@ -303,7 +297,7 @@ async function sendVotesMessage(channel) {
 				return
 			}
 
-			usersVote[r.emoji.name].push(user.id)
+			usersVote[number.emojiToNumber(r.emoji.name)].push(user.id)
 
 			fs.writeFileSync(`./guilds/${message.guild.id}/tempVote.json`, JSON.stringify(usersVote))
 		})
@@ -312,12 +306,12 @@ async function sendVotesMessage(channel) {
 	reactionCollector.on('remove', r => {
 		r.users.cache.delete(message.author.id)
 
-		usersVote[r.emoji.name].forEach(user => {
+		usersVote[number.emojiToNumber(r.emoji.name)].forEach(user => {
 
 			if (r.users.cache.has(user))
 				return;
 
-			usersVote[r.emoji.name].splice(usersVote[r.emoji.name].indexOf(user), 1);
+			usersVote[number.emojiToNumber(r.emoji.name)].splice(usersVote[number.emojiToNumber(r.emoji.name)].indexOf(user), 1);
 
 			fs.writeFileSync(`./guilds/${message.guild.id}/tempVote.json`, JSON.stringify(usersVote))
 		})
@@ -329,18 +323,11 @@ async function sendVotesMessage(channel) {
 
 function cleanVotes(guildID) {
 
-	const usersVote = {};
+	const usersVote = [];
 
-	usersVote[emojis.one] = [];
-	usersVote[emojis.two] = [];
-	usersVote[emojis.three] = [];
-	usersVote[emojis.four] = [];
-	usersVote[emojis.five] = [];
-	usersVote[emojis.six] = [];
-	usersVote[emojis.seven] = [];
-	usersVote[emojis.eight] = [];
-	usersVote[emojis.nine] = [];
-	usersVote[emojis.ten] = [];
+	for (let i = 1; i <= 10; i++) {
+		usersVote[i] = [];
+	}
 
 	fs.writeFileSync(`./guilds/${guildID}/tempVote.json`, JSON.stringify(usersVote))
 
