@@ -61,4 +61,55 @@ function numberToEmoji(number) {
 	return emoji;
 }
 
-module.exports = { getRandomInt, numberToEmoji }
+function emojiToNumber(emoji) {
+
+	let number = null;
+
+	if (typeof emoji !== "string")
+		throw new Error("Emoji must be a string");
+
+	switch (emoji) {
+		case emojis.zero:
+			number = 0;
+			break;
+		case emojis.one:
+			number = 1;
+			break;
+		case emojis.two:
+			number = 2;
+			break;
+		case emojis.three:
+			number = 3;
+			break;
+		case emojis.four:
+			number = 4;
+			break;
+		case emojis.five:
+			number = 5;
+			break;
+		case emojis.six:
+			number = 6;
+			break;
+		case emojis.seven:
+			number = 7;
+			break;
+		case emojis.eight:
+			number = 8;
+			break;
+		case emojis.nine:
+			number = 9;
+			break;
+		case emojis.ten:
+			number = 10;
+			break;
+		default:
+			throw new Error("Invalid number");
+	}
+
+
+	return number;
+
+
+}
+
+module.exports = { getRandomInt, numberToEmoji, emojiToNumber }
