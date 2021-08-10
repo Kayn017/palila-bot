@@ -26,14 +26,14 @@ function seb(message, args, config) {
 		console.log(conf);
 		// Verification de connection à l'API
 		fetch(`${conf.url}/api/profile/me`, { bearer: conf.token, json: true }).then(async (response) => {
-			console.log(response)
 			if (response.status === 200) {
 				return message.channel.send(`Connecté à Seb™ en tant que ${response?.data?.data?.firstname} ${response?.data?.data?.lastname} (${response?.data?.data?.username})\nPermissions: \`${response?.data?.data?.permissions?.join('`, `')}\``).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 			} else {
 				return message.channel.send(`Erreur: ${response?.data?.message}`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 			}
 		}).catch((error) => {
-			console.error(error);
+			console.log(error);
+			return message.channel.send(`Problème de connexion à Seb™`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 		});
 		return;
 	}
@@ -44,7 +44,15 @@ function seb(message, args, config) {
 	if (!args[2])
 		return message.channel.send("Veuillez définir une valeur pour `" + args[1] + "`").catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 
-	conf[args[1]] = args[2];
+	if (args[1] === 'url') {
+		if (args[2].endsWith('/')) {
+			args[2] = args[2].substring(0, args[2].length - 1);
+		}
+		conf[args[1]] = args[2];
+	} else {
+		conf[args[1]] = args[2];
+	}
+
 	log(`Seb: Modification de ${args[1]} par ${message.author.tag} (nouvelle valeur: ${args[2]})`, message);
 
 	message.channel.send(`Option ${args[1]} mise à jour !`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));

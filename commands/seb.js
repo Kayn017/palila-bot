@@ -36,37 +36,42 @@ const _fetch_products = async (message, conf) => {
 };
 
 const stocks = async (message, args, conf) => {
-    let categories = await _fetch_categories(message, conf);
-    let products = await _fetch_products(message, conf);
+    try {
+        let categories = await _fetch_categories(message, conf);
+        let products = await _fetch_products(message, conf);
 
-    const attachment = new MessageAttachment('./resources/seb.png', 'seb.png');
-    let stocksEmbed = new MessageEmbed()
-        .setColor('#0099ff')
-        .setTitle("Seb™ : Stocks")
-        .attachFiles([attachment])
-        .setThumbnail('attachment://seb.png');
 
-    for (let category of categories) {
-        let prods = products.filter(p => p.category_id === category.id);
-        category.products = prods;
+        const attachment = new MessageAttachment('./resources/seb.png', 'seb.png');
+        let stocksEmbed = new MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle("Seb™ : Stocks")
+            .attachFiles([attachment])
+            .setThumbnail('attachment://seb.png');
 
-        let string_products = "";
-        for (let product of prods) {
-            let emoji = emojis.yes;
+        for (let category of categories) {
+            let prods = products.filter(p => p.category_id === category.id);
+            category.products = prods;
 
-            if (product.count <= 0) {
-                emoji = emojis.null;
-            } else if (product.count <= 10 && product.count <= product.alert_level) {
-                emoji = numberToEmoji(product.count);
+            let string_products = "";
+            for (let product of prods) {
+                let emoji = emojis.yes;
+
+                if (product.count <= 0) {
+                    emoji = emojis.null;
+                } else if (product.count <= 10 && product.count <= product.alert_level) {
+                    emoji = numberToEmoji(product.count);
+                }
+
+                string_products += `${emoji} ${product.name}\n`;
             }
 
-            string_products += `${emoji} ${product.name}\n`;
+            stocksEmbed = stocksEmbed.addField(category.name, string_products, true);
         }
 
-        stocksEmbed = stocksEmbed.addField(category.name, string_products, true);
+        message.channel.send(stocksEmbed);
+    } catch (e) {
+        return message.channel.send(`Problème de connexion à Seb™`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
     }
-
-    message.channel.send(stocksEmbed);
 };
 
 const subcommands = {
