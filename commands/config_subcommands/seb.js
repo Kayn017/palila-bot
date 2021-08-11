@@ -54,7 +54,15 @@ function seb(message, args, config) {
 	log(`Seb: Modification de ${args[1]} par ${message.author.tag} (nouvelle valeur: ${args[2]})`, message);
 
 	message.channel.send(`Option ${args[1]} mise à jour !`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
-	message.delete();
+
+	if (message.channel.type !== 'dm') {
+		try {
+			message.delete();
+		} catch (e) {
+			err('Impossible de supprimer le message!', message, e);
+		}
+	}
+
 	fs.writeFileSync(`./config/seb.json`, JSON.stringify(conf));
 }
 
