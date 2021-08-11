@@ -23,7 +23,6 @@ function seb(message, args, config) {
 	const conf = JSON.parse(fs.readFileSync(`./config/seb.json`));
 
 	if (args[1] === "check") {
-		console.log(conf);
 		// Verification de connection à l'API
 		fetch(`${conf.url}/api/profile/me`, { bearer: conf.token, json: true }).then(async (response) => {
 			if (response.status === 200) {
@@ -32,7 +31,6 @@ function seb(message, args, config) {
 				return message.channel.send(`Erreur: ${response?.data?.message}`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 			}
 		}).catch((error) => {
-			console.log(error);
 			return message.channel.send(`Problème de connexion à Seb™`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 		});
 		return;
