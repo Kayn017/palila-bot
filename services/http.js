@@ -55,13 +55,31 @@ async function download(url, dest, cb) {
 	});
 }
 
-function fetch(url) {
+function fetch(url, params) {
+
+	const { bearer, headers, json } = params;
+
+	let options = {};
+
+	if (headers !== undefined) {
+		options.headers = headers;
+	} else if (bearer !== undefined) {
+		options.headers = {};
+	}
+
+	if (bearer !== undefined) {
+		options.headers["Authorization"] = `Bearer ${bearer}`;
+	}
+
+	if (json === true) {
+		options.headers["Accept"] = "application/json";
+	}
 
 	return new Promise((resolve, reject) => {
 
 		const httpMethod = url.startsWith('https://') ? https : http;
 
-		httpMethod.get(url, res => {
+		httpMethod.get(url, options, res => {
 
 			let bufs = [];
 
@@ -69,8 +87,23 @@ function fetch(url) {
 				bufs.push(d);
 			})
 
-			res.on('end', () => {
-				resolve(Buffer.concat(bufs))
+			res.on('end', async () => {
+				let data = Buffer.concat(bufs);
+				
+				if (json === true) {
+					try {
+						let text = await data.toString();
+						resolve({
+							status: res.statusCode,
+							headers: res.headers,
+							data: JSON.parse(text)
+						});
+					} catch (e) {
+						reject(e);
+					}
+				} else {
+					resolve(data);
+				}
 			})
 
 

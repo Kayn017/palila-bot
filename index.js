@@ -26,6 +26,10 @@ const fileConfig = {
 	lynch: {
 		channelID: "UCDLD_zxiuyh1IMasq9nbjrA",
 		channels: {}
+	},
+	seb: {
+		url: "http://127.0.0.1/",
+		token: ""
 	}
 }
 
