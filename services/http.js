@@ -63,7 +63,7 @@ function fetch(url, params) {
 
 	if (headers !== undefined) {
 		options.headers = headers;
-	} else if (bearer !== undefined) {
+	} else {
 		options.headers = {};
 	}
 
@@ -119,7 +119,6 @@ function fetch(url, params) {
 
 		if (data !== undefined) {
 			if (json === true) {
-				console.log(data)
 				r.setHeader('Content-Type', 'application/json');
 				r.write(JSON.stringify(data), 'utf8');
 			} else {
