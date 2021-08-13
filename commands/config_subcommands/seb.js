@@ -26,7 +26,7 @@ function seb(message, args, config) {
 		// Verification de connection à l'API
 		fetch(`${conf.url}/api/profile/me`, { bearer: conf.token, json: true }).then(async (response) => {
 			if (response.status === 200) {
-				return message.channel.send(`Connecté à Seb™ en tant que ${response?.data?.data?.firstname} ${response?.data?.data?.lastname} (${response?.data?.data?.username})\nPermissions: \`${response?.data?.data?.permissions?.join('`, `')}\``).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
+				return message.channel.send(`Connecté à Seb™ en tant que ${response?.data?.data?.firstname} ${response?.data?.data?.lastname} (${response?.data?.data?.username})\nPermissions: \`${response?.data?.data?.permissions?.join('`, `')}\`\nURL API GitLab: \`${conf.gitlab_api}\``).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 			} else {
 				return message.channel.send(`Erreur: ${response?.data?.message}`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 			}
@@ -36,8 +36,8 @@ function seb(message, args, config) {
 		return;
 	}
 
-	if (!args[1] || (args[1] != 'url' && args[1] != 'token'))
-		return message.channel.send("Veuillez préciser si vous voulez définir le token ou l'url, ou verifier la connectivité à Seb™ (argument attendu : `token`, `url` ou `check`)").catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
+	if (!args[1] || (args[1] != 'url' && args[1] != 'token' && args[1] != 'gitlab_api'))
+		return message.channel.send("Veuillez préciser si vous voulez définir le token, l'url de Seb ou l'url du project gitlab (API), ou verifier la connectivité à Seb™ (argument attendu : `token`, `url`, `gitlab_api` ou `check`)").catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 
 	if (!args[2])
 		return message.channel.send("Veuillez définir une valeur pour `" + args[1] + "`").catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
