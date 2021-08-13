@@ -57,7 +57,7 @@ async function download(url, dest, cb) {
 
 function fetch(url, params) {
 
-	const { bearer, headers, json } = params;
+	const { bearer, headers, json, method, data } = params;
 
 	let options = {};
 
@@ -75,11 +75,17 @@ function fetch(url, params) {
 		options.headers["Accept"] = "application/json";
 	}
 
+	if (method !== undefined) {
+		options.method = method;
+	} else {
+		options.method = 'GET';
+	}
+
 	return new Promise((resolve, reject) => {
 
 		const httpMethod = url.startsWith('https://') ? https : http;
 
-		httpMethod.get(url, options, res => {
+		let r = httpMethod.request(url, options, res => {
 
 			let bufs = [];
 
@@ -89,7 +95,7 @@ function fetch(url, params) {
 
 			res.on('end', async () => {
 				let data = Buffer.concat(bufs);
-				
+
 				if (json === true) {
 					try {
 						let text = await data.toString();
@@ -111,6 +117,17 @@ function fetch(url, params) {
 			reject(e);
 		})
 
+		if (data !== undefined) {
+			if (json === true) {
+				console.log(data)
+				r.setHeader('Content-Type', 'application/json');
+				r.write(JSON.stringify(data), 'utf8');
+			} else {
+				r.write(data);
+			}
+		}
+
+		r.end();
 	})
 }
 
