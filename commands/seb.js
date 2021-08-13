@@ -3,6 +3,7 @@ const { MessageEmbed, MessageAttachment } = require('discord.js');
 const fs = require('fs');
 const { fetch } = require('../services/http');
 const { emojiToNumber, numberToEmoji } = require('../services/number');
+const { cache, cache_age } = require('../services/cache');
 const emojis = require('../resources/emojis.json');
 
 const name = "seb";
@@ -19,21 +20,35 @@ const explication =
 const author = "Maxime Friess <M4x1me@pm.me>";
 
 const _fetch_categories = async (message, conf) => {
-    let response = await fetch(`${conf.url}/api/products_categories`, { bearer: conf.token, json: true });
-    if (response.status === 200) {
-        return response.data;
-    } else {
+    let response = await cache('seb.categories', 120, async () => {
+        let response = await fetch(`${conf.url}/api/products_categories`, { bearer: conf.token, json: true });
+        if (response.status === 200) {
+            return response;
+        } else {
+            return null;
+        }
+    });
+
+    if (response?.status !== 200) {
         return message.channel.send(`Erreur: ${response?.data?.message}`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
     }
+    return response.data;
 };
 
 const _fetch_products = async (message, conf) => {
-    let response = await fetch(`${conf.url}/api/products?order_by=name`, { bearer: conf.token, json: true });
-    if (response.status === 200) {
-        return response.data;
-    } else {
+    let response = await cache('seb.products', 120, async () => {
+        let response = await fetch(`${conf.url}/api/products?order_by=name`, { bearer: conf.token, json: true });
+        if (response.status === 200) {
+            return response;
+        } else {
+            return null;
+        }
+    });
+
+    if (response?.status !== 200) {
         return message.channel.send(`Erreur: ${response?.data?.message}`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
     }
+    return response.data;
 };
 
 const _make_member = async (firstname, lastname, discord_id, conf) => {
@@ -84,6 +99,7 @@ const stocks = async (message, args, conf) => {
             .setColor('#0099ff')
             .setTitle("Seb™ : Stocks")
             .attachFiles([attachment])
+            .setTimestamp(cache_age('seb.products'))
             .setThumbnail('attachment://seb.png');
 
         for (let category of categories) {
@@ -103,11 +119,12 @@ const stocks = async (message, args, conf) => {
                 string_products += `${emoji} ${product.name}\n`;
             }
 
-            stocksEmbed = stocksEmbed.addField(category.name, string_products, true);
+            stocksEmbed = stocksEmbed.addField(category.name, string_products, false);
         }
 
         message.channel.send(stocksEmbed);
     } catch (e) {
+        console.log(e);
         return message.channel.send(`Problème de connexion à Seb™`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
     }
 };
@@ -127,5 +144,9 @@ const execute = async (message, args) => {
         return message.channel.send("Veuillez spécifier une sous-commande valide").catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
     }
 };
+
+function err(text, msg, err) {
+    require('../services/log').logError(text, name, msg ?? null, err ? err.stack : null)
+}
 
 module.exports = { name, synthax, description, explication, author, execute };
