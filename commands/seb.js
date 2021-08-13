@@ -129,9 +129,23 @@ const stocks = async (message, args, conf) => {
     }
 };
 
+const tember = (message) => {
+
+    const attachment = new MessageAttachment('./resources/tember.jpg', 'tember.jpg');
+    let stocksEmbed = new MessageEmbed()
+        .setColor('#0099ff')
+        .setTitle("Seb™ : Tember")
+        .setURL('https://www.youtube.com/watch?v=3B4pNK5g8UQ')
+        .attachFiles([attachment])
+        .setImage('attachment://tember.jpg')
+        .setFooter('Do you remember...');
+    message.channel.send(stocksEmbed);
+}
+
 const subcommands = {
     stocks: stocks,
-    cotiser: cotiser
+    cotiser: cotiser,
+    tember: tember
 };
 
 const execute = async (message, args) => {
