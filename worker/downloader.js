@@ -3,6 +3,7 @@ const fs = require('fs');
 const { execSync } = require('child_process');
 const worker = require('worker_threads');
 const { download } = require('../services/http');
+const path = require("path")
 
 const config = require('../config/config.json');
 
@@ -231,23 +232,28 @@ async function downloadChan(message) {
 	log(`Vidéos Twitter téléchargés`, message);
 	log(`Backup terminée`, message);
 
-	await message.channel.send("Backup terminée ! Demandez à Kayn#2859 pour qu'il vous passe l'archive !").catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
+	await message.channel.send("Backup terminée ! Demandez à Kayn#2222 pour qu'il vous passe l'archive !").catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
 
 }
 
 function twitterDownload(url, dest) {
-	if (process.platform == "win32")
-		execSync(`"${__dirname}\\..\\bin\\youtube-dl.exe" --no-warnings -q -o "${dest}" ${url}`);
-	else if (process.platform == "linux")
-		execSync(`${__dirname}/../bin/youtube-dl --no-warnings -q -o "${dest}" ${url}`);
+	execSync(path.join(
+		__dirname,
+		"..",
+		"bin",
+		process.platform,
+		process.platform === "win32" ? "youtube-dl.exe" : "youtube-dl"
+	) + ` --no-warnings -q -o "${dest}" ${url}`)
 }
 
 function youtubeDownload(url, dest) {
-
-	if (process.platform == "win32")
-		execSync(`"${__dirname}\\..\\bin\\youtube-dl.exe" --no-warnings -q -o "${dest}/%(title)s.%(ext)s" ${url}`);
-	else if (process.platform == "linux")
-		execSync(`${__dirname}/../bin/youtube-dl --no-warnings -q -o "${dest}/%(title)s.%(ext)s" ${url}`);
+	execSync(path.join(
+		__dirname,
+		"..",
+		"bin",
+		process.platform,
+		process.platform === "win32" ? "youtube-dl.exe" : "youtube-dl"
+	) + ` --no-warnings -q -o "${dest}/%(title)s.%(ext)s" ${url}`)
 }
 
 if (worker.isMainThread) {

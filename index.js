@@ -131,6 +131,12 @@ client.login(config.discord.token);
 /** créé les fichiers et dossiers de configurations pour chaque serveur s'il n'existe pas
  */
 function CreateGuildsFolder() {
+
+	if (!fs.existsSync(`${__dirname}/guilds`)) {
+		fs.mkdirSync(`${__dirname}/guilds`)
+		log(`Dossier guilds créé`);
+	}
+
 	//on récupère chaque dossier existant
 	const existantFolders = fs.readdirSync(`${__dirname}/guilds`);
 
