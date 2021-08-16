@@ -20,7 +20,7 @@ const author = "Kayn"
 
 async function execute(message, args) {
 
-	if (!fs.readdirSync("./resources/citations"))
+	if (!fs.existsSync("./resources/citations"))
 		return err("Le dossier resources de citations n'existe pas", null, null);
 
 	if (message.attachments.array().length === 0)

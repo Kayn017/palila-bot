@@ -89,7 +89,7 @@ async function execute(message, args) {
 			break;
 
 		case 'lynch':
-			lynch.lynch(message, config, args)
+			lynch.lynch(message, args, config)
 			break;
 
 		default:

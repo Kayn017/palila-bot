@@ -255,21 +255,17 @@ function checkUniqueVote(usersVote, userID) {
 
 async function sendVotesMessage(channel) {
 
-	const responseFilter = reaction =>
-		reaction.emoji.name === emojis.one ||
-		reaction.emoji.name === emojis.two ||
-		reaction.emoji.name === emojis.three ||
-		reaction.emoji.name === emojis.four ||
-		reaction.emoji.name === emojis.five ||
-		reaction.emoji.name === emojis.six ||
-		reaction.emoji.name === emojis.seven ||
-		reaction.emoji.name === emojis.eight ||
-		reaction.emoji.name === emojis.nine ||
-		reaction.emoji.name === emojis.ten
+	const responseFilter = reaction => {
+		let out = false;
+		for (let i = 1; i <= 10; i++) {
+			out |= reaction.emoji.name === emojis[i]
+		}
+		return out;
+	};
 
 	const message = await channel.send(`Quel sera le numéro suivant ? A vous de voter !`).catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
 
-	await reactWithNumbers(message)
+	reactWithNumbers(message)
 
 
 	const reactionCollector = message.createReactionCollector(responseFilter, { dispose: true })

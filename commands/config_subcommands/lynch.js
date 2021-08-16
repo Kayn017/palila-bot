@@ -5,7 +5,7 @@
 
 const fs = require('fs')
 
-function lynch(message, config, args) {
+function lynch(message, args, config) {
 
 	if (!args[1] || (args[1] !== 'enabled' && args[1] !== 'disabled' && args[1] !== 'setChannel'))
 		return message.channel.send("Veuillez préciser une action pour ce module (argument attendu : `enabled`, `disabled` ou `setChannel`)").catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
