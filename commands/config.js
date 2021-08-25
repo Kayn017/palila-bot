@@ -92,9 +92,9 @@ async function execute(message, args) {
 
 		case 'lynch':
 			lynch.lynch(message, args, config)
-			break;
-
-		case 'seb':
+      break;
+      
+    case 'seb':
 			seb.seb(message, args, config)
 			break;
 
