@@ -7,7 +7,8 @@ const prefixConfig = require('./config_subcommands/prefix');
 const je_suisConfig = require('./config_subcommands/je_suis');
 const VquidabConfig = require('./config_subcommands/Vquidab');
 const whitelistConfig = require('./config_subcommands/whitelist');
-const lynch = require('./config_subcommands/lynch')
+const lynch = require('./config_subcommands/lynch');
+const seb = require('./config_subcommands/seb');
 
 const name = "config";
 
@@ -24,6 +25,7 @@ Options disponibles :
 	- **changePrefix** : change le préfixe pour activer le bot par le(s) caractère(s) passé en arguments
 	- **whitelist** : gère les channels sur lesquelles le bot prend en compte les commandes
 	- **lynch** : configure le module lynch
+	- **seb** : configure la commande Seb™
 `
 
 const author = "Kayn";
@@ -90,6 +92,10 @@ async function execute(message, args) {
 
 		case 'lynch':
 			lynch.lynch(message, args, config)
+      break;
+      
+    case 'seb':
+			seb.seb(message, args, config)
 			break;
 
 		default:
