@@ -196,32 +196,57 @@ const _random_fact = async (message, conf) => {
     let facts = await cache('seb.facts', 60, async () => {
         let facts = [];
 
-        let stats = await _fetch_stats(message, conf);
-        let gitlab = await _fetch_gitlab(message, conf);
-
+        let stats = undefined;
         try {
-            facts.push(`${stats.sold_coffee_liters}L de cafés ont été vendus depuis la création de Seb™.`);
-            facts.push(`Le produit le plus vendu est: ${stats.most_sold_product}.`);
-            facts.push(`Un grand fou a dépensé ${new Number(stats.biggest_sale).toFixed(2)}€ d'un coup à l'Amicale.`);
-            facts.push("K achète ses gateaux à l'amicale...");
-            facts.push(`Seb™ a été créé il y a ${_date_diff(Date.parse(gitlab.created_at))}.`);
-            facts.push(`${stats.sold_water_bottles} pigeons ont acheté des bouteilles d'Eau... Alors qu'on a des robinets.`);
-            let days_since_restock = Math.floor((Date.now() - Date.parse(stats.latest_restock)) / (24 * 60 * 60 * 1000));
-            if (days_since_restock === 0) {
-                facts.push("Les courses ont été faites aujourd'hui.");
-            } else if (days_since_restock === 1) {
-                facts.push("Les courses ont été faites hier.");
-            } else {
-                facts.push(`Les courses ont été faites il y a ${days_since_restock} jours.`);
-            }
-            facts.push(`${stats.sold_bounties} bounties ont ont été vendus depuis la création de Seb™ (Merci EW. ^^).`);
-            facts.push(`${stats.most_sales} a vendu le plus de produits.`);
-            facts.push(`${stats.members} personnes ont généreusement contribué à la survie de l'amicale cette année 💜`);
-            facts.push(`L'amicale est ${Math.floor((1 - stats.price_coca / 0.8) * 100)}% moins chère que les distributeurs.`);
-            facts.push(`${gitlab.star_count} personnes ont laché une étoile sur le repo de Seb™: <${gitlab.web_url}> 👀`);
+            stats = await _fetch_stats(message, conf);
         } catch (e) {
-            err("Erreur lors du traitement de la commande ,seb fact (_random_fact)", message, e);
-            return message.channel.send(`Problème de connexion à Seb™`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
+            stats = undefined;
+            err("Erreur lors du traitement de la commande ,seb fact (stats)", message, e);
+        }
+
+        let gitlab = undefined;
+        try {
+            gitlab = await _fetch_gitlab(message, conf);
+        } catch (e) {
+            gitlab = undefined;
+            err("Erreur lors du traitement de la commande ,seb fact (gitlab)", message, e);
+        }
+
+        facts.push("K achète ses gateaux à l'amicale...");
+        if (stats !== undefined) {
+            // Add the stats stuff
+            try {
+                facts.push(`${stats.sold_coffee_liters}L de cafés ont été vendus depuis la création de Seb™.`);
+                facts.push(`Le produit le plus vendu est: ${stats.most_sold_product}.`);
+                facts.push(`Un grand fou a dépensé ${new Number(stats.biggest_sale).toFixed(2)}€ d'un coup à l'Amicale.`);
+                facts.push(`${stats.sold_water_bottles} pigeons ont acheté des bouteilles d'Eau... Alors qu'on a des robinets.`);
+                let days_since_restock = Math.floor((Date.now() - Date.parse(stats.latest_restock)) / (24 * 60 * 60 * 1000));
+                if (days_since_restock === 0) {
+                    facts.push("Les courses ont été faites aujourd'hui.");
+                } else if (days_since_restock === 1) {
+                    facts.push("Les courses ont été faites hier.");
+                } else {
+                    facts.push(`Les courses ont été faites il y a ${days_since_restock} jours.`);
+                }
+                facts.push(`${stats.sold_bounties} bounties ont ont été vendus depuis la création de Seb™ (Merci EW. ^^).`);
+                facts.push(`${stats.most_sales} a vendu le plus de produits.`);
+                facts.push(`${stats.members} personnes ont généreusement contribué à la survie de l'amicale cette année 💜`);
+                facts.push(`L'amicale est ${Math.floor((1 - stats.price_coca / 0.8) * 100)}% moins chère que les distributeurs.`);
+            } catch (e) {
+                err("Erreur lors du traitement de la commande ,seb fact (push_stats)", message, e);
+                return message.channel.send(`Problème de connexion à Seb™`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
+            }
+        }
+
+        if (gitlab !== undefined) {
+            // Add the gitlab stuff
+            try {
+                facts.push(`Seb™ a été créé il y a ${_date_diff(Date.parse(gitlab.created_at))}.`);
+                facts.push(`${gitlab.star_count} personnes ont laché une étoile sur le repo de Seb™: <${gitlab.web_url}> 👀`);
+            } catch (e) {
+                err("Erreur lors du traitement de la commande ,seb fact (push_gitlab)", message, e);
+                return message.channel.send(`Problème de connexion à Seb™`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
+            }
         }
         return facts;
     });
