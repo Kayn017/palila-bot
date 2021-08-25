@@ -136,8 +136,8 @@ const stocks = async (message, args, conf) => {
             .setTimestamp(cache_age('seb.products'))
             .setThumbnail('attachment://seb.png');
 
-        for (let category of categories) {
-            let prods = products.filter(p => p.category_id === category.id);
+        for (let category of categories.data) {
+            let prods = products.data.filter(p => p.category_id === category.id);
             category.products = prods;
 
             let string_products = "";
@@ -153,11 +153,13 @@ const stocks = async (message, args, conf) => {
                 string_products += `${emoji} ${product.name}\n`;
             }
 
-            stocksEmbed = stocksEmbed.addField(category.name, string_products, false);
+            if (string_products !== "")
+                stocksEmbed = stocksEmbed.addField(category.name, string_products, false);
         }
 
         message.channel.send(stocksEmbed);
     } catch (e) {
+        err("Erreur lors du traitement de la commande ,seb stocks", null, e);
         return message.channel.send(`Problème de connexion à Seb™`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
     }
 };
