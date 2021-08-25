@@ -159,7 +159,7 @@ const stocks = async (message, args, conf) => {
 
         message.channel.send(stocksEmbed);
     } catch (e) {
-        err("Erreur lors du traitement de la commande ,seb stocks", null, e);
+        err("Erreur lors du traitement de la commande ,seb stocks", message, e);
         return message.channel.send(`Problème de connexion à Seb™`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
     }
 };
@@ -220,6 +220,7 @@ const _random_fact = async (message, conf) => {
             facts.push(`L'amicale est ${Math.floor((1 - stats.price_coca / 0.8) * 100)}% moins chère que les distributeurs.`);
             facts.push(`${gitlab.star_count} personnes ont laché une étoile sur le repo de Seb™: <${gitlab.web_url}> 👀`);
         } catch (e) {
+            err("Erreur lors du traitement de la commande ,seb fact (_random_fact)", message, e);
             return message.channel.send(`Problème de connexion à Seb™`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
         }
         return facts;
@@ -234,6 +235,7 @@ const fact = async (message, args, conf) => {
     try {
         message.channel.send(await _random_fact(message, conf));
     } catch (e) {
+        err("Erreur lors du traitement de la commande ,seb fact", message, e);
         return message.channel.send(`Problème de connexion à Seb™`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
     }
 }
