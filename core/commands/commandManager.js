@@ -1,6 +1,7 @@
 const fs = require("fs");
 const Discord = require('discord.js');
 const path = require("path");
+const { log } = require("../../services/log");
 
 function fetchCommands(commandsFolder) {
 
@@ -22,7 +23,6 @@ function fetchCommands(commandsFolder) {
 
 	return commands;
 }
-
 function findSubcommands(commandName, rootFolder) {
 
 	if (!fs.existsSync(rootFolder))
@@ -50,33 +50,86 @@ function findSubcommands(commandName, rootFolder) {
 	}
 }
 
-function initCommands(client) {
+async function initCommands(client) {
 
 	const config = require("../../config/config.json");
 
-	client.commands.forEach(cmd => {
+	await client.application.commands.fetch();
+
+	client.commands.forEach(async cmd => {
 
 		cmd.init(client);
 
-		const command = client.application.commands.cache.find(c => c.name === cmd.name)
+		let command;
 
-		if (command) {
-			client.application.commands.edit(command, {
-				name: cmd.name,
-				description: cmd.description
-			}, process.argv.includes("--VERBOSE") ? config.discord.devGuild : null);
+		if (process.argv.includes("--VERBOSE")) {
+			// weird thing that gets all the commands that are not available locally
+			command = (await (await client.guilds.fetch(config.discord.devGuild)).commands.fetch()).find(c => c.name === cmd.name);
 		}
 		else {
-			client.application.commands.create({
-				name: cmd.name,
-				description: cmd.description
-			}, process.argv.includes("--VERBOSE") ? config.discord.devGuild : null);
+			command = (await client.application.commands.fetch()).find(c => c.name === cmd.name);
+		}
+
+		const data = {
+			name: cmd.name,
+			description: cmd.description,
+			options: initOptions(cmd)
+		};
+
+		if (command) {
+			client.application.commands.edit(command, data, process.argv.includes("--VERBOSE") ? config.discord.devGuild : null);
+		}
+		else {
+			client.application.commands.create(data, process.argv.includes("--VERBOSE") ? config.discord.devGuild : null);
 		}
 	});
+
+
+	let oldCommands;
+
+	if (process.argv.includes("--VERBOSE")) {
+		// weird thing that gets all the commands that are not available locally
+		oldCommands = (await (await client.guilds.fetch(config.discord.devGuild)).commands.fetch()).filter(c => !client.commands.has(c.name));
+	}
+	else {
+		oldCommands = (await client.application.commands.fetch()).filter(c => !client.commands.has(c.name))
+	}
+
+	oldCommands.forEach(c => {
+		c.delete();
+		log(`Suppression de la commande ${c.name}. Celle-ci n'est plus en local.`, "commandManager")
+	});
+
 }
+
+function initOptions(command) {
+
+	const options = [];
+
+	if (command.subcommands) {
+		for (const [name, subcmd] of command.subcommands.entries()) {
+
+			const option = {};
+
+			option.name = name;
+			option.description = subcmd.description;
+			option.type = subcmd.subcommands ? "SUB_COMMAND_GROUP" : "SUB_COMMAND";
+			option.options = initOptions(subcmd)
+
+			options.push(option);
+		}
+	}
+
+	options.push(...command.options);
+
+	return options;
+}
+
+
 
 module.exports = {
 	fetchCommands,
 	findSubcommands,
-	initCommands
+	initCommands,
+	initOptions
 }

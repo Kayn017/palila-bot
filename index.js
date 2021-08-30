@@ -11,6 +11,7 @@ const { getAllIntents } = require("./core/permissions/intentsManager");
 const { getAllPermissions } = require("./core/permissions/permissionsManager");
 
 const { log } = require("./services/log");
+const { executeCommand } = require("./core/commands/commandExecutor");
 
 // creation of all the structure of the bot
 if (!fs.existsSync('./log'))
@@ -41,13 +42,23 @@ client.modules = modules;
 client.permissions = permissions;
 
 
-client.on('ready', () => {
+
+client.once('ready', async () => {
 	log(`Connecté à Discord en tant que ${client.user.tag}`, "index");
 
-	initCommands(client)
+	await initCommands(client);
 
 	client.modules.forEach(m => m.init(client));
 
+	log(`Le bot est prêt à fonctionner !`, "index");
+});
+
+// command handling
+client.on('interactionCreate', interaction => {
+
+	if (!interaction.isCommand()) return;
+
+	executeCommand(client.commands, interaction.commandName, interaction.options.data, interaction)
 })
 
 client.login(config.discord.token);

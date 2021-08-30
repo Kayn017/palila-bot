@@ -1,4 +1,5 @@
 node_modules
 guilds/*
 config/*
+cache/*
 package-lock.json

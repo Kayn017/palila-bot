@@ -4,21 +4,19 @@ const Permissions = Discord.Permissions;
 
 const name = "ping";
 const description = "Le bot est-il toujours vivant ?";
+const options = [];
 
-const intents = [
-	Intents.FLAGS.GUILD_MESSAGES,
-	Intents.FLAGS.DIRECT_MESSAGES
-];
+const intents = [];
 const permissions = [
 	Permissions.FLAGS.SEND_MESSAGES
 ];
 
-async function execute(interaction, args) {
-	interaction.reply("Pong");
+async function execute(interaction, options) {
+	interaction.reply({ content: "Pong 🏓", ephemeral: true });
 }
 
 function init(client) { }
 
 function shutdown(client) { }
 
-module.exports = { name, description, intents, permissions, execute, init, shutdown }
+module.exports = { name, description, options, intents, permissions, execute, init, shutdown }

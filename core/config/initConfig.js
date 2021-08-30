@@ -27,7 +27,7 @@ function initConfig() {
 		console.log(`Aucun guild de développement spécifié. Entrez un ID de guild : `);
 		const answer = waitForUser();
 
-		config.discord.devGuild = [answer];
+		config.discord.devGuild = answer;
 		debug(`devGuild added`, "initConfig");
 	}
 
