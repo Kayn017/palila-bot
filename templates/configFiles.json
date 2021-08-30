@@ -1,0 +1,17 @@
+{
+	"config": {
+		"discord": {
+			"token": null,
+			"gods": [],
+			"devGuild": null
+		},
+		"adminUserID": null
+	},
+	"presence": {
+		"status": "online",
+		"activity": {
+			"name": "September",
+			"type": "LISTENING"
+		}
+	}
+}

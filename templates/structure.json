@@ -1,0 +1,14 @@
+{
+	"bin": {
+		"win32": null,
+		"linux": null
+	},
+	"commands": null,
+	"config": null,
+	"log": null,
+	"modules": null,
+	"resources": null,
+	"services": null,
+	"worker": null,
+	"scripts": null
+}

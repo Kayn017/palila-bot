@@ -1,0 +1,20 @@
+[24/8/2021][20:55:0][configFiles.js] Création du dossier ./config
+[24/8/2021][20:55:0][configFiles.js] Creation du fichier ./config/config.json
+[24/8/2021][20:55:0][configFiles.js] Creation du fichier ./config/presence.json
+[24/8/2021][20:55:0][structure.js] Création du dossier ./bin
+[24/8/2021][20:55:0][structure.js] Création du dossier ./bin/win32
+[24/8/2021][20:55:0][structure.js] Création du dossier ./bin/linux
+[24/8/2021][20:55:0][structure.js] Création du dossier ./modules
+[24/8/2021][20:55:0][structure.js] Création du dossier ./commands
+[24/8/2021][20:55:0][structure.js] Création du dossier ./resources
+[24/8/2021][20:55:0][structure.js] Création du dossier ./services
+[24/8/2021][20:55:0][structure.js] Création du dossier ./worker
+[24/8/2021][20:55:0][structure.js] Création du dossier ./scripts
+[24/8/2021][20:55:58][initConfig.js] ID updated
+[30/8/2021][14:6:48][initConfig.js] Token updated
+[30/8/2021][14:7:14][initConfig.js] devGuild added
+[30/8/2021][14:6:55][initConfig.js] God added
+[30/8/2021][14:10:20][configFiles.js] Creation du fichier ./config/config.json
+[30/8/2021][14:12:48][initConfig.js] God added
+[30/8/2021][14:12:36][initConfig.js] Token updated
+[30/8/2021][14:13:1][initConfig.js] devGuild added

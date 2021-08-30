@@ -1,72 +1,99 @@
 const fs = require('fs');
 const os = require('os');
+const process = require('process')
 
-/** Affiche une erreur dans les logs correctement
- * 
- * @param {*} erreur : message d'erreur
- * @param {*} fileName : nom du module ou de la commande qui a raté
- * @param {*} message : message discord qui a provoqué l'erreur
- * @param {*} stack : stacktrace de l'erreur
- */
-function logError(erreur, fileName, message = null, stack = null) {
+function log(text, filename, message = null) {
 
-	let maintenant = new Date();
+	const now = new Date();
 
-	let affichage = `[${maintenant.getDate()}/${maintenant.getMonth() + 1}/${maintenant.getFullYear()}][${maintenant.getHours()}:${maintenant.getMinutes()}:${maintenant.getSeconds()}][${fileName}.js]`;
+	let display = `[${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}][${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}][${filename}.js]`;
 
 	if (message) {
 		if (message.guild)
-			affichage += `[${message.guild.name}]`;
+			display += `[${message.guild.name}]`;
 		if (message.channel)
-			affichage += `[${message.channel.name}]`;
+			display += `[${message.channel.name}]`;
 	}
 
-	affichage += ` Erreur : ${erreur}`;
+	display += ` ${text}`;
 
-	console.error(affichage);
+	console.log(display);
+
+	const stream = fs.createWriteStream("./log/log.txt", { 'flags': 'a' });
+	stream.once('open', fd => {
+		stream.write(display + os.EOL);
+
+		stream.close();
+	})
+}
+
+function err(error, filename, message = null, stack = null) {
+
+	const now = new Date();
+
+	let display = `[${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}][${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}][${filename}.js]`;
+
+	if (message) {
+		if (message.guild)
+			display += `[${message.guild.name}]`;
+		if (message.channel)
+			display += `[${message.channel.name}]`;
+	}
+
+	display += `ERREUR : ${error}`;
+
+	console.error(display);
 
 	if (stack)
 		console.error(stack);
 
 	const stream = fs.createWriteStream("./log/error.txt", { 'flags': 'a' });
 	stream.once('open', fd => {
-		stream.write(affichage + os.EOL);
+		stream.write(display + os.EOL);
 
 		if (stack)
 			stream.write(stack + os.EOL);
 
 		stream.close();
 	})
-
 }
 
-/** affiche un message dans les logs correctement
- * 
- * @param {*} text : texte a afficher
- * @param {*} fileName : nom du module ou de la commande qui a lancé le log
- */
-function logStdout(text, fileName, message = null) {
-	let maintenant = new Date();
+function debug(text, filename, message = null, stack = null) {
 
-	let affichage = `[${maintenant.getDate()}/${maintenant.getMonth() + 1}/${maintenant.getFullYear()}][${maintenant.getHours()}:${maintenant.getMinutes()}:${maintenant.getSeconds()}][${fileName}.js]`;
+	if (!process.argv.includes("--VERBOSE"))
+		return;
+
+	const now = new Date();
+
+	let display = `[${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}][${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}][${filename}.js]`;
 
 	if (message) {
 		if (message.guild)
-			affichage += `[${message.guild.name}]`;
+			display += `[${message.guild.name}]`;
 		if (message.channel)
-			affichage += `[${message.channel.name}]`;
+			display += `[${message.channel.name}]`;
 	}
 
-	affichage += ` ${text}`;
+	display += ` ${text}`;
 
-	console.log(affichage);
+	console.log(display);
 
-	const stream = fs.createWriteStream("./log/log.txt", { 'flags': 'a' });
+	if (stack)
+		console.error(stack);
+
+	const stream = fs.createWriteStream("./log/debug.txt", { 'flags': 'a' });
 	stream.once('open', fd => {
-		stream.write(affichage + os.EOL);
+		stream.write(display + os.EOL);
+
+		if (stack)
+			stream.write(stack + os.EOL);
 
 		stream.close();
 	})
 }
 
-module.exports = { logError, logStdout }
+module.exports = {
+	log,
+	err,
+	debug
+}

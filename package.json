@@ -1,16 +1,16 @@
 {
 	"name": "palila-bot",
-	"version": "1.0.4",
+	"version": "2.0.0",
 	"description": "Le palila bot est un bot super cool",
 	"main": "index.js",
 	"scripts": {
 		"start": "node index.js",
-		"debug": "nodemon index.js"
+		"debug": "nodemon index.js --VERBOSE"
 	},
 	"author": "Tanguy Gimenez",
 	"license": "ISC",
 	"dependencies": {
-		"discord.js": "^12.5.1",
+		"discord.js": "^13.1.0",
 		"rss-parser": "^3.12.0"
 	},
 	"devDependencies": {
