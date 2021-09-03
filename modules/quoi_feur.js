@@ -1,8 +1,18 @@
+const { INSPECT_MAX_BYTES } = require('buffer');
 const fs = require('fs');
 
 const name = "quoi_feur";
 
 const description = "Fait la deuxième meilleure vanne du monde";
+
+const quoi_word = [
+	"feur",
+	"drillatère",
+	"tuor",
+	"ffure",
+	"driceps",
+	"la Lumpur",
+]
 
 function init(client) {
 	client.on('message', async message => {
@@ -16,26 +26,17 @@ function init(client) {
 		// si le module n'est pas activé ou si l'author du message est un bot => osef
 		if (message.author.bot || !config.quoi_feur) return;
 
+		// quoi en fin de phrase suivi par aucuns ou plusieurs caractères spéciaux dans n'importe quel ordre
+		const regex = new RegExp('quoi[ .!?"\':;^+=()*-]*$', 'gim');
 
-		// Si il n'y a pas de quoi on s'en fou
-		if(!message.content.toLowerCase().includes("quoi")) {
-			return;
+		if(regex.test(message.content)){
+			quoiFeurise(message);
 		}
-
-		splitedMessage = message.content.toLowerCase().split(" ");
-		console.log(splitedMessage);
-
-		// si la fin du message n'est pas quoi
-		if(splitedMessage[splitedMessage.length-1] !== "quoi") {
-
-			//Si l'utilisateur à écrit des lettres la blague marche pas
-			if(splitedMessage[splitedMessage.length-1].toLowerCase() !== splitedMessage[splitedMessage.length-1].toUpperCase() ) {
-				return
-			}
-		}
-
-		message.inlineReply('feur');
 	});
+}
+
+function quoiFeurise(message) {
+	message.inlineReply(quoi_word[Math.floor(Math.random()*quoi_word.length)]);
 }
 
 module.exports = { name, description, init };
