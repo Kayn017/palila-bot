@@ -1,4 +1,6 @@
 const Discord = require('discord.js');
+require("./worker/ExtendedMessage");
+
 const fs = require('fs');
 const path = require('path');
 
@@ -161,6 +163,7 @@ function CreateGuildsFolder() {
 				prefix: config.prefix,
 				adminRoles: null,
 				je_suis: false,
+				quoi_feur: false,
 				Vquidab: false,
 				whitelist: false,
 				lynch: false
