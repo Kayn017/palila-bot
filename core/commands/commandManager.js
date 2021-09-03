@@ -101,7 +101,6 @@ async function initCommands(client) {
 	});
 
 }
-
 function initOptions(command) {
 
 	const options = [];
@@ -114,13 +113,13 @@ function initOptions(command) {
 			option.name = name;
 			option.description = subcmd.description;
 			option.type = subcmd.subcommands ? "SUB_COMMAND_GROUP" : "SUB_COMMAND";
-			option.options = initOptions(subcmd)
+			option.options = initOptions(subcmd);
 
 			options.push(option);
 		}
 	}
-
-	options.push(...command.options);
+	else
+		options.push(...command.options);
 
 	return options;
 }

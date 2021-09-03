@@ -9,9 +9,10 @@ const { fetchCommands, initCommands } = require('./core/commands/commandManager'
 const { fetchModules } = require("./core/modules/moduleManager");
 const { getAllIntents } = require("./core/permissions/intentsManager");
 const { getAllPermissions } = require("./core/permissions/permissionsManager");
+const { executeCommand } = require("./core/commands/commandExecutor");
+const { createGuildsFiles } = require("./core/guilds/guildsFiles");
 
 const { log } = require("./services/log");
-const { executeCommand } = require("./core/commands/commandExecutor");
 
 // creation of all the structure of the bot
 if (!fs.existsSync('./log'))
@@ -25,7 +26,7 @@ initConfig();
 
 const config = JSON.parse(fs.readFileSync(`./config/config.json`));
 
-// init commands and modules
+// get commands and modules
 const commands = fetchCommands(path.join(__dirname, "commands"));
 const modules = fetchModules(path.join(__dirname, "modules"));
 
@@ -45,6 +46,8 @@ client.permissions = permissions;
 
 client.once('ready', async () => {
 	log(`Connecté à Discord en tant que ${client.user.tag}`, "index");
+
+	createGuildsFiles(await client.guilds.fetch());
 
 	await initCommands(client);
 

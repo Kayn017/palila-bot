@@ -3,7 +3,8 @@ const { err } = require("../../services/log");
 
 function executeCommand(commandCollection, commandName, options, interaction) {
 
-	options = [...options];
+	if (options)
+		options = [...options];
 
 	if (!commandCollection.has(commandName))
 		return err(`Tentative d'execution d'une commande qui n'existe pas : ${commandName}`, "commandExecutor");
@@ -11,7 +12,7 @@ function executeCommand(commandCollection, commandName, options, interaction) {
 	const cmd = commandCollection.get(commandName);
 
 	if (!cmd.subcommands)
-		cmd.execute(interaction, options);
+		cmd.execute(interaction, options).catch(e => err(e, "commandExecutor", undefined, e.stack));
 	else {
 		const subCommandName = options[0].name;
 		options = options[0].options;

@@ -5,28 +5,27 @@ const Permissions = Discord.Permissions;
 
 
 /********** INFORMATIONS **********/
-const name = "ping";
-const description = "Le bot est-il toujours vivant ?";
-const explication = "";
+const name = "config";
+const description = "La commande de configuration du bot";
+const explication = "Cette commande permet de configurer différents aspects du bot";
 const author = "Kayn";
 const options = [];
 
 
 /********** PERMISSIONS **********/
-const intents = [];
-const permissions = [
-	Permissions.FLAGS.SEND_MESSAGES
+const intents = [
+	Intents.FLAGS.GUILDS
 ];
+const permissions = [];
 
 
 /********** ACTIONS **********/
-async function execute(interaction, options) {
-	interaction.reply({ content: "Pong 🏓", ephemeral: true });
-}
+async function execute(interaction, options) { }
 
 function init(client) { }
 
 function shutdown(client) { }
+
 
 /********** EXPORTS **********/
 module.exports = { name, description, explication, author, options, intents, permissions, execute, init, shutdown }
