@@ -8,8 +8,9 @@
  * 
  * @param {*} message 
  * @param {*} config 
+ * @param {*} args 
  */
-function changePrefix(message, config, args) {
+function changePrefix(message, args, config) {
 	if (!args[1])
 		return message.channel.send("Veuillez préciser un préfixe pour le serveur").catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 
