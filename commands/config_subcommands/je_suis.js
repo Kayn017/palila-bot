@@ -11,13 +11,10 @@
  * @param {*} config 
  */
 function je_suis(message, args, config) {
-	if (!args[1] || (args[1] != 'enabled' && args[1] != 'disabled'))
+	if (!args[1] || (args[1] !== 'enabled' && args[1] !== 'disabled'))
 		return message.channel.send("Veuillez préciser si vous activez ou non ce module (argument attendu : `enabled` ou `disabled`)").catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));;
 
-	if (args[1] == 'enabled')
-		config.je_suis = true;
-	else
-		config.je_suis = false;
+	config.je_suis = args[1] === 'enabled';
 
 	log(`${config.je_suis ? 'Activation' : 'Desactivation'} du module je_suis par ${message.author.tag}`, message);
 

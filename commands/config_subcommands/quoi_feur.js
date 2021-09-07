@@ -11,13 +11,10 @@
  * @param {*} config 
  */
 function quoi_feur(message, args, config) {
-	if (!args[1] || (args[1] != 'enabled' && args[1] != 'disabled'))
+	if (!args[1] || (args[1] !== 'enabled' && args[1] !== 'disabled'))
 		return message.channel.send("Veuillez préciser si vous activez ou non ce module (argument attendu : `enabled` ou `disabled`)").catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));;
 
-	if (args[1] == 'enabled')
-		config.quoi_feur = true;
-	else
-		config.quoi_feur = false;
+		config.quoi_feur = args[1] === 'enabled'
 
 	log(`${config.quoi_feur ? 'Activation' : 'Desactivation'} du module quoi_feur par ${message.author.tag}`, message);
 
