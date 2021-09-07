@@ -1,18 +1,11 @@
-const { INSPECT_MAX_BYTES } = require('buffer');
+const { getRandomInt } = require('../services/number');
 const fs = require('fs');
+const quoi_word = require('../resources/quoi_words.json');
 
 const name = "quoi_feur";
 
 const description = "Fait la deuxième meilleure vanne du monde";
 
-const quoi_word = [
-	"feur",
-	"drillatère",
-	"tuor",
-	"ffure",
-	"driceps",
-	"la Lumpur",
-]
 
 function init(client) {
 	client.on('message', async message => {
@@ -27,7 +20,7 @@ function init(client) {
 		if (message.author.bot || !config.quoi_feur) return;
 
 		// quoi en fin de phrase suivi par aucuns ou plusieurs caractères spéciaux dans n'importe quel ordre
-		const regex = new RegExp('quoi[ .!?"\':;^+=()*-]*$', 'gim');
+		const regex = new RegExp('quoi[ .!?"\':;^+=()*-,]*$', 'gim');
 
 		if(regex.test(message.content)){
 			quoiFeurise(message);
@@ -36,7 +29,7 @@ function init(client) {
 }
 
 function quoiFeurise(message) {
-	message.inlineReply(quoi_word[Math.floor(Math.random()*quoi_word.length)]);
+	message.inlineReply(quoi_word[getRandomInt(quoi_word.length)]);
 }
 
 module.exports = { name, description, init };
