@@ -3,6 +3,7 @@
 		"win32": null,
 		"linux": null
 	},
+	"cache": null,
 	"commands": null,
 	"config": null,
 	"guilds": null,

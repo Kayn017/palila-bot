@@ -118,8 +118,8 @@ function initOptions(command) {
 			options.push(option);
 		}
 	}
-	else
-		options.push(...command.options);
+
+	options.push(...command.options);
 
 	return options;
 }
