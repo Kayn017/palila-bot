@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-require("./worker/ExtendedMessage");
+require("./services/ExtendedMessage");
 
 const fs = require('fs');
 const path = require('path');
