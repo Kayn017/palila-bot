@@ -10,7 +10,7 @@
 	"author": "Tanguy Gimenez",
 	"license": "ISC",
 	"dependencies": {
-		"discord.js": "^12.5.1",
+		"discord.js": "12.5.1",
 		"rss-parser": "^3.12.0"
 	},
 	"devDependencies": {
