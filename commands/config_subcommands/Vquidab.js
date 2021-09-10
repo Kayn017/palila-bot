@@ -13,13 +13,10 @@
  */
 function Vquidab(message, args, config) {
 
-	if (!args[1] || (args[1] != 'enabled' && args[1] != 'disabled'))
+	if (!args[1] || (args[1] !== 'enabled' && args[1] !== 'disabled'))
 		return message.channel.send("Veuillez préciser si vous activez ou non ce module (argument attendu : `enabled` ou `disabled`)").catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 
-	if (args[1] == 'enabled')
-		config.Vquidab = true;
-	else
-		config.Vquidab = false;
+	config.Vquidab = args[1] === 'enabled'
 
 	log(`${config.Vquidab ? 'Activation' : 'Desactivation'} du module Vquidab par ${message.author.tag}`, message);
 
