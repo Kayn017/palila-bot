@@ -5,6 +5,7 @@ const fs = require('fs');
 const perms = require('./config_subcommands/perms');
 const prefixConfig = require('./config_subcommands/prefix');
 const je_suisConfig = require('./config_subcommands/je_suis');
+const quoi_feurConfig = require('./config_subcommands/quoi_feur');
 const VquidabConfig = require('./config_subcommands/Vquidab');
 const whitelistConfig = require('./config_subcommands/whitelist');
 const lynch = require('./config_subcommands/lynch');
@@ -75,11 +76,15 @@ async function execute(message, args) {
 			break;
 
 		case 'changePrefix':
-			prefixConfig.changePrefix(message, config, args);
+			prefixConfig.changePrefix(message, args, config);
 			break;
 
 		case 'je_suis':
 			je_suisConfig.je_suis(message, args, config);
+			break;
+
+		case 'quoi_feur':
+			quoi_feurConfig.quoi_feur(message, args, config);
 			break;
 
 		case 'Vquidab':
