@@ -2,3 +2,4 @@ node_modules
 guilds/*
 config/*
 package-lock.json
+*.zip

@@ -1,29 +1,29 @@
 /*
- *  Toutes les sous commandes qui gèrent le module je_suis du bot
+ *  Toutes les sous commandes qui gèrent le module quoi_feur du bot
  *
  */
 
 
-/** Active ou désactive le module je_suis
+/** Active ou désactive le module quoi_feur
  * 
  * @param {*} message 
  * @param {*} args 
  * @param {*} config 
  */
-function je_suis(message, args, config) {
+function quoi_feur(message, args, config) {
 	if (!args[1] || (args[1] !== 'enabled' && args[1] !== 'disabled'))
 		return message.channel.send("Veuillez préciser si vous activez ou non ce module (argument attendu : `enabled` ou `disabled`)").catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));;
 
-	config.je_suis = args[1] === 'enabled';
+		config.quoi_feur = args[1] === 'enabled'
 
-	log(`${config.je_suis ? 'Activation' : 'Desactivation'} du module je_suis par ${message.author.tag}`, message);
+	log(`${config.quoi_feur ? 'Activation' : 'Desactivation'} du module quoi_feur par ${message.author.tag}`, message);
 
-	message.channel.send(`Module ${config.je_suis ? 'activé' : 'désactivé'} !`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
+	message.channel.send(`Module ${config.quoi_feur ? 'activé' : 'désactivé'} !`).catch(error => err(`Impossible d'envoyer un message sur le channel.`, message, error));
 
 }
 
 
-module.exports = { je_suis }
+module.exports = { quoi_feur }
 
 function log(text, msg) {
 	require('../../services/log').logStdout(text, "config", msg ?? null);
