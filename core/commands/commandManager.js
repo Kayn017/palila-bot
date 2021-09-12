@@ -1,14 +1,15 @@
 const fs = require("fs");
-const Discord = require('discord.js');
+const Discord = require("discord.js");
 const path = require("path");
 const { log } = require("../../services/log");
+const process = require("process");
 
 function fetchCommands(commandsFolder) {
 
 	if (!fs.existsSync(commandsFolder))
 		throw new Error("The given folder doesn't exist.");
 
-	const commandsFiles = fs.readdirSync(commandsFolder).filter(entry => entry.endsWith('.js'));
+	const commandsFiles = fs.readdirSync(commandsFolder).filter(entry => entry.endsWith(".js"));
 
 	const commands = new Discord.Collection();
 
@@ -35,13 +36,13 @@ function findSubcommands(commandName, rootFolder) {
 	else {
 		const subcommands = new Discord.Collection();
 
-		const subcommandsFiles = fs.readdirSync(path.join(rootFolder, subcommandsFolder)).filter(entry => entry.endsWith('.js'));
+		const subcommandsFiles = fs.readdirSync(path.join(rootFolder, subcommandsFolder)).filter(entry => entry.endsWith(".js"));
 
 		for (const file of subcommandsFiles) {
 
 			const subcommand = require(path.join(rootFolder, subcommandsFolder, file));
 
-			subcommand.subcommands = findSubcommands(subcommand.name, path.join(rootFolder, subcommandsFolder))
+			subcommand.subcommands = findSubcommands(subcommand.name, path.join(rootFolder, subcommandsFolder));
 
 			subcommands.set(subcommand.name, subcommand);
 		}
@@ -63,7 +64,7 @@ async function initCommands(client) {
 		let command;
 
 		if (process.argv.includes("--VERBOSE")) {
-			// weird thing that gets all the commands that are not available locally
+			// weird thing that gets all the commands that are available locally
 			command = (await (await client.guilds.fetch(config.discord.devGuild)).commands.fetch()).find(c => c.name === cmd.name);
 		}
 		else {
@@ -92,12 +93,12 @@ async function initCommands(client) {
 		oldCommands = (await (await client.guilds.fetch(config.discord.devGuild)).commands.fetch()).filter(c => !client.commands.has(c.name));
 	}
 	else {
-		oldCommands = (await client.application.commands.fetch()).filter(c => !client.commands.has(c.name))
+		oldCommands = (await client.application.commands.fetch()).filter(c => !client.commands.has(c.name));
 	}
 
 	oldCommands.forEach(c => {
 		c.delete();
-		log(`Suppression de la commande ${c.name}. Celle-ci n'est plus en local.`, "commandManager")
+		log(`Suppression de la commande ${c.name}. Celle-ci n'est plus présente en local.`, "commandManager");
 	});
 
 }
@@ -131,4 +132,4 @@ module.exports = {
 	findSubcommands,
 	initCommands,
 	initOptions
-}
+};

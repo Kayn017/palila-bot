@@ -1,11 +1,10 @@
 /********** REQUIRE **********/
-const Discord = require('discord.js');
-const { stringToMs } = require('../services/time');
-const Intents = Discord.Intents;
-const Permissions = Discord.Permissions;
-const { color } = require('../config/config.json');
-const { addButton } = require('../services/buttons');
-const { LocalCache } = require('../services/cache');
+const Discord = require("discord.js");
+const { stringToMs } = require("../services/time");
+const { color } = require("../config/config.json");
+const { addButton } = require("../services/buttons");
+const { LocalCache } = require("../services/cache");
+const { debug } = require("../services/log");
 
 /********** INFORMATIONS **********/
 const name = "poll";
@@ -51,7 +50,7 @@ const options = [{
 {
 	name: "duree",
 	type: "STRING",
-	description: "Durée du sondage",
+	description: "Durée du sondage (format \"<nombre><unité>\" exemple : 10s, 3h",
 	required: false
 }];
 
@@ -69,6 +68,7 @@ const cache = new LocalCache("poll");
 /********** ACTIONS **********/
 async function execute(interaction, options) {
 
+	// récuperation des options
 	const title = options.find(o => o.name === "intitule").value;
 
 	const choice1 = options.find(o => o.name === "choix1").value;
@@ -80,6 +80,7 @@ async function execute(interaction, options) {
 
 	const duration = options.find(o => o.name === "duree")?.value;
 
+	// préparation du temps restants du sondage
 	let pollDuration;
 
 	if (duration) {
@@ -94,7 +95,7 @@ async function execute(interaction, options) {
 		pollDuration = DEFAULT_DURATION;
 	}
 
-
+	// préparation du message
 	const endDate = new Date(Date.now() + pollDuration);
 	const endDateString = `${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear()} à ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}`;
 
@@ -107,50 +108,155 @@ async function execute(interaction, options) {
 	embed.addField("Date de fin du sondage", endDateString);
 
 
+	// préparation des boutons
 	const row = new Discord.MessageActionRow();
 
-	addButton(row, choice1);
-	addButton(row, choice2);
+	addButton(row, `${choice1} : 0`, choice1);
+	addButton(row, `${choice2} : 0`, choice2);
 
 	if (choice3)
-		addButton(row, choice3);
+		addButton(row, `${choice3} : 0`, choice3);
 	if (choice4)
-		addButton(row, choice4);
+		addButton(row, `${choice4} : 0`, choice4);
 	if (choice5)
-		addButton(row, choice5);
+		addButton(row, `${choice5} : 0`, choice5);
 
-	const response = await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
+	let response;
 
+	// envoie du sondage
+	try {
+		response = await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
+	}
+	catch (e) {
+		if (e instanceof Discord.DiscordAPIError)
+			return interaction.reply({ content: "Chaque fois du vote doit être unique.", ephemeral: true });
+	}
 
+	// récupération des votes
+	const votes = collectVotes(response, pollDuration);
 
-
-	collectVotes(response, pollDuration);
-
+	cache.set(response.id, {
+		channel: interaction.channelId,
+		votes,
+		voters: [], // {id: <id du votant>, choice: <id du choix>}
+		endDate: Date.now() + pollDuration
+	});
 }
 
-function init(client) { }
+async function init(client) {
 
-function shutdown(client) { }
+	for (const [key, value] of cache.getAllDataEntries()) {
+
+		// on récupère le message du sondage
+		let channel;
+		let pollMessage;
+
+		try {
+			channel = await client.channels.fetch(value.channel);
+			pollMessage = await channel.messages.fetch(key);
+		}
+		catch (e) {
+			debug(`Suppression de la valeur ${key} du cache : le message n'existe plus.`, "poll", undefined, e.stack);
+			cache.delete(key);
+			continue;
+		}
+
+
+		const timeLeft = value.endDate - Date.now();
+
+		if (timeLeft > 0)
+			collectVotes(pollMessage, timeLeft);
+		else
+			sendResults(pollMessage);
+	}
+}
+
+function shutdown() { }
 
 
 
 
 function collectVotes(voteMessage, pollDuration) {
 
+	const votes = cache.get(voteMessage.id)?.votes ?? {};
+
 	const filter = (interaction) => interaction.isButton();
 
 	const collector = voteMessage.createMessageComponentCollector({ filter, time: pollDuration, dispose: true });
 
-	collector.on('collect', i => {
+	collector.on("collect", i => {
 
-		console.log(i.user.id)
-		console.log(i.customId)
+		const res = updateVote(voteMessage.id, i.user.id, i.customId);
 
-		i.reply({ content: `Vous avez voté \`${i.customId}\``, ephemeral: true });
-	})
+		if (!res)
+			return i.reply({ content: `Vous avez déjà voté \`${i.customId}\``, ephemeral: true });
 
+		for (const component of i.message.components[0].components) {
+			component.setLabel(`${component.customId} : ${votes[component.customId] ?? 0}`);
+		}
+
+		i.update({ components: i.message.components });
+	});
+
+	collector.on("end", () => {
+		sendResults(voteMessage);
+	});
+
+
+	return votes;
 }
 
 
+function updateVote(pollID, voterID, vote) {
+
+	const infos = cache.get(pollID);
+
+	const voter = infos.voters.find(v => v.id === voterID);
+
+	if (!voter) {
+		infos.votes[vote] ? infos.votes[vote]++ : infos.votes[vote] = 1;
+
+		infos.voters.push({ id: voterID, choice: vote });
+
+		cache.set(pollID, infos);
+
+		return true;
+	}
+	else if (voter.choice !== vote) {
+
+		infos.votes[voter.choice]--;
+		infos.votes[vote] ? infos.votes[vote]++ : infos.votes[vote] = 1;
+
+		const voterIndex = infos.voters.findIndex(v => v.id === voterID);
+
+		infos.voters[voterIndex] = { id: voterID, choice: vote };
+
+		cache.set(pollID, infos);
+
+		return true;
+	}
+
+	return false;
+}
+
+function sendResults(voteMessage) {
+
+	const votes = cache.get(voteMessage.id)?.votes ?? {};
+
+	const embed = new Discord.MessageEmbed();
+
+	embed.setColor(color);
+	embed.setTitle(`Résultat du sondage : ${voteMessage.embeds[0].title}`);
+	embed.setAuthor(voteMessage.interaction.user.username, voteMessage.interaction.user.avatarURL());
+
+	for (const button of voteMessage.components[0].components) {
+		embed.addField(button.customId, `${votes[button.customId] ?? 0} vote(s)`, true);
+	}
+
+	voteMessage.reply({ embeds: [embed] });
+
+	cache.delete(voteMessage.id);
+}
+
 /********** EXPORTS **********/
-module.exports = { name, description, explication, author, options, intents, permissions, execute, init, shutdown }
+module.exports = { name, description, explication, author, options, intents, permissions, execute, init, shutdown };

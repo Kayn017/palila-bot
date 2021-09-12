@@ -1,6 +1,6 @@
-const fs = require('fs');
-const os = require('os');
-const process = require('process')
+const fs = require("fs");
+const os = require("os");
+const process = require("process");
 
 function log(text, filename, message = null) {
 
@@ -19,12 +19,12 @@ function log(text, filename, message = null) {
 
 	console.log(display);
 
-	const stream = fs.createWriteStream("./log/log.txt", { 'flags': 'a' });
-	stream.once('open', fd => {
+	const stream = fs.createWriteStream("./log/log.txt", { "flags": "a" });
+	stream.once("open", () => {
 		stream.write(display + os.EOL);
 
 		stream.close();
-	})
+	});
 }
 
 function err(error, filename, message = null, stack = null) {
@@ -47,15 +47,15 @@ function err(error, filename, message = null, stack = null) {
 	if (stack)
 		console.error(stack);
 
-	const stream = fs.createWriteStream("./log/error.txt", { 'flags': 'a' });
-	stream.once('open', fd => {
+	const stream = fs.createWriteStream("./log/error.txt", { "flags": "a" });
+	stream.once("open", () => {
 		stream.write(display + os.EOL);
 
 		if (stack)
 			stream.write(stack + os.EOL);
 
 		stream.close();
-	})
+	});
 }
 
 function debug(text, filename, message = null, stack = null) {
@@ -81,19 +81,19 @@ function debug(text, filename, message = null, stack = null) {
 	if (stack)
 		console.error(stack);
 
-	const stream = fs.createWriteStream("./log/debug.txt", { 'flags': 'a' });
-	stream.once('open', fd => {
+	const stream = fs.createWriteStream("./log/debug.txt", { "flags": "a" });
+	stream.once("open", () => {
 		stream.write(display + os.EOL);
 
 		if (stack)
 			stream.write(stack + os.EOL);
 
 		stream.close();
-	})
+	});
 }
 
 module.exports = {
 	log,
 	err,
 	debug
-}
+};
