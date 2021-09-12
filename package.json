@@ -5,7 +5,8 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "node index.js",
-		"debug": "nodemon index.js --VERBOSE"
+		"debug": "nodemon index.js --VERBOSE",
+		"make:command": "node scripts/commandFactory.js"
 	},
 	"author": "Tanguy Gimenez",
 	"license": "ISC",
