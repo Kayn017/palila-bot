@@ -1,6 +1,6 @@
-const fs = require('fs');
-const template = require('../../templates/guildFolder.json');
-const { debug } = require('../../services/log');
+const fs = require("fs");
+const template = require("../../templates/guildFolder.json");
+const { debug } = require("../../services/log");
 
 function createGuildsFiles(guilds) {
 
@@ -28,7 +28,7 @@ function initGuildConfigFile(guild) {
 
 	fileContent.name = guild.name;
 
-	fs.writeFileSync(`./guilds/${guild.id}/config.json`, JSON.stringify(fileContent))
+	fs.writeFileSync(`./guilds/${guild.id}/config.json`, JSON.stringify(fileContent));
 
 }
 
@@ -38,4 +38,4 @@ module.exports = {
 
 	createGuildsFiles
 
-}
+};

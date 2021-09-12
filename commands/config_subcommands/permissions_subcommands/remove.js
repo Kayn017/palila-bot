@@ -1,10 +1,10 @@
 /********** REQUIRE **********/
-const Discord = require('discord.js');
+const Discord = require("discord.js");
 const Intents = Discord.Intents;
 const Permissions = Discord.Permissions;
-const { havePermission } = require('../../../services/permissions');
-const fs = require('fs');
-const { log } = require('../../../services/log');
+const { havePermission } = require("../../../services/permissions");
+const fs = require("fs");
+const { log } = require("../../../services/log");
 
 /********** INFORMATIONS **********/
 const name = "remove";
@@ -20,12 +20,17 @@ const options = [{
 
 
 /********** PERMISSIONS **********/
-const intents = [];
+const intents = [
+	Intents.FLAGS.GUILDS
+];
 const permissions = [];
 
 
 /********** ACTIONS **********/
 async function execute(interaction, options) {
+
+	if (interaction.channel.type === "dm")
+		return interaction.reply({ content: "Cette commande ne peut pas être utilisé en MP.", ephemeral: true });
 
 	if (!havePermission(interaction.user.id, interaction.guildId, interaction.member._roles) && interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR, true))
 		return interaction.reply({ content: "Vous n'avez pas les droits pour executer cette commande.", ephemeral: true });
@@ -44,10 +49,10 @@ async function execute(interaction, options) {
 	fs.writeFileSync(`./guilds/${interaction.guild.id}/config.json`, JSON.stringify(config));
 }
 
-function init(client) { }
+function init() { }
 
-function shutdown(client) { }
+function shutdown() { }
 
 
 /********** EXPORTS **********/
-module.exports = { name, description, explication, author, options, intents, permissions, execute, init, shutdown }
+module.exports = { name, description, explication, author, options, intents, permissions, execute, init, shutdown };

@@ -19,7 +19,7 @@ function getAllIntents(...collections) {
 					if (!intents.includes(intent))
 						intents.push(intent);
 				}
-		})
+		});
 	}
 
 	return intents;
@@ -46,4 +46,4 @@ function getCommandIntents(command) {
 module.exports = {
 	getAllIntents,
 	getCommandIntents
-}
+};

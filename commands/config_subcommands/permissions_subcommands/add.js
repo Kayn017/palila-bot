@@ -1,10 +1,10 @@
 /********** REQUIRE **********/
-const Discord = require('discord.js');
-const { havePermission } = require('../../../services/permissions');
+const Discord = require("discord.js");
+const { havePermission } = require("../../../services/permissions");
 const Intents = Discord.Intents;
 const Permissions = Discord.Permissions;
-const fs = require('fs');
-const { log } = require('../../../services/log');
+const fs = require("fs");
+const { log } = require("../../../services/log");
 
 /********** INFORMATIONS **********/
 const name = "add";
@@ -20,14 +20,17 @@ const options = [{
 
 
 /********** PERMISSIONS **********/
-const intents = [];
+const intents = [
+	Intents.FLAGS.GUILDS
+];
 const permissions = [];
 
 
 /********** ACTIONS **********/
 async function execute(interaction, options) {
 
-	// TODO : checker pour les executions de la commande en MP
+	if (interaction.channel.type === "dm")
+		return interaction.reply({ content: "Cette commande ne peut pas être utilisé en MP.", ephemeral: true });
 
 	if (!havePermission(interaction.user.id, interaction.guildId, interaction.member._roles) && interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR, true))
 		return interaction.reply({ content: "Vous n'avez pas les droits pour executer cette commande.", ephemeral: true });
@@ -43,10 +46,10 @@ async function execute(interaction, options) {
 	interaction.reply({ content: `Le rôle ${options[0].role.name} a été ajouté aux roles administrateurs !`, ephemeral: true });
 }
 
-function init(client) { }
+function init() { }
 
-function shutdown(client) { }
+function shutdown() { }
 
 
 /********** EXPORTS **********/
-module.exports = { name, description, explication, author, options, intents, permissions, execute, init, shutdown }
+module.exports = { name, description, explication, author, options, intents, permissions, execute, init, shutdown };

@@ -2,6 +2,7 @@
 	"config": {
 		"name": null,
 		"adminRoles": [],
-		"modules": {}
+		"modules": {},
+		"botRole": null
 	}
 }

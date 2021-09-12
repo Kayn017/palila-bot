@@ -3,6 +3,10 @@
 	"version": "2.0.0",
 	"description": "Le palila bot est un bot super cool",
 	"main": "index.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Kayn017/palila-bot.git"
+	},
 	"scripts": {
 		"start": "node index.js",
 		"debug": "nodemon index.js --VERBOSE",
