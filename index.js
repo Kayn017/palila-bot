@@ -13,6 +13,7 @@ const { executeCommand } = require("./core/commands/commandExecutor");
 const { createGuildsFiles } = require("./core/guilds/guildsFiles");
 
 const { log } = require("./services/log");
+const { handleError } = require("./core/error");
 
 // creation of all the structure of the bot
 if (!fs.existsSync("./log"))
@@ -40,11 +41,11 @@ const client = new Discord.Client({
 	intents
 });
 
+handleError(client);
+
 client.commands = commands;
 client.modules = modules;
 client.permissions = permissions;
-
-
 
 client.once("ready", async () => {
 	log(`Connecté à Discord en tant que ${client.user.tag}`, "index");
@@ -58,6 +59,8 @@ client.once("ready", async () => {
 	client.modules.forEach(m => m.init(client));
 
 	log("Le bot est prêt à fonctionner !", "index");
+
+	truc();
 });
 
 // command handling
