@@ -53,7 +53,7 @@ function findSubcommands(commandName, rootFolder) {
 
 async function initCommands(client) {
 
-	const config = require("../../config/config.json");
+	const config = JSON.parse(fs.readFileSync("./config/config.json"));
 
 	await client.application.commands.fetch();
 

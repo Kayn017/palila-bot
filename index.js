@@ -3,14 +3,7 @@ const path = require("path");
 const fs = require("fs");
 
 const { createConfigFolderAndFiles } = require("./core/config/configFiles");
-const { initConfig } = require("./core/config/initConfig");
 const { createStructure } = require("./core/structure");
-const { fetchCommands, initCommands } = require("./core/commands/commandManager");
-const { fetchModules } = require("./core/modules/moduleManager");
-const { getAllIntents } = require("./core/permissions/intentsManager");
-const { getAllPermissions, manageBotRole } = require("./core/permissions/permissionsManager");
-const { executeCommand } = require("./core/commands/commandExecutor");
-const { createGuildsFiles } = require("./core/guilds/guildsFiles");
 
 const { log } = require("./services/log");
 
@@ -20,6 +13,14 @@ if (!fs.existsSync("./log"))
 
 createConfigFolderAndFiles();
 createStructure();
+
+const { initConfig } = require("./core/config/initConfig");
+const { fetchCommands, initCommands } = require("./core/commands/commandManager");
+const { fetchModules } = require("./core/modules/moduleManager");
+const { getAllIntents } = require("./core/permissions/intentsManager");
+const { getAllPermissions, manageBotRole } = require("./core/permissions/permissionsManager");
+const { executeCommand } = require("./core/commands/commandExecutor");
+const { createGuildsFiles } = require("./core/guilds/guildsFiles");
 
 // init configuration of the bot
 initConfig();
