@@ -61,7 +61,6 @@ client.once("ready", async () => {
 
 	log("Le bot est prêt à fonctionner !", "index");
 
-	truc();
 });
 
 // command handling

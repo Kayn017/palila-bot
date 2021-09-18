@@ -113,7 +113,7 @@ function fatalError(text, filename, message = null, stack = null) {
 		console.error(stack);
 
 
-	const stream = fs.createWriteStream("./log/log.txt", { "flags": "a" });
+	const stream = fs.createWriteStream("./log/fatal.txt", { "flags": "a" });
 	stream.once("open", () => {
 		stream.write(display + os.EOL);
 

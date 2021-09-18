@@ -1,8 +1,7 @@
 /********** REQUIRE **********/
-const Discord = require('discord.js');
+const Discord = require("discord.js");
 const Intents = Discord.Intents;
 const Permissions = Discord.Permissions;
-
 
 /********** INFORMATIONS **********/
 const name = "config";
@@ -16,16 +15,22 @@ const options = [];
 const intents = [
 	Intents.FLAGS.GUILDS
 ];
-const permissions = [];
+const permissions = [
+	Permissions.FLAGS.MANAGE_ROLES
+];
 
 
 /********** ACTIONS **********/
-async function execute(interaction, options) { }
+async function execute() { }
 
-function init(client) { }
+function init(client) {
+	this.subcommands.each(sub => {
+		sub.init(client);
+	});
+}
 
-function shutdown(client) { }
+function shutdown() { }
 
 
 /********** EXPORTS **********/
-module.exports = { name, description, explication, author, options, intents, permissions, execute, init, shutdown }
+module.exports = { name, description, explication, author, options, intents, permissions, execute, init, shutdown };

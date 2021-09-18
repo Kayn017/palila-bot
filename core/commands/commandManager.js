@@ -126,7 +126,6 @@ function initOptions(command) {
 }
 
 
-
 module.exports = {
 	fetchCommands,
 	findSubcommands,

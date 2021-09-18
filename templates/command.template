@@ -26,4 +26,4 @@ function shutdown(client) { }
 
 
 /********** EXPORTS **********/
-module.exports = { name, description, explication, author, options, intents, permissions, execute, init, shutdown }
+module.exports = { name, description, explication, author, options, intents, permissions, execute, init, shutdown };

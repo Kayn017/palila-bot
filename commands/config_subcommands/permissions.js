@@ -1,7 +1,4 @@
 /********** REQUIRE **********/
-const Discord = require('discord.js');
-const Intents = Discord.Intents;
-const Permissions = Discord.Permissions;
 
 
 /********** INFORMATIONS **********/
@@ -18,12 +15,12 @@ const permissions = [];
 
 
 /********** ACTIONS **********/
-async function execute(interaction, options) { }
+async function execute() { }
 
-function init(client) { }
+function init() { }
 
-function shutdown(client) { }
+function shutdown() { }
 
 
 /********** EXPORTS **********/
-module.exports = { name, description, explication, author, options, intents, permissions, execute, init, shutdown }
+module.exports = { name, description, explication, author, options, intents, permissions, execute, init, shutdown };
