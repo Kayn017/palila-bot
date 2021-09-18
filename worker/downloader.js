@@ -13,7 +13,7 @@ let discord_link = true;
 
 async function downloadChan(message) {
 
-	// return message.channel.send("Cette fonctionnalité est pour l'instant désactivée.").catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
+	return message.channel.send("Cette fonctionnalité est pour l'instant désactivée.").catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
 
 	message.channel.send(`Lancement de la backup du channel en cours... Merci de ne plus envoyer de messages ici avant la fin du scan du channel :eyes:`).catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
 	log(`Lancement de la backup par ${message.author.tag}`, message);
@@ -295,9 +295,9 @@ else {
 }
 
 function log(text, msg) {
-	require('../utils').logStdout(text, "downloader", msg ?? null);
+	require('../services/log').logStdout(text, "downloader", msg ?? null);
 }
 
 function err(text, msg, e) {
-	require('../utils').logError(text, "downloader", msg ?? null, e ? e.stack : null)
+	require('../services/log').logError(text, "downloader", msg ?? null, e ? e.stack : null)
 }
