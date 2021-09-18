@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 
-const name = "sondage"
+const name = "poll"
 const synthax = `${name} [duree: <duree du sondage de votre choix>] <intitulé du sondage>`
 const description = "créer un sondage"
 const explication = "Permet de créer un sondage pour une certaine durée."
@@ -8,8 +8,8 @@ const author = "Kayn"
 
 const emojis = require('../resources/emojis.json')
 
-// une minute par défaut
-let duration = 60000;
+// une heure par défaut
+let duration = 60 * 60 * 1000;
 const yes = emojis.yes
 const no = emojis.no
 
