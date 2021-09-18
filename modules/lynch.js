@@ -227,7 +227,7 @@ function sendRank(guild, todayResponse) {
 			persons = persons === "" ? person : `${persons} \n${person}`;
 		})
 
-		embed.addField(numberOfPersonsDisplayed === 0 ? `1er avec ${rankToDisplay[i].points} points` : `${numberOfPersonsDisplayed}e avec ${rankToDisplay[i].points} points`, persons);
+		embed.addField(numberOfPersonsDisplayed === 1 ? `1er avec ${rankToDisplay[i].points} points` : `${numberOfPersonsDisplayed}e avec ${rankToDisplay[i].points} points`, persons);
 		numberOfPersonsDisplayed += rankToDisplay[i].persons.length;
 	}
 
