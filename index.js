@@ -3,6 +3,7 @@ require("./services/ExtendedMessage");
 
 const fs = require('fs');
 const path = require('path');
+const process = require('process')
 
 // template des fichiers de configurations globaux
 // chaque clé => le nom du fichier de config
@@ -42,10 +43,12 @@ const config = require(`${__dirname}/config/config.json`);
 
 // on créé le client + on se prépare a la connexion
 const client = new Discord.Client();
+client.ready = false;
 
 client.on('ready', () => {
 	log(`Connecté à Discord en tant que ${client.user.tag}`);
-	CreateGuildsFolder()
+	client.ready = true;
+	CreateGuildsFolder();
 });
 
 
@@ -125,6 +128,28 @@ client.on('guildCreate', guild => {
 	log(`Arrivée du bot sur le serveur ${guild.name}`);
 	CreateGuildsFolder();
 })
+
+process.on("uncaughtException", async (err) => {
+
+	require('./services/log').logError(`FATAL : ${err.message}`, "index", undefined, err.stack);
+
+	if (client.ready) {
+
+		const config = JSON.parse(fs.readFileSync("./config/config.json"));
+
+		for (const userID of config.discord.gods) {
+			const user = await client.users.fetch(userID);
+
+			const errorMessage = new Discord.MessageEmbed();
+			errorMessage.setTitle("FATAL ERROR");
+			errorMessage.addField("Message", err.message);
+			errorMessage.addField("Stack", err.stack ?? "Pas de stack");
+			errorMessage.setColor("RED");
+
+			user.send(errorMessage);
+		}
+	}
+});
 
 
 // on se connecte a discord 

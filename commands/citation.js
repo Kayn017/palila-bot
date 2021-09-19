@@ -18,6 +18,8 @@ Si vous envoyez une citation (en image) avec le nom d'une personne (en 1 mot), l
 
 const author = "Kayn"
 
+const NUMBER_OF_REACTIONS_FOR_DELETE = 5;
+
 async function execute(message, args) {
 
 	if (!fs.existsSync("./resources/citations"))
@@ -142,7 +144,7 @@ async function createDeleteReactions(sendedMessage, originalMessage, filePath) {
 	await sendedMessage.react('🚽').catch(e => err("Impossible de reagir a ce message", sendedMessage, e));
 
 	const filter = (reaction, user) => reaction.emoji.name === '🚽' || (reaction.emoji.name === '🗑️' && config.discord.gods.includes(user.id));
-	const collector = sendedMessage.createReactionCollector(filter, { time: 24 * 60 * 60 * 1000, max: 8, dispose: true });
+	const collector = sendedMessage.createReactionCollector(filter, { time: 24 * 60 * 60 * 1000, max: NUMBER_OF_REACTIONS_FOR_DELETE, dispose: true });
 
 	let nbReactToilet = 0;
 
@@ -150,7 +152,7 @@ async function createDeleteReactions(sendedMessage, originalMessage, filePath) {
 
 		nbReactToilet++;
 
-		if (nbReactToilet < 8 && r.emoji.name === '🚽')
+		if (nbReactToilet < NUMBER_OF_REACTIONS_FOR_DELETE && r.emoji.name === '🚽')
 			return;
 
 		try {

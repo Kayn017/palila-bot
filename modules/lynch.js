@@ -9,6 +9,8 @@ const number = require("../services/number")
 const name = `lynch`
 const description = `Module pour la fameuse loterie de David Lynch`
 
+const NUMBER_OF_ROWS_TO_DISPLAY = 8;
+
 let lynchPostedVideos = [];
 let allMessageCollectors = [];
 let allReactionsCollectors = [];
@@ -52,7 +54,7 @@ async function checkForUpdates(client) {
 	if (lynchPostedVideos.includes(latestVideo.link))
 		return;
 
-	if (latestVideo.title.includes(`TODAY'S NUMBER IS`)) {
+	if (latestVideo.title.includes(`David Lynch's Weather Report`)) {
 		allMessageCollectors.forEach(mc => mc.stop());
 		allReactionsCollectors.forEach(rc => rc.stop());
 	}
@@ -64,7 +66,7 @@ async function checkForUpdates(client) {
 		const configGuild = JSON.parse(fs.readFileSync(`./guilds/${guildID}/config.json`))
 
 		if (!configGuild.lynch)
-			continue
+			continue;
 
 		const guild = await client.guilds.fetch(guildID);
 
@@ -86,7 +88,9 @@ async function checkForUpdates(client) {
 
 async function askForResult(message, channels) {
 
-	const numberFilter = m => /[1-9]|10/g.test(m.content);
+	await message.channel.send("Quel est le numéro du jour ?").catch(e => err("Impossible d'envoyer un message sur ce channel.", message, e));
+
+	const numberFilter = m => /^[1-9]$|^10$/g.test(m.content);
 
 	const messageCollector = message.channel.createMessageCollector(numberFilter, { dispose: true })
 
@@ -94,6 +98,7 @@ async function askForResult(message, channels) {
 		if (todayResult !== null)
 			messageCollector.stop();
 		else {
+
 			todayResult = m.content;
 
 			for (const [guildID, channelID] of Object.entries(channels)) {
@@ -212,7 +217,9 @@ function sendRank(guild, todayResponse) {
 		.addField("Résultat d'aujourd'hui", `Le chiffre du jour est le ${todayResponse} !`)
 		.setColor(0x1e80d6)
 
-	for (let i = 0; i < rankToDisplay.length && i < 5; i++) {
+	let numberOfPersonsDisplayed = 1;
+
+	for (let i = 0; i < rankToDisplay.length && i < NUMBER_OF_ROWS_TO_DISPLAY; i++) {
 
 		let persons = "";
 
@@ -220,7 +227,8 @@ function sendRank(guild, todayResponse) {
 			persons = persons === "" ? person : `${persons} \n${person}`;
 		})
 
-		embed.addField(i === 0 ? `1er avec ${rankToDisplay[i].points} points` : `${i + 1}e avec ${rankToDisplay[i].points} points`, persons);
+		embed.addField(numberOfPersonsDisplayed === 1 ? `1er avec ${rankToDisplay[i].points} points` : `${numberOfPersonsDisplayed}e avec ${rankToDisplay[i].points} points`, persons);
+		numberOfPersonsDisplayed += rankToDisplay[i].persons.length;
 	}
 
 	// on envoie ce message sur tout les channels de la guild en question
