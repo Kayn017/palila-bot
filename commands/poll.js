@@ -81,7 +81,7 @@ async function execute(interaction, options) {
 	const duration = options.find(o => o.name === "duree")?.value;
 
 	// préparation du temps restants du sondage
-	let pollDuration;
+	let pollDuration = DEFAULT_DURATION;
 
 	if (duration) {
 		try {
@@ -90,9 +90,6 @@ async function execute(interaction, options) {
 		catch (err) {
 			return interaction.reply({ content: "Le format de la date est invalide. Elle doit être au format `<nombre><j ou h ou m ou s>`.\nExemple : `10j` pour 10 jours, `30m` pour 30 minutes.", ephemeral: true });
 		}
-	}
-	else {
-		pollDuration = DEFAULT_DURATION;
 	}
 
 	// préparation du message

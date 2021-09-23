@@ -3,3 +3,4 @@ guilds/*
 config/*
 cache/*
 package-lock.json
+backup

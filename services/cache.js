@@ -21,7 +21,7 @@ class LocalCache {
 
 	set(property, value) {
 		this.data[property] = value;
-		fs.writeFile(this.cacheFile, JSON.stringify(this.data), e => { if (e) err(e, "cache.js", undefined, e.stack); });
+		fs.writeFile(this.cacheFile, JSON.stringify(this.data), e => { if (e) err(e, "cache", undefined, e.stack); });
 	}
 
 	get(property) {
@@ -34,7 +34,7 @@ class LocalCache {
 
 	delete(property) {
 		delete this.data[property];
-		fs.writeFile(this.cacheFile, JSON.stringify(this.data), e => { if (e) err(e, "cache.js", undefined, e.stack); });
+		fs.writeFile(this.cacheFile, JSON.stringify(this.data), e => { if (e) err(e, "cache", undefined, e.stack); });
 	}
 
 	getAllDataEntries() {

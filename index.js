@@ -19,9 +19,10 @@ const { initConfig } = require("./core/config/initConfig");
 const { fetchCommands, initCommands } = require("./core/commands/commandManager");
 const { fetchModules } = require("./core/modules/moduleManager");
 const { getAllIntents } = require("./core/permissions/intentsManager");
-const { getAllPermissions, manageBotRole } = require("./core/permissions/permissionsManager");
+const { getAllPermissions } = require("./core/permissions/permissionsManager");
 const { executeCommand } = require("./core/commands/commandExecutor");
 const { createGuildsFiles } = require("./core/guilds/guildsFiles");
+const { checkGuildFolders } = require("./core/guilds/guildManagement");
 
 // init configuration of the bot
 initConfig();
@@ -52,15 +53,12 @@ client.once("ready", async () => {
 	log(`Connecté à Discord en tant que ${client.user.tag}`, "index");
 
 	createGuildsFiles(await client.guilds.fetch());
-
-	await manageBotRole(client);
+	await checkGuildFolders(client);
 
 	await initCommands(client);
-
 	client.modules.forEach(m => m.init(client));
 
 	log("Le bot est prêt à fonctionner !", "index");
-
 });
 
 // command handling

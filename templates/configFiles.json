@@ -13,5 +13,9 @@
 			"name": "September",
 			"type": "LISTENING"
 		}
+	},
+	"path": {
+		"backup": null,
+		"resources": "resources"
 	}
 }

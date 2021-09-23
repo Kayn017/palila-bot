@@ -3,6 +3,11 @@
 		"name": null,
 		"adminRoles": [],
 		"modules": {},
+		"commands": {
+			"nickname": {
+				"keepPseudo": false
+			}
+		},
 		"botRole": null
 	}
 }
