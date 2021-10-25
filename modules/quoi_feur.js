@@ -20,7 +20,7 @@ function init(client) {
 		if (message.author.bot || !config.quoi_feur) return;
 
 		// quoi en fin de phrase suivi par aucuns ou plusieurs caractères spéciaux dans n'importe quel ordre
-		const regex = new RegExp('quoi[ .!?"\':;^+=()*-,]*$', 'gim');
+		const regex = new RegExp('quoi[ .!?"\':;^+=()*-,]*$', 'gi');
 
 		if(regex.test(message.content)){
 			quoiFeurise(message);
