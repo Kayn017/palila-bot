@@ -1,0 +1,13 @@
+{
+	"actions.js": {
+		"init": "function",
+		"shutdown": "function",
+		"execute": "async function",
+		"middleware": "async function"
+	},
+	"infos.js": {
+		"method": "value",
+		"url": "value",
+		"author": "value"
+	}
+}

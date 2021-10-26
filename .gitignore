@@ -1,6 +1,6 @@
 node_modules
-guilds/*
-config/*
-cache/*
 package-lock.json
-backup
+database
+!core/database
+.env
+log

@@ -1,12 +1,11 @@
 const fs = require("fs");
 const os = require("os");
-const process = require("process");
 
 function log(text, filename, message = null) {
 
 	const now = new Date();
 
-	let display = `[${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}][${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}][${filename}.js]`;
+	let display = `[${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}][${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}][${filename}]`;
 
 	if (message) {
 		if (message.guild)
@@ -31,7 +30,7 @@ function err(error, filename, message = null, stack = null) {
 
 	const now = new Date();
 
-	let display = `[${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}][${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}][${filename}.js]`;
+	let display = `[${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}][${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}][${filename}]`;
 
 	if (message) {
 		if (message.guild)
@@ -60,12 +59,12 @@ function err(error, filename, message = null, stack = null) {
 
 function debug(text, filename, message = null, stack = null) {
 
-	if (!process.argv.includes("--VERBOSE"))
+	if (!global.devEnv)
 		return;
 
 	const now = new Date();
 
-	let display = `[${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}][${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}][${filename}.js]`;
+	let display = `[${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}][${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}][${filename}]`;
 
 	if (message) {
 		if (message.guild)
@@ -96,7 +95,7 @@ function fatalError(text, filename, message = null, stack = null) {
 
 	const now = new Date();
 
-	let display = `[${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}][${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}][${filename}.js]`;
+	let display = `[${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}][${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}][${filename}]`;
 
 	if (message) {
 		if (message.guild)

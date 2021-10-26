@@ -1,0 +1,20 @@
+const { Sequelize, DataTypes } = require("sequelize");
+
+module.exports = sequelize => {
+
+	class {{name}} extends Sequelize.Model {
+		static associate() {
+		}
+	}
+
+	{{name}}.init({
+
+		}, 
+		{
+			sequelize,
+			modelName: "{{name}}",
+			tableName: "{{name}}"
+		});
+
+	return {{name}};
+};

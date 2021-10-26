@@ -1,74 +1,61 @@
 const fs = require("fs");
-const Discord = require("discord.js");
 const path = require("path");
-const { log } = require("../../services/log");
+const { Collection } = require("discord.js");
 const process = require("process");
+const { log } = require("../../services/log");
 
 function fetchCommands(commandsFolder) {
-
 	if (!fs.existsSync(commandsFolder))
-		throw new Error("The given folder doesn't exist.");
+		throw new Error(`Le dossier ${commandsFolder} n'existe pas`);
 
-	const commandsFiles = fs.readdirSync(commandsFolder).filter(entry => entry.endsWith(".js"));
+	const commands = new Collection();
+	const cmdFolders = fs.readdirSync(commandsFolder);
 
-	const commands = new Discord.Collection();
+	for (const folder of cmdFolders) {
+		const command = require(path.join(
+			commandsFolder,
+			folder
+		));
 
-	for (const file of commandsFiles) {
-
-		const command = require(path.join(commandsFolder, file));
-
-		command.subcommands = findSubcommands(command.name, commandsFolder);
+		if (fs.readdirSync(path.join(
+			commandsFolder,
+			folder,
+			"subcommands"
+		)).length > 0)
+			command.subcommands = fetchCommands(path.join(
+				commandsFolder,
+				folder,
+				"subcommands"
+			));
+		else
+			command.subcommands = null;
 
 		commands.set(command.name, command);
 	}
 
 	return commands;
 }
-function findSubcommands(commandName, rootFolder) {
-
-	if (!fs.existsSync(rootFolder))
-		throw new Error("The given folder doesn't exist.");
-
-	const subcommandsFolder = fs.readdirSync(rootFolder).find(entry => entry.startsWith(`${commandName}_subcommands`));
-
-	if (!subcommandsFolder)
-		return null;
-	else {
-		const subcommands = new Discord.Collection();
-
-		const subcommandsFiles = fs.readdirSync(path.join(rootFolder, subcommandsFolder)).filter(entry => entry.endsWith(".js"));
-
-		for (const file of subcommandsFiles) {
-
-			const subcommand = require(path.join(rootFolder, subcommandsFolder, file));
-
-			subcommand.subcommands = findSubcommands(subcommand.name, path.join(rootFolder, subcommandsFolder));
-
-			subcommands.set(subcommand.name, subcommand);
-		}
-
-		return subcommands;
-	}
-}
 
 async function initCommands(client) {
 
-	const config = JSON.parse(fs.readFileSync("./config/config.json"));
-
 	await client.application.commands.fetch();
 
+	// on initialise les commandes
+	// on ajoute les nouvelles commandes et on actualise les commandes déjà existantes
 	client.commands.forEach(async cmd => {
 
-		cmd.init(client);
+		await cmd.init(client);
 
-		let command;
+		let distantCommand;
 
-		if (process.argv.includes("--VERBOSE")) {
-			// weird thing that gets all the commands that are available locally
-			command = (await (await client.guilds.fetch(config.discord.devGuild)).commands.fetch()).find(c => c.name === cmd.name);
+		if (global.devEnv) {
+			const devGuild = await client.guilds.fetch(process.env.DEVGUILD);
+			const guildCommands = await devGuild.commands.fetch();
+			distantCommand = guildCommands.find(c => c.name === cmd.name);
 		}
 		else {
-			command = (await client.application.commands.fetch()).find(c => c.name === cmd.name);
+			const applicationCommands = await client.application.commands.fetch();
+			distantCommand = applicationCommands.find(c => c.name === cmd.name);
 		}
 
 		const data = {
@@ -77,38 +64,38 @@ async function initCommands(client) {
 			options: initOptions(cmd)
 		};
 
-		if (command) {
-			client.application.commands.edit(command, data, process.argv.includes("--VERBOSE") ? config.discord.devGuild : null);
-		}
-		else {
-			client.application.commands.create(data, process.argv.includes("--VERBOSE") ? config.discord.devGuild : null);
-		}
+		if (distantCommand)
+			client.application.commands.edit(distantCommand, data, global.devEnv ? process.env.DEVGUILD : null);
+		else
+			client.application.commands.create(data, global.devEnv ? process.env.DEVGUILD : null);
 	});
 
-
+	// on supprime les vieilles commandes qui n'existent plus en local
 	let oldCommands;
 
-	if (process.argv.includes("--VERBOSE")) {
-		// weird thing that gets all the commands that are not available locally
-		oldCommands = (await (await client.guilds.fetch(config.discord.devGuild)).commands.fetch()).filter(c => !client.commands.has(c.name));
+	if (global.devEnv) {
+		const devGuild = await client.guilds.fetch(process.env.DEVGUILD);
+		const guildCommands = await devGuild.commands.fetch();
+		oldCommands = guildCommands.filter(c => !client.commands.has(c.name));
 	}
 	else {
-		oldCommands = (await client.application.commands.fetch()).filter(c => !client.commands.has(c.name));
+		const applicationCommands = await client.application.commands.fetch();
+		oldCommands = applicationCommands.filter(c => !client.commands.has(c.name));
 	}
+
 
 	oldCommands.forEach(c => {
 		c.delete();
 		log(`Suppression de la commande ${c.name}. Celle-ci n'est plus présente en local.`, "commandManager");
 	});
-
 }
+
 function initOptions(command) {
 
 	const options = [];
 
 	if (command.subcommands) {
 		for (const [name, subcmd] of command.subcommands.entries()) {
-
 			const option = {};
 
 			option.name = name;
@@ -125,10 +112,7 @@ function initOptions(command) {
 	return options;
 }
 
-
 module.exports = {
 	fetchCommands,
-	findSubcommands,
-	initCommands,
-	initOptions
+	initCommands
 };

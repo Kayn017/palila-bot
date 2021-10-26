@@ -1,0 +1,17 @@
+{
+	"actions.js": {
+		"init": "function",
+		"shutdown": "function"
+	},
+	"config.js": {
+		"configure": "async function"
+	},
+	"infos.js": {
+		"name": "value",
+		"description": "value",
+		"explication": "value",
+		"author": "value",
+		"intents": "array",
+		"permissions": "array"
+	}
+}

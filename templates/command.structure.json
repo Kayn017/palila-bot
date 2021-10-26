@@ -1,0 +1,22 @@
+{
+	"actions.js": {
+		"init": "function",
+		"shutdown": "function",
+		"execute": "async function",
+		"middleware": "async function"
+	},
+	"config.js": {
+		"configure": "async function",
+		"configurations": "array"
+	},
+	"infos.js": {
+		"name": "value",
+		"description": "value",
+		"explication": "value",
+		"author": "value",
+		"options": "array",
+		"intents": "array",
+		"permissions": "array"
+	},
+	"subcommands": {}
+}

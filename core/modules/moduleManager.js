@@ -1,28 +1,34 @@
-const fs = require('fs');
-const Discord = require('discord.js');
-const path = require('path');
-
+const fs = require("fs");
+const { Collection } = require("discord.js");
+const path = require("path");
 
 function fetchModules(modulesFolder) {
-
 	if (!fs.existsSync(modulesFolder))
-		throw new Error("The given folder doesn't exist.");
+		throw new Error(`Le dossier ${modulesFolder} n'existe pas`);
 
-	const modulesFiles = fs.readdirSync(modulesFolder).filter(entry => entry.endsWith('.js'));
+	const modules = new Collection();
+	const modulesFolderContent = fs.readdirSync(modulesFolder);
 
-	const modules = new Discord.Collection();
-
-	for (const file of modulesFiles) {
-
-		const module = require(path.join(modulesFolder, file));
-
+	for (const folder of modulesFolderContent) {
+		const module = require(path.join(
+			modulesFolder,
+			folder
+		));
 		modules.set(module.name, module);
 	}
 
 	return modules;
 }
 
+async function initModules(client) {
+
+	client.modules.forEach(async mod => {
+		await mod.init(client);
+	});
+
+}
 
 module.exports = {
-	fetchModules
-}
+	fetchModules,
+	initModules
+};
