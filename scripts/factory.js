@@ -63,6 +63,7 @@ const factory = {
 		for (const [filename, content] of Object.entries(template)) {
 			if (!filename.endsWith(".js")) {
 				fs.mkdirSync(path.join(commandpath, filename));
+				fs.appendFileSync(path.join(commandpath, filename, ".gitkeep"), ".gitkeep");
 				continue;
 			}
 
@@ -127,6 +128,7 @@ const factory = {
 		for (const [filename, content] of Object.entries(template)) {
 			if (!filename.endsWith(".js")) {
 				fs.mkdirSync(path.join(modulePath, filename));
+				fs.appendFileSync(path.join(modulePath, filename, ".gitkeep"), ".gitkeep");
 				continue;
 			}
 
@@ -191,6 +193,7 @@ const factory = {
 		for (const [filename, content] of Object.entries(template)) {
 			if (!filename.endsWith(".js")) {
 				fs.mkdirSync(path.join(routePath, filename));
+				fs.appendFileSync(path.join(routePath, filename, ".gitkeep"), ".gitkeep");
 				continue;
 			}
 
