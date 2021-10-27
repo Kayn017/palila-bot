@@ -4,3 +4,4 @@ database
 !core/database
 .env
 log
+cache

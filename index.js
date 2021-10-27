@@ -21,6 +21,7 @@ const database = require("./core/database");
 const { handleError } = require("./core/errors");
 const handleExtinctionSignal = require("./core/extinction");
 const api = require("./core/api");
+const redisClient = require("./core/config");
 
 // eslint-disable-next-line no-undef
 const commands = fetchCommands(path.join(__dirname, "commands"));
@@ -37,6 +38,7 @@ const client = new Discord.Client({
 client.commands = commands;
 client.modules = modules;
 client.db = database;
+client.config = redisClient;
 client.permissions = permissions;
 client.api = api;
 

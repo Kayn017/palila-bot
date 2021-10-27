@@ -9,7 +9,7 @@ function fetchCommands(commandsFolder) {
 		throw new Error(`Le dossier ${commandsFolder} n'existe pas`);
 
 	const commands = new Collection();
-	const cmdFolders = fs.readdirSync(commandsFolder);
+	const cmdFolders = fs.readdirSync(commandsFolder).filter(f => !f.includes(".gitkeep"));
 
 	for (const folder of cmdFolders) {
 		const command = require(path.join(
@@ -17,11 +17,9 @@ function fetchCommands(commandsFolder) {
 			folder
 		));
 
-		if (fs.readdirSync(path.join(
-			commandsFolder,
-			folder,
-			"subcommands"
-		)).length > 0)
+		const subcommands = fs.readdirSync(path.join(commandsFolder, folder, "subcommands")).filter(f => !f.includes(".gitkeep"));
+
+		if (subcommands.length > 0)
 			command.subcommands = fetchCommands(path.join(
 				commandsFolder,
 				folder,

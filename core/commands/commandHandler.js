@@ -31,7 +31,7 @@ async function executeCommand(commandCollection, commandName, options, interacti
 		}
 	}
 	else {
-		const { name, options } = options[0];
+		const { subcmd_name, subcmd_options } = options[0];
 
 		let stopExecution = false;
 		try {
@@ -42,7 +42,7 @@ async function executeCommand(commandCollection, commandName, options, interacti
 		}
 		if (stopExecution) return;
 
-		executeCommand(cmd.subcommands, name, options, interaction);
+		executeCommand(cmd.subcommands, subcmd_name, subcmd_options, interaction);
 	}
 }
 
