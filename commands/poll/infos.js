@@ -51,5 +51,6 @@ module.exports = {
 		Intents.FLAGS.GUILDS
 	],
 	permissions: [],
+	configurations: [],
 	DEFAULT_DURATION: 60 * 60 * 1000
 };

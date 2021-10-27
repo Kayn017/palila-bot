@@ -1,6 +1,5 @@
-const { init, shutdown, execute, middleware } = require("./actions");
-const { configure, configurations } = require("./config");
-const { name, author, description, explication, options, intents, permissions } = require("./infos");
+const { init, shutdown, execute, middleware, configure } = require("./actions");
+const { name, author, description, explication, options, intents, permissions, configurations } = require("./infos");
 
 module.exports = {
 	// actions
@@ -8,10 +7,7 @@ module.exports = {
 	shutdown,
 	execute,
 	middleware,
-
-	// config
 	configure,
-	configurations,
 
 	// infos
 	name,
@@ -21,4 +17,5 @@ module.exports = {
 	options,
 	intents,
 	permissions,
+	configurations,
 };

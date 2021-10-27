@@ -3,11 +3,8 @@
 		"init": "function",
 		"shutdown": "function",
 		"execute": "async function",
-		"middleware": "async function"
-	},
-	"config.js": {
-		"configure": "async function",
-		"configurations": "array"
+		"middleware": "async function",
+		"configure": "async function"
 	},
 	"infos.js": {
 		"name": "value",
@@ -16,7 +13,8 @@
 		"author": "value",
 		"options": "array",
 		"intents": "array",
-		"permissions": "array"
+		"permissions": "array",
+		"configurations": "array"
 	},
 	"subcommands": {}
 }

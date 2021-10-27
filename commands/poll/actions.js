@@ -135,6 +135,9 @@ async function execute(interaction, options) {
 async function middleware() {
 
 }
+async function configure() {
+
+}
 
 function collectVotes(voteMessage, pollDuration) {
 
@@ -222,4 +225,5 @@ module.exports = {
 	shutdown,
 	execute,
 	middleware,
+	configure
 };
