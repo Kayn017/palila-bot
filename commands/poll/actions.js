@@ -4,7 +4,7 @@ const { stringToMs } = require("../../services/time");
 const color = process.env.COLOR;
 const { LocalCache } = require("../../services/cache");
 const { debug } = require("../../services/log");
-const { DEFAULT_DURATION } = require("./infos");
+const { DEFAULT_DURATION } = require("./consts");
 
 const cache = new LocalCache("poll");
 

@@ -31,11 +31,12 @@ async function executeCommand(commandCollection, commandName, options, interacti
 		}
 	}
 	else {
-		const { subcmd_name, subcmd_options } = options[0];
+		const subcmd_name = options[0].name;
+		const subcmd_options = options[0].options;
 
 		let stopExecution = false;
 		try {
-			stopExecution = await cmd.middleware();
+			stopExecution = await cmd.middleware(interaction, options);
 		}
 		catch (e) {
 			err(e, "commandHandler", undefined, e.stack);

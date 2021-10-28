@@ -52,5 +52,4 @@ module.exports = {
 	],
 	permissions: [],
 	configurations: [],
-	DEFAULT_DURATION: 60 * 60 * 1000
 };

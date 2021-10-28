@@ -5,3 +5,5 @@ database
 .env
 log
 cache
+*.aof
+*.rdb

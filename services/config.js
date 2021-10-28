@@ -5,18 +5,18 @@ const TYPES = [
 	"module"
 ];
 
-async function get(type, name, guildId, property) {
+function get(type, name, guildId, property) {
 	if (!TYPES.includes(type))
 		throw new Error("Type invalide");
 
-	return configCore.redisClient.asyncGet(`${type}:${name}:${guildId}:${property}`);
+	return configCore.redisClient.getAsync(`${type}:${name}:${guildId}:${property}`);
 }
 
-async function set(type, name, guildId, property) {
+function set(type, name, guildId, property, value) {
 	if (!TYPES.includes(type))
 		throw new Error("Type invalide");
 
-	configCore.redisClient.asyncSet(`${type}:${name}:${guildId}:${property}`);
+	configCore.redisClient.set(`${type}:${name}:${guildId}:${property}`, value);
 }
 
 module.exports = {
