@@ -1,41 +1,31 @@
-const configCore = require("../core/config");
+const db = require("../core/database/index");
 
 async function isGod(id) {
-	const gods = await configCore.redisClient.getAsync("global:gods");
-	return gods.includes(id);
+	return (await db.User.findOne({ where: { discordid: id } })).god;
 }
 
 async function addGod(id) {
-	let gods = await configCore.redisClient.getAsync("global:gods");
+	const user = await db.User.findOne({ where: { discordid: id } });
 
-	if (!gods) {
-		gods = [];
+	if (!user) {
+		db.User.create({ discordid: id, god: true });
 	}
 	else {
-		gods = gods.split(",");
+		user.god = true;
+		user.save();
 	}
-
-	gods.push(id);
-
-	configCore.redisClient.set("global:gods", gods.join(","));
 }
 
 async function delGod(id) {
-	let gods = await configCore.redisClient.getAsync("global:gods");
+	const user = await db.User.findOne({ where: { discordid: id } });
 
-	if (!gods) {
-		gods = [];
+	if (!user) {
+		throw new Error("Aucun utilisateur ne correspond a cet id");
 	}
 	else {
-		gods = gods.split(",");
+		user.god = false;
+		user.save();
 	}
-
-	if (!gods.includes(id)) {
-		throw new Error("L'utilisateur donné n'est pas un utilisateur god");
-	}
-
-	gods.splice(gods.indexOf(id), 1);
-	configCore.redisClient.set("global:gods", gods.join(","));
 }
 
 module.exports = {

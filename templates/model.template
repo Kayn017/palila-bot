@@ -9,12 +9,12 @@ module.exports = sequelize => {
 
 	{{name}}.init({
 
-		}, 
-		{
-			sequelize,
-			modelName: "{{name}}",
-			tableName: "{{name}}"
-		});
+	}, 
+	{
+		sequelize,
+		modelName: "{{name}}",
+		tableName: "{{name}}"
+	});
 
 	return {{name}};
 };
