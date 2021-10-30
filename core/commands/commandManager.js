@@ -42,7 +42,7 @@ async function initCommands(client) {
 	// on ajoute les nouvelles commandes et on actualise les commandes déjà existantes
 	client.commands.forEach(async cmd => {
 
-		await cmd.init(client);
+		await initCommand(cmd, client);
 
 		let distantCommand;
 
@@ -110,6 +110,13 @@ function initOptions(command) {
 	return options;
 }
 
+async function initCommand(cmd, client) {
+	await cmd.init(client);
+
+	if (cmd.subcommands) {
+		cmd.subcommands.forEach(subcmd => initCommand(subcmd, client))
+	}
+}
 module.exports = {
 	fetchCommands,
 	initCommands
