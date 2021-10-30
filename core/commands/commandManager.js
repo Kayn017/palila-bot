@@ -114,7 +114,7 @@ async function initCommand(cmd, client) {
 	await cmd.init(client);
 
 	if (cmd.subcommands) {
-		cmd.subcommands.forEach(subcmd => initCommand(subcmd, client))
+		cmd.subcommands.forEach(subcmd => initCommand(subcmd, client));
 	}
 }
 module.exports = {
