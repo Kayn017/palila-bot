@@ -1,4 +1,4 @@
-const db = require("../core/database/index");
+const db = require("../core/database");
 
 async function isGod(id) {
 	const user = await db.User.findOne({ where: { discordid: id } });
