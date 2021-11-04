@@ -52,4 +52,5 @@ module.exports = {
 	],
 	permissions: [],
 	configurations: [],
+	globalCommand: true
 };

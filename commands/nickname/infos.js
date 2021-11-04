@@ -20,4 +20,5 @@ module.exports = {
 	configurations: [
 		"keepPseudo"
 	],
+	globalCommand: true
 };

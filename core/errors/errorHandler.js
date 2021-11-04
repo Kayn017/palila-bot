@@ -1,5 +1,5 @@
 const process = require("process");
-const fs = require("fs");
+const db = require("../database");
 const { MessageEmbed } = require("discord.js");
 const { fatalError } = require("../../services/log");
 
@@ -11,10 +11,10 @@ function handleError(client) {
 
 		if (client.isReady() && !global.devEnv) {
 
-			const config = JSON.parse(fs.readFileSync("./config/config.json"));
+			const gods = await db.User.findAll({ where: { god: true } });
 
-			for (const userID of config.discord.gods) {
-				const user = await client.users.fetch(userID);
+			for (const god of gods) {
+				const user = await client.users.fetch(god.discordid);
 
 				const errorMessage = new MessageEmbed();
 				errorMessage.setTitle("FATAL ERROR");

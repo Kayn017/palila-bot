@@ -218,8 +218,12 @@ const factory = {
 					}
 					else if (type === "array") {
 						value = "[]";
-					} else if (type === "object") {
+					} 
+					else if (type === "object") {
 						value = "{}";
+					}
+					else if (type === "boolean") {
+						value = "false";
 					}
 
 					exports += `\t${property}: ${value},${FILE_LINE_BREAK}`;

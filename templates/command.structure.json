@@ -14,7 +14,8 @@
 		"options": "array",
 		"intents": "array",
 		"permissions": "array",
-		"configurations": "array"
+		"configurations": "array",
+		"globalCommand": "boolean"
 	},
 	"subcommands": {}
 }

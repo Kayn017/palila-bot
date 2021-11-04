@@ -1,8 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const { Collection } = require("discord.js");
-const process = require("process");
 const { log } = require("../../services/log");
+const process = require("process");
 
 function fetchCommands(commandsFolder) {
 	if (!fs.existsSync(commandsFolder))
@@ -34,27 +34,50 @@ function fetchCommands(commandsFolder) {
 	return commands;
 }
 
-async function initCommands(client) {
-
-	await client.application.commands.fetch();
+async function initGlobalCommands(client) {
 
 	// on initialise les commandes
 	// on ajoute les nouvelles commandes et on actualise les commandes déjà existantes
 	client.commands.forEach(async cmd => {
 
+		if(!cmd.globalCommand) return;
+
 		await initCommand(cmd, client);
 
-		let distantCommand;
+		const applicationCommands = await client.application.commands.fetch();
+		const distantCommand = applicationCommands.find(c => c.name === cmd.name);
+		
+		const data = {
+			name: cmd.name,
+			description: cmd.description,
+			options: initOptions(cmd)
+		};
 
-		if (global.devEnv) {
-			const devGuild = await client.guilds.fetch(process.env.DEVGUILD);
-			const guildCommands = await devGuild.commands.fetch();
-			distantCommand = guildCommands.find(c => c.name === cmd.name);
-		}
-		else {
-			const applicationCommands = await client.application.commands.fetch();
-			distantCommand = applicationCommands.find(c => c.name === cmd.name);
-		}
+		if (distantCommand)
+			client.application.commands.edit(distantCommand, data, null);
+		else
+			client.application.commands.create(data, null);
+	});
+
+	// on supprime les vieilles commandes qui n'existent plus en local
+	const applicationCommands = await client.application.commands.fetch();
+	const oldCommands = applicationCommands.filter(c => !client.commands.has(c.name));
+
+	oldCommands.forEach(c => {
+		c.delete();
+		log(`Suppression de la commande ${c.name}. Celle-ci n'est plus présente en local.`, "commandManager");
+	});
+}
+
+async function initDevCommands(client) {
+	client.commands.forEach(async cmd => {
+
+		await initCommand(cmd, client);
+
+		const devGuild = await client.guilds.fetch(process.env.DEVGUILD);
+		const guildCommands = await devGuild.commands.fetch();
+		const distantCommand = guildCommands.find(c => c.name === cmd.name);
+
 
 		const data = {
 			name: cmd.name,
@@ -63,24 +86,15 @@ async function initCommands(client) {
 		};
 
 		if (distantCommand)
-			client.application.commands.edit(distantCommand, data, global.devEnv ? process.env.DEVGUILD : null);
+			client.application.commands.edit(distantCommand, data, process.env.DEVGUILD);
 		else
-			client.application.commands.create(data, global.devEnv ? process.env.DEVGUILD : null);
+			client.application.commands.create(data, process.env.DEVGUILD);
 	});
 
 	// on supprime les vieilles commandes qui n'existent plus en local
-	let oldCommands;
-
-	if (global.devEnv) {
-		const devGuild = await client.guilds.fetch(process.env.DEVGUILD);
-		const guildCommands = await devGuild.commands.fetch();
-		oldCommands = guildCommands.filter(c => !client.commands.has(c.name));
-	}
-	else {
-		const applicationCommands = await client.application.commands.fetch();
-		oldCommands = applicationCommands.filter(c => !client.commands.has(c.name));
-	}
-
+	const devGuild = await client.guilds.fetch(process.env.DEVGUILD);
+	const guildCommands = await devGuild.commands.fetch();
+	const oldCommands = guildCommands.filter(c => !client.commands.has(c.name));
 
 	oldCommands.forEach(c => {
 		c.delete();
@@ -117,7 +131,11 @@ async function initCommand(cmd, client) {
 		cmd.subcommands.forEach(subcmd => initCommand(subcmd, client));
 	}
 }
+
 module.exports = {
 	fetchCommands,
-	initCommands
+	initGlobalCommands,
+	initCommand,
+	initOptions,
+	initDevCommands
 };

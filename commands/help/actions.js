@@ -48,7 +48,6 @@ async function execute(interaction, options) {
 		}
 	}
 
-
 	interaction.reply({ embeds: [embed] });
 }
 async function middleware() {
