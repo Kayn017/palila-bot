@@ -20,6 +20,7 @@ createBotStructure();
 const database = require("./core/database");
 const { handleError } = require("./core/errors");
 const handleExtinctionSignal = require("./core/extinction");
+const { handleNewGuild } = require("./core/guilds")
 const api = require("./core/api");
 const redisClient = require("./core/config");
 
@@ -44,6 +45,7 @@ client.api = api;
 
 handleError(client);
 handleExtinctionSignal(client);
+handleNewGuild(client);
 
 client.once("ready", async () => {
 	log(`Connecté à Discord en tant que ${client.user.tag}`, "index");

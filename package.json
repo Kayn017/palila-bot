@@ -13,7 +13,8 @@
 		"make:model": "node ./scripts/factory.js MODEL",
 		"make:command": "node ./scripts/factory.js COMMAND",
 		"make:module": "node ./scripts/factory.js MODULE",
-		"make:route": "node ./scripts/factory.js ROUTE"
+		"make:route": "node ./scripts/factory.js ROUTE",
+		"dev:cleancmd": "node ./scripts/commands.js CLEAN_COMMANDS"
 	},
 	"author": "Tanguy Gimenez",
 	"license": "ISC",

@@ -13,25 +13,7 @@ async function initGuildCommands(client) {
 
 		await initCommand(cmd, client);
 
-		guilds.forEach( async g => {
-
-			const guild = await g.fetch();
-
-			const guildCommands = await guild.commands.fetch();
-			const distantCommand = guildCommands.find(c => c.name === cmd.name);
-
-			const data = {
-				name: cmd.name,
-				description: cmd.description,
-				options: initOptions(cmd)
-			};
-
-			if (distantCommand)
-				client.application.commands.edit(distantCommand, data, guild.id);
-			else
-				client.application.commands.create(data, guild.id);
-
-		});
+		guilds.forEach( g => initGuildCommand(client, cmd, g));	
 	});
 
 	// on supprime les vieilles commandes qui n'existent plus en local
@@ -49,6 +31,25 @@ async function initGuildCommands(client) {
 	});
 }
 
+async function initGuildCommand(client, cmd, g) {
+	const guild = await g.fetch();
+
+	const guildCommands = await guild.commands.fetch();
+	const distantCommand = guildCommands.find(c => c.name === cmd.name);
+
+	const data = {
+		name: cmd.name,
+		description: cmd.description,
+		options: initOptions(cmd)
+	};
+
+	if (distantCommand)
+		client.application.commands.edit(distantCommand, data, guild.id);
+	else
+		client.application.commands.create(data, guild.id);
+}
+
 module.exports = {
-	initGuildCommands
+	initGuildCommands,
+	initGuildCommand
 };
