@@ -19,7 +19,8 @@ module.exports = app => {
 				routePath,
 				filename
 			));
-			app.use(route.url, route.middleware);
+			if(route.useMiddleware)
+				app.use(route.url, route.middleware);
 			return route;
 		})
 		.forEach(route => {

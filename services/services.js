@@ -32,11 +32,11 @@ function launchWorker(workerName, options) {
 	});
 
 	worker.on("error", e => {
-		err(`ERROR : ${e.message}`, "worker", undefined, e.stack);
+		err(`${e.message}`, "worker", undefined, e.stack);
 	});
 
 	worker.on("messageerror", e => {
-		err(`ERROR : ${e.message}`, "worker", undefined, e.stack);
+		err(`${e.message}`, "worker", undefined, e.stack);
 	});
 }
 

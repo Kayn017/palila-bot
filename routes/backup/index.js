@@ -1,12 +1,11 @@
-const { method, url, useMiddleware } = require("./infos");
+const { method, url } = require("./infos");
 const { execute, middleware, init, shutdown } = require("./actions");
 
 module.exports = {
 	method,
 	url,
-	useMiddleware,
 	execute,
 	middleware,
 	init,
-	shutdown,
+	shutdown
 };

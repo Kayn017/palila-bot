@@ -8,6 +8,7 @@
 	"infos.js": {
 		"method": "value",
 		"url": "value",
-		"author": "value"
+		"author": "value",
+		"useMiddleware": "boolean"
 	}
 }

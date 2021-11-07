@@ -2,6 +2,7 @@ const worker = require("worker_threads");
 const path = require("path");
 const { Client } = require("discord.js");
 const process = require("process");
+require("dotenv").config();
 
 const WORKER_FOLDER = path.join(
 	// eslint-disable-next-line no-undef
@@ -22,8 +23,9 @@ const client = new Client({
 });
 
 
-client.on("ready", () => {
-	workerToExecute.execute(client, options);
+client.on("ready", async () => {
+	await workerToExecute.execute(client, options);
+	process.exit(0);
 });
 
 client.login(process.env.TOKEN);
