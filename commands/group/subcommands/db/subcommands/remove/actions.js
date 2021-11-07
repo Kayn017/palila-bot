@@ -1,8 +1,17 @@
 const db = require("../../../../../../core/database");
 const { log } = require("../../../../../../services/log");
 
-function init() {
+async function init(client, guild) {
 
+	const options = [];
+
+	const groups = await db.Group.findAll({ where: { guildId: guild.id } });
+
+	groups.forEach( group => {
+		options.push({ name: group.name, value: "" + group.id })
+	});
+
+	this.options[0].choices = options;
 }
 function shutdown() {
 

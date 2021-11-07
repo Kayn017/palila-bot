@@ -11,8 +11,6 @@ async function initGuildCommands(client) {
 
 		if(cmd.globalCommand) return;
 
-		await initCommand(cmd, client);
-
 		guilds.forEach( g => initGuildCommand(client, cmd, g));	
 	});
 
@@ -33,6 +31,8 @@ async function initGuildCommands(client) {
 
 async function initGuildCommand(client, cmd, g) {
 	const guild = await g.fetch();
+
+	await initCommand(cmd, client, guild);
 
 	const guildCommands = await guild.commands.fetch();
 	const distantCommand = guildCommands.find(c => c.name === cmd.name);

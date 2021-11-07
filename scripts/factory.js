@@ -91,6 +91,9 @@ const factory = {
 					} else if (type === "object") {
 						value = "{}";
 					}
+					else if (type === "boolean") {
+						value = "false";
+					}
 
 					exports += `\t${property}: ${value},${FILE_LINE_BREAK}`;
 				}
@@ -156,7 +159,9 @@ const factory = {
 					} else if (type === "object") {
 						value = "{}";
 					}
-
+					else if (type === "boolean") {
+						value = "false";
+					}
 					exports += `\t${property}: ${value},${FILE_LINE_BREAK}`;
 				}
 			}
@@ -238,6 +243,28 @@ const factory = {
 		fs.writeFileSync(path.join(routePath, "index.js"), index);
 
 		console.log("\x1b[0m - Route créé !\x1b[0m");
+	},
+	WORKER() {
+		const name = process.argv[3];
+		const workerPath = path.join(
+			// eslint-disable-next-line no-undef
+			__dirname,
+			"..",
+			"worker",
+			`${name}.js`
+		);
+
+		if (fs.existsSync(workerPath)) {
+			console.log("\x1b[31mCe worker existe déjà.\x1b[0m");
+			process.exit(1);
+		}
+
+		let template = getTemplate("worker");
+		template = template.replaceAll("{{name}}", name);
+
+		fs.writeFileSync(workerPath, template);
+
+		console.log("\x1b[0m - Worker créé !\x1b[0m");
 	}
 };
 

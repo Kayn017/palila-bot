@@ -72,9 +72,10 @@ async function initGlobalCommands(client) {
 async function initDevCommands(client) {
 	client.commands.forEach(async cmd => {
 
-		await initCommand(cmd, client);
-
 		const devGuild = await client.guilds.fetch(process.env.DEVGUILD);
+
+		await initCommand(cmd, client, devGuild);
+
 		const guildCommands = await devGuild.commands.fetch();
 		const distantCommand = guildCommands.find(c => c.name === cmd.name);
 
@@ -124,11 +125,11 @@ function initOptions(command) {
 	return options;
 }
 
-async function initCommand(cmd, client) {
-	await cmd.init(client);
+async function initCommand(cmd, client, guild) {
+	await cmd.init(client, guild);
 
 	if (cmd.subcommands) {
-		cmd.subcommands.forEach(subcmd => initCommand(subcmd, client));
+		cmd.subcommands.forEach(subcmd => initCommand(subcmd, client, guild));
 	}
 }
 

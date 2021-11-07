@@ -12,7 +12,7 @@ function launchWorker(workerName, options) {
 			"..",
 			"core",
 			"worker",
-			"initWorker.js"
+			"workerLoader.js"
 		)
 	);
 
