@@ -1,5 +1,5 @@
 const { init, shutdown, execute, middleware, configure } = require("./actions");
-const { name, author, description, explication, options, intents, permissions, configurations } = require("./infos");
+const {	name, author, description, explication, options, intents, permissions, configurations, globalCommand } = require("./infos");
 
 module.exports = {
 	// actions
@@ -18,4 +18,5 @@ module.exports = {
 	intents,
 	permissions,
 	configurations,
+	globalCommand,
 };

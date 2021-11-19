@@ -16,12 +16,17 @@ async function middleware(interaction) {
 	const admin = (await config.get("command", "config", interaction.guild.id, "adminRoles"))?.includes(interaction.user.id);
 
 	if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR, true) && !god && !admin) {
-		interaction.reply({ content: "Vous n'avez pas les droits pour executer cette commande.", ephemeral: true });
+		interaction.reply({
+			content: "Vous n'avez pas les droits pour executer cette commande.",
+			ephemeral: true,
+		});
 		return true;
 	}
+
+	return false;
 }
 async function configure() {
-
+	
 }
 module.exports = {
 	init,

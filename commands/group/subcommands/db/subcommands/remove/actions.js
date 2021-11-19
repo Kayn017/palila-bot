@@ -1,14 +1,13 @@
-const db = require("../../../../../../core/database");
+const { removeChoiceToCommand } = require("../../../../../../services/commands");
 const { log } = require("../../../../../../services/log");
 
 async function init(client, guild) {
-
 	const options = [];
 
-	const groups = await db.Group.findAll({ where: { guildId: guild.id } });
+	const groups = await client.db.Group.findAll({ where: { guildId: guild.id } });
 
-	groups.forEach( group => {
-		options.push({ name: group.name, value: "" + group.id })
+	groups.forEach((group) => {
+		options.push({ name: group.name, value: "" + group.id });
 	});
 
 	this.options[0].choices = options;
@@ -17,15 +16,17 @@ function shutdown() {
 
 }
 async function execute(interaction, options) {
-
 	await interaction.deferReply({ ephemeral: true });
 
 	const id = options[0].value;
 
-	const group = await db.Group.findOne({ where: { id }});
+	const group = await interaction.client.db.Group.findOne({ where: { id } });
 
-	if(group === null) {
-		return interaction.editReply({ content: "Ce rôle n'est pas le rôle d'un groupe ", ephemeral: true });
+	if (group === null) {
+		return interaction.editReply({
+			content: "Ce rôle n'est pas le rôle d'un groupe ",
+			ephemeral: true,
+		});
 	}
 
 	const role = await interaction.guild.roles.fetch(group.roleId);
@@ -33,33 +34,27 @@ async function execute(interaction, options) {
 	await group.destroy();
 
 	const commands = await interaction.guild.commands.fetch();
-	const command = commands.find(c => c.name === "group");
+	const command = commands.find((c) => c.name === "group");
 
-	const addCommand = command.options.find(o => o.name === "add");
-	if(addCommand.options[0].choices === undefined) addCommand.options[0].choices = [];
-	addCommand.options[0].choices = addCommand.options[0].choices.filter(c => c.value != group.id);
+	const addCommand = command.options.find((o) => o.name === "add");
+	removeChoiceToCommand(addCommand, group.id);
 
-	const removeCommand = command.options.find(o => o.name === "remove");
-	if(removeCommand.options[0].choices === undefined) removeCommand.options[0].choices = [];
-	removeCommand.options[0].choices = removeCommand.options[0].choices.filter(c => c.value != group.id);
+	const removeCommand = command.options.find((o) => o.name === "remove");
+	removeChoiceToCommand(removeCommand, group.id);
 
-	const dbRemoveCommand = command.options.find(o => o.name === "db").options.find(o => o.name === "remove");
-	if(dbRemoveCommand.options[0].choices === undefined) dbRemoveCommand.options[0].choices = [];
-	dbRemoveCommand.options[0].choices = dbRemoveCommand.options[0].choices.filter(c => c.value != group.id);
+	const dbRemoveCommand = command.options
+		.find((o) => o.name === "db")
+		.options.find((o) => o.name === "remove");
+	removeChoiceToCommand(dbRemoveCommand, group.id);
 
 	await command.edit({ options: command.options });
-
 
 	log(`Suppression du groupe ${group.name} par ${interaction.user.tag}`, "group db remove", interaction);
 
 	interaction.editReply({ content: "Groupe supprimé !", ephemeral: true });
 }
-async function middleware() {
-
-}
-async function configure() {
-
-}
+async function middleware() {}
+async function configure() {}
 module.exports = {
 	init,
 	shutdown,

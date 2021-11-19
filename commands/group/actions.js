@@ -9,12 +9,15 @@ async function execute() {
 }
 async function middleware(interaction) {
 	if (!interaction.channel || interaction.channel.type === "dm") {
-		interaction.reply({ content: "Cette commande ne peut pas être utilisé en MP.", ephemeral: true });
+		interaction.reply({
+			content: "Cette commande ne peut pas être utilisé en MP.",
+			ephemeral: true,
+		});
 		return true;
 	}
 }
 async function configure() {
-
+	
 }
 module.exports = {
 	init,

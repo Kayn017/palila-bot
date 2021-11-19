@@ -1,17 +1,13 @@
 const process = require("process");
-const db = require("../database");
 const { MessageEmbed } = require("discord.js");
 const { fatalError } = require("../../services/log");
 
 function handleError(client) {
-
 	process.on("uncaughtException", async (err) => {
-
 		fatalError(`FATAL : ${err.message}`, "error", undefined, err.stack);
 
 		if (client.isReady() && !global.devEnv) {
-
-			const gods = await db.User.findAll({ where: { god: true } });
+			const gods = await client.db.User.findAll({ where: { god: true } });
 
 			for (const god of gods) {
 				const user = await client.users.fetch(god.discordid);
@@ -29,5 +25,5 @@ function handleError(client) {
 }
 
 module.exports = {
-	handleError
+	handleError,
 };

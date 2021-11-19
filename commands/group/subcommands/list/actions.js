@@ -1,5 +1,4 @@
 const { MessageEmbed } = require("discord.js");
-const db = require("../../../../core/database");
 const process = require("process");
 
 function init() {
@@ -11,7 +10,7 @@ function shutdown() {
 async function execute(interaction) {
 	const guildId = interaction.guild.id;
 
-	const groups = await db.Group.findAll({ where: { guildId } });
+	const groups = await interaction.db.Group.findAll({ where: { guildId } });
 
 	const embed = new MessageEmbed()
 		.setColor(process.env.COLOR)
@@ -19,11 +18,11 @@ async function execute(interaction) {
 
 	let list = "";
 
-	for(const g of groups) {
-		list += ` - ${g.name}\n`;	
+	for (const g of groups) {
+		list += ` - ${g.name}\n`;
 	}
 
-	if(groups.length === 0) {
+	if (groups.length === 0) {
 		list = "Aucun groupe n'a été créé";
 	}
 
@@ -35,7 +34,7 @@ async function middleware() {
 
 }
 async function configure() {
-
+	
 }
 module.exports = {
 	init,
