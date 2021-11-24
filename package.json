@@ -15,7 +15,8 @@
 		"make:module": "node ./scripts/factory.js MODULE",
 		"make:route": "node ./scripts/factory.js ROUTE",
 		"make:worker": "node ./scripts/factory.js WORKER",
-		"dev:cleancmd": "node ./scripts/commands.js CLEAN_COMMANDS"
+		"dev:cleancmd": "node ./scripts/commands.js CLEAN_COMMANDS",
+		"add:god": "node ./scripts/gods.js ADD_GOD"
 	},
 	"author": "Tanguy Gimenez",
 	"license": "ISC",

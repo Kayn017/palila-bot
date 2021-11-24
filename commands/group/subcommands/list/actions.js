@@ -10,7 +10,7 @@ function shutdown() {
 async function execute(interaction) {
 	const guildId = interaction.guild.id;
 
-	const groups = await interaction.db.Group.findAll({ where: { guildId } });
+	const groups = await interaction.client.db.Group.findAll({ where: { guildId } });
 
 	const embed = new MessageEmbed()
 		.setColor(process.env.COLOR)

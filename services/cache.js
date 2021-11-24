@@ -16,9 +16,8 @@ class LocalCache {
 	}
 
 	static get(cacheName) {
-		if(!caches[cacheName]) {
+		if(!caches[cacheName]) 
 			caches[cacheName] = new LocalCache(cacheName);
-		}
 
 		return caches[cacheName];
 	}
@@ -26,7 +25,8 @@ class LocalCache {
 	set(property, value) {
 		this.data[property] = value;
 		fs.writeFile(this.cacheFile, JSON.stringify(this.data), (e) => {
-			if (e) err(e, "cache", undefined, e.stack);
+			if (e)
+				err(e, "cache", undefined, e.stack);
 		});
 	}
 
@@ -41,7 +41,8 @@ class LocalCache {
 	delete(property) {
 		delete this.data[property];
 		fs.writeFile(this.cacheFile, JSON.stringify(this.data), (e) => {
-			if (e) err(e, "cache", undefined, e.stack);
+			if (e) 
+				err(e, "cache", undefined, e.stack);
 		});
 	}
 

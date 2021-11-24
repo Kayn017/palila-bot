@@ -15,7 +15,7 @@ function shutdown() {
 async function execute(interaction, options) {
 	const id = options[0].value;
 
-	const group = await interaction.db.Group.findOne({ where: { id } });
+	const group = await interaction.client.db.Group.findOne({ where: { id } });
 
 	if (group === null) {
 		return interaction.reply({

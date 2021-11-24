@@ -1,9 +1,7 @@
 {
 	"actions.js": {
 		"init": "function",
-		"shutdown": "function"
-	},
-	"config.js": {
+		"shutdown": "function",
 		"configure": "async function"
 	},
 	"infos.js": {

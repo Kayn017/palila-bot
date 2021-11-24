@@ -7,7 +7,7 @@ async function create(channel, avatar, reason) {
 
 async function get(channel) {
 	const webhooks = await channel.fetchWebhooks();
-	return webhooks.find(wh => wh.username === channel.client.user.username);
+	return [...webhooks.values()].find(wh => wh.name === channel.client.user.username);
 }
 
 
