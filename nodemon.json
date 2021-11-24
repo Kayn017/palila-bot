@@ -1,7 +1,6 @@
 {
 	"verbose": false,
 	"ignore": [
-		"**.json",
 		"scripts"
 	]
 }

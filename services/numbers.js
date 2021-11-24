@@ -8,6 +8,14 @@ function orBit(numbers) {
 	return res;
 }
 
+function getRandomInt(max) {
+	if (!max)
+		throw new Error("Pas d'argument envoyé");
+
+	return Math.floor(Math.random() * Math.floor(max));
+}
+
 module.exports = {
-	orBit
+	orBit,
+	getRandomInt
 };

@@ -1,0 +1,30 @@
+{
+    "quoi[ .!?\"':;^+=()*-,]*$": [
+        "feur",
+        "drillatère",
+        "tuor",
+        "ffure",
+        "driceps",
+        "la Lumpur",
+        "drupède",
+        "dricolore",
+        "ffé",
+        "drillage",
+        "que",
+        "de neuf ?",
+        "artz",
+        "dragénaire"
+    ],
+    "(?:j(?:'|e *)?s|ch)uis? (.+)": [
+        "Enchanté *{{captured}}* ! Je suis *{{bot}}*",
+        "Tu t'appelles *{{captured}}* ? Drôle de prénom :o",
+        "Ah ? Tu veux que je te renomme *{{captured}}* ?",
+        "Mais non ! Tu es *{{author}}* !"
+    ],
+    "d[iy](?:. | |)(.{2,})": [
+        "{{captured}}"
+    ],
+    "c'est (.+)": [
+        "{{captured}}"
+    ]
+}
