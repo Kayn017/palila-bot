@@ -6,6 +6,5 @@ module.exports = {
 	options: [],
 	intents: [],
 	permissions: [],
-	configurations: [],
 	globalCommand: false,
 };

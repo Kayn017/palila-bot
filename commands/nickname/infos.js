@@ -17,8 +17,5 @@ module.exports = {
 	permissions: [
 		Permissions.FLAGS.CHANGE_NICKNAME
 	],
-	configurations: [
-		"keepPseudo"
-	],
 	globalCommand: true
 };

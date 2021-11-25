@@ -53,12 +53,13 @@ async function execute(interaction, options) {
 
 	interaction.editReply({ content: "Groupe supprimé !", ephemeral: true });
 }
-async function middleware() {}
-async function configure() {}
+async function middleware() {
+
+}
+
 module.exports = {
 	init,
 	shutdown,
 	execute,
 	middleware,
-	configure,
 };

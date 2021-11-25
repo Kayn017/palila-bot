@@ -31,13 +31,9 @@ async function execute(interaction) {
 async function middleware() {
 
 }
-async function configure() {
-
-}
 module.exports = {
 	init,
 	shutdown,
 	execute,
 	middleware,
-	configure,
 };

@@ -3,8 +3,7 @@
 		"init": "function",
 		"shutdown": "function",
 		"execute": "async function",
-		"middleware": "async function",
-		"configure": "async function"
+		"middleware": "async function"
 	},
 	"infos.js": {
 		"name": "value",
@@ -17,5 +16,6 @@
 		"configurations": "array",
 		"globalCommand": "boolean"
 	},
+	"configuration.js": {},
 	"subcommands": {}
 }

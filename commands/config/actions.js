@@ -26,13 +26,10 @@ async function middleware(interaction) {
 		return true;
 	}
 }
-async function configure() {
 
-}
 module.exports = {
 	init,
 	shutdown,
 	execute,
 	middleware,
-	configure,
 };

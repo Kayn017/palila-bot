@@ -22,6 +22,5 @@ module.exports = {
 		Permissions.FLAGS.VIEW_CHANNEL,
 		Permissions.FLAGS.SEND_MESSAGES
 	],
-	configurations: [],
 	globalCommand: true,
 };

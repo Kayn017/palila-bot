@@ -22,9 +22,12 @@ function init(client) {
 				let retour = jokes[t.id][getRandomInt(jokes[t.id].length)];
 				// const templateLength = retour.replaceAll(/{{[^ ]+}}/g, "").length;
 
-				retour = retour.replaceAll("{{bot}}", msg.client.user.username);
-				retour = retour.replaceAll("{{author}}", msg.author.username);
-				retour = retour.replaceAll("{{captured}}", msg.content.match(t.regexp)[1].substring(0, MESSAGE_LENGTH - retour.replaceAll("{{captured}}", "").length));
+				if(retour.includes("{{bot}}"))
+					retour = retour.replaceAll("{{bot}}", msg.client.user.username);
+				if(retour.includes("{{author}}"))
+					retour = retour.replaceAll("{{author}}", msg.author.username);
+				if(retour.includes("{{captured}}"))
+					retour = retour.replaceAll("{{captured}}", msg.content.match(t.regexp)[1]?.substring(0, MESSAGE_LENGTH - retour.replaceAll("{{captured}}", "").length));
 
 				msg.reply( retour );
 			}

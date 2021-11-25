@@ -18,13 +18,10 @@ async function execute(interaction, options) {
 async function middleware() {
 
 }
-async function configure() {
-
-}
 
 
 function getAllConfigurationParameters(command) {
-	const parameters = command.configurations;
+	const parameters = Object.keys(command.configuration);
 
 	if (command.subcommands) {
 		command.subcommands.forEach(subcmd => {
@@ -41,8 +38,8 @@ function executeConfigure(properties, value, interaction, commands) {
 
 	const command = commands.find(c => c.name === cmd);
 
-	if (command.configurations.includes(properties[properties.length - 1])) {
-		command.configure(properties[properties.length - 1], value, interaction);
+	if (Object.keys(command.configuration).includes(properties[properties.length - 1])) {
+		command.configuration[properties[properties.length - 1]](interaction, value);
 	} else {
 		properties.shift();
 		executeConfigure(properties, value, interaction, command.subcommands);
@@ -54,5 +51,4 @@ module.exports = {
 	shutdown,
 	execute,
 	middleware,
-	configure,
 };

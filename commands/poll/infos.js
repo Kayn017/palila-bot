@@ -51,6 +51,5 @@ module.exports = {
 	],
 	intents: [Intents.FLAGS.GUILDS],
 	permissions: [],
-	configurations: [],
 	globalCommand: true,
 };

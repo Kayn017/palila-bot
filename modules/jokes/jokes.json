@@ -25,6 +25,6 @@
         "{{captured}}"
     ],
     "c'est (.+)": [
-        "{{captured}}"
+        "Lorem ipsum"
     ]
 }

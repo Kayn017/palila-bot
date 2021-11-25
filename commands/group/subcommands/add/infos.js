@@ -18,5 +18,5 @@ module.exports = {
 	permissions: [
 		Permissions.FLAGS.MANAGE_ROLES
 	],
-	configurations: [],
+	globalCommand: false,
 };

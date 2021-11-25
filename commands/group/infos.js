@@ -12,6 +12,5 @@ module.exports = {
 	permissions: [
 		Permissions.FLAGS.MANAGE_GUILD
 	],
-	configurations: [],
 	globalCommand: false,
 };

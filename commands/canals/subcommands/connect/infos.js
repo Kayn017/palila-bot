@@ -18,6 +18,5 @@ module.exports = {
 	}],
 	intents: [],
 	permissions: [],
-	configurations: [],
 	globalCommand: false,
 };

@@ -15,5 +15,5 @@ module.exports = {
 		Intents.FLAGS.GUILDS
 	],
 	permissions: [],
-	configurations: [],
+	globalCommand: true
 };
