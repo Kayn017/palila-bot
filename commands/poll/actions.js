@@ -141,10 +141,6 @@ async function middleware() {
 
 }
 
-async function configure() {
-
-}
-
 function collectVotes(voteMessage, pollDuration) {
 	const votes = cache.get(voteMessage.id)?.votes ?? {};
 
@@ -235,5 +231,4 @@ module.exports = {
 	shutdown,
 	execute,
 	middleware,
-	configure,
 };

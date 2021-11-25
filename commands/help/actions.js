@@ -1,18 +1,21 @@
 const Discord = require("discord.js");
 const process = require("process");
+const { getAllCommandsName, getLocalCommandByString } = require("../../services/commands");
 
 function init(client) {
-	const allCommands = client.commands.keys();
+	
+	const commandsName = client.commands.map( cmd => getAllCommandsName(cmd) );
 
-	for (const cmdName of allCommands) {
+	commandsName.flat().forEach( name => {
 		this.options[0].choices.push({
-			name: cmdName,
-			value: cmdName
+			name: name,
+			value: name
 		});
-	}
+	});
 
 	this.color = process.env.COLOR;
 }
+
 function shutdown() {
 
 }
@@ -30,11 +33,20 @@ async function execute(interaction, options) {
 	else {
 		const commandName = options[0].value;
 
-		const cmd = interaction.client.commands.get(commandName);
+		const cmd = getLocalCommandByString(commandName, interaction.client.commands);
 
-		embed.setTitle(cmd.name);
+		embed.setTitle(commandName);
 		embed.addField("Description", cmd.description);
 		embed.addField("Explication", cmd.explication);
+
+		if(Object.keys(cmd.configuration).length > 0) {
+			let parameters = "";
+
+			Object.keys(cmd.configuration).forEach( k => parameters = parameters.concat(`- ${k}\n`));
+
+			embed.addField("Paramètres à configurer", parameters);
+		}
+
 		embed.setFooter(`Commande créée par ${cmd.author}`);
 
 		if (cmd.subcommands) {
