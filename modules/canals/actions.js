@@ -22,11 +22,7 @@ async function init(client) {
 function shutdown() {
 
 }
-function configure() {
-
-}
 module.exports = {
 	init,
-	shutdown,
-	configure
+	shutdown
 };

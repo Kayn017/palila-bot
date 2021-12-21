@@ -1,6 +1,7 @@
 {
 	"verbose": false,
 	"ignore": [
-		"scripts"
+		"scripts",
+    "cache"
 	]
 }

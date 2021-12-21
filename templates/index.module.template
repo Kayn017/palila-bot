@@ -1,11 +1,11 @@
-const { init, shutdown, configure } = require("./actions");
+const { init, shutdown } = require("./actions");
 const { name, author, description, explication, intents, permissions } = require("./infos");
+const configuration = require("./configuration");
 
 module.exports = {
 	// actions
 	init,
 	shutdown,
-	configure,
 	// infos
 	name,
 	author,
@@ -13,4 +13,6 @@ module.exports = {
 	explication,
 	intents,
 	permissions,
+	// configuration
+	configuration
 };

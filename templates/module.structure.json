@@ -1,8 +1,7 @@
 {
 	"actions.js": {
 		"init": "function",
-		"shutdown": "function",
-		"configure": "async function"
+		"shutdown": "function"
 	},
 	"infos.js": {
 		"name": "value",
@@ -11,5 +10,8 @@
 		"author": "value",
 		"intents": "array",
 		"permissions": "array"
-	}
+	},
+  "configuration.js": {
+
+  }
 }
