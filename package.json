@@ -10,8 +10,12 @@
 	"author": "Tanguy Gimenez",
 	"license": "ISC",
 	"dependencies": {
+		"bufferutil": "^4.0.5",
 		"discord.js": "12.5.1",
-		"rss-parser": "^3.12.0"
+		"erlpack": "discord/erlpack",
+		"rss-parser": "^3.12.0",
+		"utf-8-validate": "^5.0.7",
+		"zlib-sync": "^0.1.7"
 	},
 	"devDependencies": {
 		"nodemon": "^2.0.7"
