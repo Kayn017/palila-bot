@@ -169,8 +169,10 @@ function sendRank(guild, todayResponse) {
 	// on trie les personnes dans l'ordre de leur classement (les premiers en premiers, les deuxiemes en deuxiemes, etc)
 	for (const [personID, points] of Object.entries(scores)) {
 
-		const person = guild.members.cache.get(personID).user.tag;
+		const person = guild.members.cache.get(personID)?.user.tag;
 
+		if(!person) continue;
+		
 		if (rankToDisplay.length === 0) {
 			rankToDisplay.push({ persons: [person], points })
 			minPoints = points;
