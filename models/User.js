@@ -3,18 +3,22 @@ const { Sequelize, DataTypes } = require("sequelize");
 module.exports = sequelize => {
 
 	class User extends Sequelize.Model {
-		static associate() {
+		static associate(db) {
+			User.hasMany(db.LynchScore, { onDelete: "cascade" });
 		}
 	}
 
 	User.init({
 		discordid: {
 			type: DataTypes.STRING,
-			allowNull: false
+			allowNull: false,
+			primaryKey: true,
+			unique: true
 		},
 		god: {
 			type: DataTypes.BOOLEAN,
-			allowNull: false
+			allowNull: false,
+			defaultValue: false
 		}
 	},
 	{

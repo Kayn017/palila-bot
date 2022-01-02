@@ -4,7 +4,7 @@ RUN mkdir -p /usr/bot
 WORKDIR /usr/bot
 
 COPY package.json /usr/bot/
-RUN yarn install
+RUN yarn install --production
 
 COPY . /usr/bot/
 

@@ -16,6 +16,7 @@ module.exports = sequelize => {
 		nbChannelsConnected: {
 			type: DataTypes.NUMBER,
 			allowNull: true,
+			defaultValue: 0
 		},
 	}, 
 	{

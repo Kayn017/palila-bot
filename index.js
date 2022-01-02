@@ -25,7 +25,7 @@ const { handleError } = require("./core/errors");
 const handleExtinctionSignal = require("./core/extinction");
 const { handleNewGuild } = require("./core/guilds");
 const api = require("./core/api");
-const redisClient = require("./core/config");
+const { redisClient } = require("./core/config");
 
 const commands = fetchCommands(path.join(__dirname, "commands"));
 const modules = fetchModules(path.join(__dirname, "modules"));
@@ -49,6 +49,8 @@ handleNewGuild(client);
 
 client.once("ready", async () => {
 	log(`Connecté à Discord en tant que ${client.user.tag}`, "index");
+
+	await client.config.connect();
 
 	client.db = await initDatabase();
 	await initCommands(client);
