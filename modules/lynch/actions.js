@@ -174,6 +174,9 @@ async function updateScore(guildId) {
 
 		for(const id of votes[guildId][i]) {
 
+			console.log("dhjbfgjkqdfgkujqebgkuqhvg");
+			console.log(id);
+
 			let score = await db.LynchScore.findOne({
 				where: {
 					guildId,
@@ -201,9 +204,10 @@ async function updateScore(guildId) {
 				score.points++;
 			}
 
-			console.log(score.voteHistory);
-			score.voteHistory.push("" + i);
+			score.voteHistory.push(i);
 
+			// obligé de faire ca pour forcer sequelize a update l'history des votes
+			score.changed( "voteHistory", true );
 			await score.save();
 		}
 	}
@@ -231,6 +235,8 @@ async function sendRank(channel) {
 		if(!member) continue;
 		
 		const points = score.points;
+
+		if(points === 0) continue;
 
 		if (rankToDisplay.length === 0) {
 			rankToDisplay.push({ persons: [member.user.tag], points });

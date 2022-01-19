@@ -6,7 +6,7 @@ module.exports = {
 	options: [{
 		name: "personne",
 		type: "USER",
-		description: "Personne dont on veut voir le role",
+		description: "Personne dont on veut voir le score",
 		required: false,
 		choices: [],
 	}],

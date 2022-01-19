@@ -8,11 +8,6 @@ module.exports = sequelize => {
 	}
 
 	LynchHistory.init({
-		day: {
-			type: DataTypes.DATE,
-			allowNull: false,
-			defaultValue: Sequelize.NOW
-		},
 		number: {
 			type: DataTypes.INTEGER,
 			allowNull: false
