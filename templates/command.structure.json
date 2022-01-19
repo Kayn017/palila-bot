@@ -13,7 +13,6 @@
 		"options": "array",
 		"intents": "array",
 		"permissions": "array",
-		"configurations": "array",
 		"globalCommand": "boolean"
 	},
 	"configuration.js": {},

@@ -7,7 +7,6 @@ const { MessageEmbed } = require("discord.js");
 const { reactWithNumbers } = require("../../services/reaction");
 const { emojiToNumber, numberToEmoji } = require("../../services/numbers");
 const emojis = require("../../assets/emojis.json");
-const { Op } = require("sequelize");
 
 const cache = LocalCache.get("lynch");
 
@@ -171,57 +170,42 @@ async function updateScore(guildId) {
 
 	if(!todayWinners) todayWinners = [];
 
-	const scores = await db.LynchScore.findAll({ 
-		where: { 
-			guildId,
-			UserDiscordid: {
-				[Op.in]: todayWinners
-			}
-		} 
-	});
+	for(let i = 1; i <= 10; i++) {
 
-	// si des utilisateurs n'ont pas de score en bdd
-	if(scores.length !== todayWinners.length) {
+		for(const id of votes[guildId][i]) {
 
-		const users = await db.User.findAll({
-			where: {
-				discordid: {
-					[Op.in]: todayWinners,
-					[Op.notIn]: scores.map( sc => sc.UserDiscordid )
+			let score = await db.LynchScore.findOne({
+				where: {
+					guildId,
+					UserDiscordid: id
 				}
-			}
-		});
-
-		// si des utilisateurs ne sont pas encore en bdd, on les créé
-		if(users.length !== todayWinners.length) {
-			const missingUsersId = todayWinners.filter( id => !users.find(u => u.discordid === id));
-
-			for(const id of missingUsersId) {
-
-				const newUser = await db.User.create({ 
-					discordid: id,
-					god: false
-				});
-
-				users.push(newUser);
-			}
-		}
-
-		for(const user of users) {
-			const newScore = await db.LynchScore.create({
-				guildId,
-				points: 0,
-				voteHistory: [],
-				UserDiscordid: user.discordid
 			});
 
-			scores.push(newScore);
-		}		
-	}
+			// si l'utilisateur n'a pas de score en bdd, on lui en créé un
+			if(!score) {
+				let user = await db.User.findOne({
+					where: {
+						discordid: id
+					}
+				});
 
-	for(const score of scores) {
-		score.points++;
-		score.save();
+				// si on n'a jamais enregistré l'utilisateur en bdd, on le fait
+				if(!user) {
+					user = await db.User.create({ discordid: id, god: false });
+				}
+
+				score = await db.LynchScore.create({ guildId, UserDiscordid: id, points: 0, voteHistory: [] });
+			}
+
+			if(i == todayResult) {
+				score.points++;
+			}
+
+			console.log(score.voteHistory);
+			score.voteHistory.push("" + i);
+
+			await score.save();
+		}
 	}
 }
 
@@ -384,11 +368,9 @@ async function handleVotes(msg) {
 		cache.set("votes", votes);
 	});
 
-	reactionCollector.on("dispose", () => console.log("tutu"));
-
-	reactionCollector.on("end", collected => {
-		console.log(collected);
-	});
+	// reactionCollector.on("end", collected => {
+	// 	console.log(collected);
+	// });
 
 	allReactionCollectors.push(reactionCollector);
 

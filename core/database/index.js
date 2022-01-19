@@ -3,7 +3,7 @@ const { debug } = require("../../services/log");
 const { Sequelize } = require("sequelize");
 
 async function initDatabase() {
-	const sequelize = new Sequelize("palila-dev", "palila", "bot", {
+	const sequelize = new Sequelize(process.env.PG_DATABASE, process.env.PG_USERNAME, process.env.PG_PASSWORD, {
 		dialect: "postgres",
 		logging: (msg) => debug(msg, "postgres", null, null),
 	});
