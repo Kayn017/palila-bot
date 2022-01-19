@@ -14,7 +14,7 @@ module.exports = sequelize => {
 			defaultValue: Sequelize.NOW
 		},
 		number: {
-			type: DataTypes.NUMBER,
+			type: DataTypes.INTEGER,
 			allowNull: false
 		}
 	}, 

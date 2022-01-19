@@ -3,10 +3,9 @@ const { debug } = require("../../services/log");
 const { Sequelize } = require("sequelize");
 
 async function initDatabase() {
-	const sequelize = new Sequelize({
-		storage: "./database/db.sqlite",
-		dialect: "sqlite",
-		logging: (msg) => debug(msg, "sqlite", null, null),
+	const sequelize = new Sequelize("palila-dev", "palila", "bot", {
+		dialect: "postgres",
+		logging: (msg) => debug(msg, "postgres", null, null),
 	});
 	
 	const db = {};
