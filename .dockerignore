@@ -1,6 +1,6 @@
 .env
-node_modules
-cache
-database
-files
-log
+node_modules/
+cache/
+database/
+files/
+log/
