@@ -19,17 +19,17 @@ function init(client) {
 		triggers.forEach( t => {
 			if(t.regexp.test(msg.content)) {
 
-				let retour = jokes[t.id][getRandomInt(jokes[t.id].length)];
-				// const templateLength = retour.replaceAll(/{{[^ ]+}}/g, "").length;
+				let joke = jokes[t.id][getRandomInt(jokes[t.id].length)];
+				// const templateLength = joke.replaceAll(/{{[^ ]+}}/g, "").length;
 
-				if(retour.includes("{{bot}}"))
-					retour = retour.replaceAll("{{bot}}", msg.client.user.username);
-				if(retour.includes("{{author}}"))
-					retour = retour.replaceAll("{{author}}", msg.author.username);
-				if(retour.includes("{{captured}}"))
-					retour = retour.replaceAll("{{captured}}", msg.content.match(t.regexp)[1]?.substring(0, MESSAGE_LENGTH - retour.replaceAll("{{captured}}", "").length));
+				if(joke.includes("{{bot}}"))
+					joke = joke.replaceAll("{{bot}}", msg.client.user.username);
+				if(joke.includes("{{author}}"))
+					joke = joke.replaceAll("{{author}}", msg.author.username);
+				if(joke.includes("{{captured}}"))
+					joke = joke.replaceAll("{{captured}}", msg.content.match(t.regexp)[1]?.substring(0, MESSAGE_LENGTH - joke.replaceAll("{{captured}}", "").length));
 
-				msg.reply( retour );
+				msg.reply( joke );
 			}
 		});
 
