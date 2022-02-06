@@ -1,6 +1,3 @@
-const path = require("path");
-const { fetchCommands } = require("../core/commands/commandManager");
-
 function addChoiceToCommand(command, name, id, optionIndex = 0) {
 
 	if (command.options[optionIndex].choices === undefined)
