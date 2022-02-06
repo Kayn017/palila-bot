@@ -10,6 +10,7 @@
 	"scripts": {
 		"start": "node index.js",
 		"build": "docker build . -t ",
+		"lint": "eslint .",
 		"dev": "nodemon index.js --DEV",
 		"make:model": "node ./scripts/factory.js MODEL",
 		"make:command": "node ./scripts/factory.js COMMAND",
