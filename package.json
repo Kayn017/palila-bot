@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"start": "node index.js",
-		"build": "docker build . -t ",
+		"build": "eslint . && docker build . -t ",
 		"lint": "eslint .",
 		"prepare": "husky install",
 		"dev": "nodemon index.js --DEV",
@@ -19,6 +19,7 @@
 		"make:route": "node ./scripts/factory.js ROUTE",
 		"make:worker": "node ./scripts/factory.js WORKER",
 		"dev:cleancmd": "node ./scripts/commands.js CLEAN_COMMANDS",
+		"dev:updatecache": "node ./scripts/cache.js", 
 		"add:god": "node ./scripts/gods.js ADD_GOD"
 	},
 	"author": "Tanguy Gimenez",
