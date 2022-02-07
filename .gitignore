@@ -8,3 +8,4 @@ cache
 *.aof
 *.rdb
 files
+tmp

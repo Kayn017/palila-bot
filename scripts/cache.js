@@ -6,7 +6,7 @@ const { LocalCache } = require("../services/cache");
 const cache = LocalCache.get("lynch");
 const LYNCH_CHANNEL_ID = "UUDLD_zxiuyh1IMasq9nbjrA";
 
-
+// Définition du cache lynch
 axios({
 	method: "GET",
 	url: "https://youtube.googleapis.com/youtube/v3/playlistItems",
