@@ -35,6 +35,6 @@ module.exports = {
 
 		response = response.addField("Jours", body);
 
-		interaction.reply({ embeds: [response], ephemeral: true });
+		interaction.reply({ embeds: [response] });
 	}
 };

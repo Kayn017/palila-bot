@@ -22,6 +22,6 @@ module.exports = {
 
 		response = response.addField("Fréquence", body);
 
-		interaction.reply({ embeds: [response], ephemeral: true });
+		interaction.reply({ embeds: [response] });
 	}
 };
