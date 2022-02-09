@@ -3,7 +3,9 @@ const { debug } = require("../../services/log");
 const { Sequelize } = require("sequelize");
 
 async function initDatabase() {
-	const sequelize = new Sequelize(process.env.PG_DATABASE, process.env.PG_USERNAME, process.env.PG_PASSWORD, {
+	const sequelize = new Sequelize(process.env.POSTGRES_DATABASE, process.env.POSTGRES_USERNAME, process.env.POSTGRES_PASSWORD, {
+		host: process.env.POSTGRES_HOST,
+		port: process.env.POSTGRES_PORT,
 		dialect: "postgres",
 		logging: (msg) => debug(msg, "postgres", null, null),
 	});

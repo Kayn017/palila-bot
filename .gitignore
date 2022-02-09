@@ -2,7 +2,8 @@ node_modules
 package-lock.json
 database
 !core/database
-.env
+.env*
+!.env.example
 log
 cache
 *.aof

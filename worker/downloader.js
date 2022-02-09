@@ -126,7 +126,7 @@ async function execute(client, options) {
 	fs.rmSync(folderPath, { recursive: true, force: true });
 
 	await channel.send({
-		content: `La backup est terminé !\nL'archive est disponible ici : http://${process.env.API_BASE_PATH}/backup/${channel.guild.id}/${channel.id}/${zipname}`
+		content: `La backup est terminé !\nL'archive est disponible ici : http://${process.env.API_BASE_PATH}:${process.env.API_PORT}/backup/${channel.guild.id}/${channel.id}/${zipname}`
 	});
 }
 
