@@ -25,6 +25,9 @@ services:
      - redis
     env_file:
       - .env
+    environment:
+      - POSTGRES_PORT=5432
+      - REDIS_PORT=6379
     volumes:
       - ./files:/usr/bot/files
       - ./cache:/usr/bot/cache
