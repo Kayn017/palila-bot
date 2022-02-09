@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: "postgres"
+    restart: always
+    ports: 
+    - "${POSTGRES_PORT}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+  redis:
+    image: "redis"
+    restart: always
+    ports: 
+    - "${REDIS_PORT}:6379"
+    volumes:
+      - ./config:/data
+    command: redis-server --appendonly yes
+  palila:
+    build: .
+    links: 
+     - postgres
+     - redis
+    env_file:
+      - .env
+    volumes:
+      - ./files:/usr/bot/files
+      - ./cache:/usr/bot/cache
+      - ./log:/usr/bot/log
+    depends_on:
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
