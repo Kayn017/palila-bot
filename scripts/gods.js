@@ -1,3 +1,4 @@
+require("dotenv").config();
 const initDatabase = require("../core/database");
 const process = require("process");
 

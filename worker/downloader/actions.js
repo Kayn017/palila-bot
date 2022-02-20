@@ -1,16 +1,11 @@
-const { Intents, MessageEmbed } = require("discord.js");
-const { err, log } = require("../services/log");
+const { MessageEmbed } = require("discord.js");
+const { err, log } = require("../../services/log");
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
-const { download } = require("../services/http");
+const { download } = require("../../services/http");
 const { zip, COMPRESSION_LEVEL  } = require("zip-a-folder");
 
-const name = "downloader";
-const intents = [
-	Intents.FLAGS.GUILDS,
-	Intents.FLAGS.DIRECT_MESSAGES
-];
 
 async function execute(client, options) {
 
@@ -160,7 +155,5 @@ async function updateStatusMessage(statusMessage, embed, scanned = 0, attachment
 }
 
 module.exports = {
-	name,
-	intents,
 	execute
 };

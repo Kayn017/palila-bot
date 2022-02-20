@@ -1,0 +1,11 @@
+{
+	"actions.js": {
+		"execute": "async function"
+	},
+	"infos.js": {
+		"name": "value",
+		"description": "value",
+		"author": "value",
+		"intents": "array"
+	}
+}
