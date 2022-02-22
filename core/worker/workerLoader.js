@@ -5,7 +5,6 @@ const process = require("process");
 require("dotenv").config();
 
 const WORKER_FOLDER = path.join(
-	// eslint-disable-next-line no-undef
 	__dirname,
 	"..",
 	"..",
@@ -15,8 +14,9 @@ const WORKER_FOLDER = path.join(
 const params = worker.receiveMessageOnPort(worker.parentPort).message;
 const workerName = params.workerName;
 const options = params.options;
+global.devEnv = params.dev;
 
-const workerToExecute = require(path.join(WORKER_FOLDER, `${workerName}.js`));
+const workerToExecute = require(path.join(WORKER_FOLDER, workerName));
 
 const client = new Client({
 	intents: workerToExecute.intents
@@ -25,7 +25,10 @@ const client = new Client({
 
 client.on("ready", async () => {
 	await workerToExecute.execute(client, options);
-	process.exit(0);
+
+	if(workerToExecute.exitAfterLaunch) {
+		process.exit(0);
+	}
 });
 
 client.login(process.env.TOKEN);

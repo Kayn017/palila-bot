@@ -71,6 +71,7 @@ async function execute(client, options) {
 		// eslint-disable-next-line no-undef
 		__dirname,
 		"..",
+		"..",
 		"files",
 		channel.guild.id,
 		channel.id,
@@ -108,7 +109,7 @@ async function execute(client, options) {
 
 	await zip(folderPath, path.join(
 		folderPath, 
-		"..", 
+		"..",
 		zipname
 	), 
 	{

@@ -5,5 +5,6 @@ module.exports = {
 	intents: [
 		Intents.FLAGS.GUILDS,
 		Intents.FLAGS.DIRECT_MESSAGES
-	]
+	],
+	exitAfterLaunch: true
 };

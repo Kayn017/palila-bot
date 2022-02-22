@@ -6,6 +6,7 @@
 		"name": "value",
 		"description": "value",
 		"author": "value",
-		"intents": "array"
+		"intents": "array",
+		"exitAfterLaunch": "boolean"
 	}
 }

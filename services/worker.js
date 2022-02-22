@@ -3,11 +3,11 @@ const path = require("path");
 const { err, debug } = require("./log");
 
 
+
 function launchWorker(workerName, options) {
 
 	const worker = new Worker(
 		path.join(
-			// eslint-disable-next-line no-undef
 			__dirname,
 			"..",
 			"core",
@@ -19,7 +19,8 @@ function launchWorker(workerName, options) {
 	worker.on("online", () => {
 		const params = {
 			workerName,
-			options
+			options,
+			dev: global.devEnv
 		};
 		worker.postMessage(params);
 	});
@@ -38,9 +39,19 @@ function launchWorker(workerName, options) {
 	worker.on("messageerror", e => {
 		err(`${e.message}`, "worker", undefined, e.stack);
 	});
+
+	return worker;
 }
 
+function postMessageAndAwaitResponse(worker, message) {
+	return new Promise( (resolve, reject) => {
+		worker.postMessage(message);
+		worker.on("message", msg => resolve(msg));
+		worker.on("messageerror", err => reject(err));
+	});
+}
 
 module.exports = {
-	launchWorker
+	launchWorker,
+	postMessageAndAwaitResponse
 };

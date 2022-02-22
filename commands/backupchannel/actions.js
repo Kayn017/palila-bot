@@ -1,4 +1,4 @@
-const { launchWorker } = require("../../services/services");
+const { launchWorker } = require("../../services/worker");
 
 function init() {
 
