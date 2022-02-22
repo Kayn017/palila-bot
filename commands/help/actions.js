@@ -37,7 +37,7 @@ async function execute(interaction, options) {
 
 		embed.setTitle(commandName);
 		embed.addField("Description", cmd.description);
-		embed.addField("Explication", cmd.explication);
+		embed.addField("Explication", cmd.explication ?? "Aucune explication pour le moment...");
 
 		if(Object.keys(cmd.configuration).length > 0) {
 			let parameters = "";
@@ -47,7 +47,7 @@ async function execute(interaction, options) {
 			embed.addField("Paramètres à configurer", parameters);
 		}
 
-		embed.setFooter(`Commande créée par ${cmd.author}`);
+		embed.setFooter({ text: `Commande créée par ${cmd.author}`});
 
 		if (cmd.subcommands) {
 			let subCommands = "";
