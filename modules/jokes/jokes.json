@@ -13,7 +13,13 @@
         "que",
         "de neuf ?",
         "artz",
-        "dragénaire"
+        "dragénaire",
+        "Henri Feur résidait dans sa jeunesse avec ses parents au 171 rue de Pessac, à Bordeaux. Il entre comme apprenti dans l'atelier de Joseph Villiet qui a ouvert en 1852. Il est son contremaître quand il pose en 1866 les vitraux de l'église Saint-Ferdinand de Bordeaux.",
+        "Fils d'Henri Feur dont il reprend en 1908 la maison bordelaise fondée en 1850, Marcel Feur est notamment à l'origine de la réalisation des vitraux de l’église Sainte-Marie Madeleine de Rennes-le-Château lors de sa rénovation par l'abbé Saunière à partir de 1887 et de ceux du transept et du chœur de l'église Saint-Martin à Cognac.",
+        "Feurs est située en plein cœur de la plaine du Forez, dans le département de la Loire. Elle est l'ancienne capitale historique du Forez auquel elle a donné son nom. La ville est en rive droite (côté est) de la Loire, à la confluence de son affluent la Loise. La vallée de la Loire est à cet endroit parsemée de nombreux étangs, notamment au sud de la ville.",
+        "Sandrine Le Feur, née le 18 mars 1991 à Saint-Brieuc, est une femme politique française. Agricultrice, membre de La République en marche, elle est élue députée dans la quatrième circonscription du Finistère lors des élections législatives de 2017.",
+        "Georges de Feure, pseudonyme de Georges Joseph van Sluijters, né le 6 septembre 1868 à Paris et mort le 26 novembre 1943 dans la même ville, est un artiste peintre, affichiste et designer de meubles, d'objets décoratifs et d'aéroplanes français.",
+        "http://www.allo-medecins.fr/Cauterets-65110/rhumatologue/rhumatologue_Le-Feur-Christine.html"
     ],
     "(?:j(?:'|e *)?s|ch)uis? (.+)": [
         "Enchanté *{{captured}}* ! Je suis *{{bot}}*",
