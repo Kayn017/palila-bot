@@ -26,6 +26,9 @@ async function executeCommand(commandCollection, commandName, options, interacti
 				return interaction.reply({ content: "Je manque de permissions pour faire cette action...", ephemeral: true });
 			else {
 				err(e, "commandHandler", undefined, e.stack);
+				if(interaction.replied) 
+					return interaction.editReply({ content: "Une erreur a eu lieu lors de l'execution de la commande...", ephemeral: true });
+				
 				return interaction.reply({ content: "Une erreur a eu lieu lors de l'execution de la commande...", ephemeral: true });
 			}
 		}

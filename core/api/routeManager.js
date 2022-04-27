@@ -29,8 +29,15 @@ module.exports = app => {
 		});
 
 	// 404 handling
-	app.get("*", function (req, res) {
+	app.use("*", function (req, res) {
 		res.status(404).send("Route not found");
+	});
+
+	// obligé de désactiver eslint ici
+	// express ne détecte pas le middleware d'erreur s'il y a - de 4 paramètres a la fonction
+	// eslint-disable-next-line no-unused-vars
+	app.use((err, req, res, next) => {
+		res.status(err.code ?? 500).send(err.message);
 	});
 
 	app.routes = routes;

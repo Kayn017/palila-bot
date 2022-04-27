@@ -14,7 +14,6 @@ async function execute(request, response, next) {
 	const archiveName = request.params.archive_name;
 
 	const archivePath = path.join(
-		// eslint-disable-next-line no-undef
 		__dirname,
 		"..",
 		"..",

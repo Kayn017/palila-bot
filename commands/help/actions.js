@@ -1,10 +1,10 @@
 const Discord = require("discord.js");
 const process = require("process");
-const { getAllCommandsName, getLocalCommandByString } = require("../../services/commands");
+const { getLocalCommandByString } = require("../../services/commands");
 
 function init(client) {
 	
-	const commandsName = client.commands.map( cmd => getAllCommandsName(cmd) );
+	const commandsName = client.commands.map( cmd => cmd.name );
 
 	commandsName.flat().forEach( name => {
 		this.options[0].choices.push({

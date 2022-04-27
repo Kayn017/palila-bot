@@ -2,6 +2,10 @@ const { Worker } = require("worker_threads");
 const path = require("path");
 const { err, debug } = require("./log");
 
+const MESSAGE_TYPES = {
+	error: "error",
+	response: "response"
+};
 
 
 function launchWorker(workerName, options) {
@@ -46,12 +50,26 @@ function launchWorker(workerName, options) {
 function postMessageAndAwaitResponse(worker, message) {
 	return new Promise( (resolve, reject) => {
 		worker.postMessage(message);
-		worker.on("message", msg => resolve(msg));
-		worker.on("messageerror", err => reject(err));
+
+		const handleResolve = msg => {
+			resolve(msg);
+			worker.removeListener("messageerror", handleError);
+			worker.removeListener("message", handleResolve);
+		};
+
+		const handleError = error => {
+			reject(error);
+			worker.removeListener("messageerror", handleError);
+			worker.removeListener("message", handleResolve);
+		};
+			
+		worker.on("message", handleResolve);
+		worker.on("messageerror", handleError);
 	});
 }
 
 module.exports = {
+	MESSAGE_TYPES,
 	launchWorker,
 	postMessageAndAwaitResponse
 };

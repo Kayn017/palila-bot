@@ -13,9 +13,9 @@ function getAllPermissions(...collections) {
 			if (item.subcommands)
 				permissions.push(...getCommandPermissions(item));
 			else
-				for (const intent of item.permissions) {
-					if (!permissions.includes(intent))
-						permissions.push(intent);
+				for (const perms of item.permissions) {
+					if (!permissions.includes(perms))
+						permissions.push(perms);
 				}
 		});
 	}
