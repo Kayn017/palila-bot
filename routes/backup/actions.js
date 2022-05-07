@@ -1,14 +1,7 @@
-const fs = require("fs");
 const path = require("path");
+const fs = require("fs");
 
-function init() {
-
-}
-function shutdown() {
-
-}
-async function execute(request, response, next) {
-
+async function GET(request, response, next) {
 	const guildId = request.params.guild_id;
 	const channelId = request.params.channel_id;
 	const archiveName = request.params.archive_name;
@@ -32,12 +25,6 @@ async function execute(request, response, next) {
 	
 	return response.download(archivePath);
 }
-async function middleware() {
-
-}
 module.exports = {
-	init,
-	shutdown,
-	execute,
-	middleware,
+	GET,
 };

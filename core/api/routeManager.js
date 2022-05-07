@@ -1,32 +1,59 @@
+const { Router } = require("express");
 const fs = require("fs");
 const path = require("path");
+
+function getRouterFromPath(routesPath, parentRoute = undefined ) {
+
+	const routesFiles = fs.readdirSync(routesPath).filter(f => fs.lstatSync(path.join(routesPath, f)).isDirectory());
+
+	const mainRouter = Router();
+
+	for(const filename of routesFiles) {
+
+		const route = require(path.join(
+			routesPath,
+			filename
+		));
+
+		const fileRouter = Router();
+
+		for(const method of Object.keys(route.actions)) {
+
+			if(!route.stack) route.stack = {};
+
+			route.stack[method] = parentRoute?.stack[method] ? [	...parentRoute.stack[method], route.actions[method] ] : [route.actions[method]];
+			
+			fileRouter[method.toLowerCase()](route.url, route.stack[method]);
+		}
+
+		if(fs.existsSync(path.join(routesPath, filename,	"routes"))) {
+			const subRouter = getRouterFromPath(path.join(
+				routesPath,
+				filename,
+				"routes"
+			), route);
+
+			fileRouter.use(route.url, subRouter);
+		}
+
+		mainRouter.use(fileRouter);
+	}
+
+	return mainRouter;
+}
 
 module.exports = app => {
 
 	const routePath = path.join(
-		// eslint-disable-next-line no-undef
 		__dirname,
 		"..",
 		"..",
 		"routes"
 	);
 
-	const routes = [];
+	const mainRouter = getRouterFromPath(routePath);
 
-	fs.readdirSync(routePath)
-		.map(filename => {
-			const route = require(path.join(
-				routePath,
-				filename
-			));
-			if(route.useMiddleware)
-				app.use(route.url, route.middleware);
-			return route;
-		})
-		.forEach(route => {
-			app[route.method](route.url, route.execute);
-			routes.push(route);
-		});
+	app.use(mainRouter);
 
 	// 404 handling
 	app.use("*", function (req, res) {
@@ -40,5 +67,5 @@ module.exports = app => {
 		res.status(err.code ?? 500).send(err.message);
 	});
 
-	app.routes = routes;
+	app.router = mainRouter;
 };

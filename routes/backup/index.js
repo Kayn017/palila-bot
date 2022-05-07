@@ -1,11 +1,10 @@
-const { method, url } = require("./infos");
-const { execute, middleware, init, shutdown } = require("./actions");
+const actions = require("./actions");
+const { author, name, url } = require("./infos");
 
 module.exports = {
-	method,
+	author,
+	name,
 	url,
-	execute,
-	middleware,
-	init,
-	shutdown
+
+	actions
 };

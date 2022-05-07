@@ -1,14 +1,11 @@
 {
 	"actions.js": {
-		"init": "function",
-		"shutdown": "function",
-		"execute": "async function",
-		"middleware": "async function"
+		"GET": "async function"
 	},
 	"infos.js": {
-		"method": "value",
+		"name": "value",
 		"url": "value",
-		"author": "value",
-		"useMiddleware": "boolean"
-	}
+		"author": "value"
+	},
+	"routes": {}
 }

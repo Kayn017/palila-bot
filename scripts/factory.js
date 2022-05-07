@@ -5,20 +5,24 @@ const path = require("path");
 
 const { getTemplate, getJsonTemplate, createFromJSONTemplate } = require("../services/template");
 
-if (!process.argv[2])
-	return console.log("\x1b[31mVeuillez préciser un type d'élement à créer.\x1b[0m");
+if (!process.argv[2]) {
+	console.log("\x1b[31mVeuillez préciser un type d'élement à créer.\x1b[0m");
+	process.exit(1);
+}
+	
 
 // MODEL, COMMAND or MODULE
 const type = process.argv[2];
 
-if (!process.argv[3])
-	return console.log("\x1b[31mVeuillez préciser un nom.\x1b[0m");
+if (!process.argv[3]) {
+	console.log("\x1b[31mVeuillez préciser un nom.\x1b[0m");
+	process.exit(1);
+}
 
 const factory = {
 	MODEL() {
 		const name = process.argv[3];
 		const modelPath = path.join(
-			// eslint-disable-next-line no-undef
 			__dirname,
 			"..",
 			"models",
@@ -39,7 +43,6 @@ const factory = {
 	},
 	COMMAND() {
 		const commandpath = path.join(
-			// eslint-disable-next-line no-undef
 			__dirname,
 			"..",
 			"commands",
@@ -66,7 +69,7 @@ const factory = {
 	},
 	MODULE() {
 		const modulePath = path.join(
-			// eslint-disable-next-line no-undef
+
 			__dirname,
 			"..",
 			"modules",
@@ -93,14 +96,13 @@ const factory = {
 	},
 	ROUTE() {
 		const routePath = path.join(
-			// eslint-disable-next-line no-undef
 			__dirname,
 			"..",
 			"routes",
-			process.argv[3]
+			process.argv.slice(3).join(path.sep + "routes" + path.sep)
 		);
 
-		const routeName = process.argv[3];
+		const routeName = process.argv[process.argv.length - 1];
 
 		if (fs.existsSync(routePath)) {
 			console.log("\x1b[31mCette route existe déjà.\x1b[0m");
@@ -120,7 +122,7 @@ const factory = {
 	},
 	WORKER() {
 		const workerPath = path.join(
-			// eslint-disable-next-line no-undef
+
 			__dirname,
 			"..",
 			"worker",
@@ -147,7 +149,9 @@ const factory = {
 	}
 };
 
-if (!Object.keys(factory).includes(type))
-	return console.log("\x1b[31mType inconnu...\x1b[0m");
+if (!Object.keys(factory).includes(type)) {
+	console.log("\x1b[31mType inconnu...\x1b[0m");
+	process.exit(1);
+}
 
 factory[type]();
