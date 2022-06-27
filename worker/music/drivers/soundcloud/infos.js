@@ -5,10 +5,10 @@ async function getInfosFromURL(url) {
 	const allInfos = await scdl.default.getInfo(url);
 
 	return {
-		title: allInfos.title ?? "test",
-		author: allInfos.user?.username ?? "test",
+		title: allInfos.title ?? "",
+		author: allInfos.user?.username ?? "",
 		url: url,
-		cover: allInfos.artwork_url ?? "test"
+		cover: allInfos.artwork_url ?? ""
 	};
 }
 
