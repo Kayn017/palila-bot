@@ -26,7 +26,7 @@ function getRouterFromPath(routesPath, parentRoute = undefined ) {
 			fileRouter[method.toLowerCase()](route.url, route.stack[method]);
 		}
 
-		if(fs.existsSync(path.join(routesPath, filename,	"routes"))) {
+		if(fs.existsSync(path.join(routesPath, filename, "routes"))) {
 			const subRouter = getRouterFromPath(path.join(
 				routesPath,
 				filename,

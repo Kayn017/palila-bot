@@ -174,9 +174,6 @@ async function updateScore(guildId) {
 
 		for(const id of votes[guildId][i]) {
 
-			console.log("dhjbfgjkqdfgkujqebgkuqhvg");
-			console.log(id);
-
 			let score = await db.LynchScore.findOne({
 				where: {
 					guildId,

@@ -24,8 +24,8 @@ const initDatabase = require("./core/database");
 const { handleError } = require("./core/errors");
 const handleExtinctionSignal = require("./core/extinction");
 const { handleNewGuild } = require("./core/guilds");
-const api = require("./core/api");
 const { redisClient } = require("./core/config");
+const initApi = require("./core/api");
 
 const commands = fetchCommands(path.join(__dirname, "commands"));
 const modules = fetchModules(path.join(__dirname, "modules"));
@@ -41,7 +41,7 @@ client.commands = commands;
 client.modules = modules;
 client.config = redisClient;
 client.permissions = permissions;
-client.api = api;
+client.api = initApi(client);
 
 handleError(client);
 handleExtinctionSignal(client);

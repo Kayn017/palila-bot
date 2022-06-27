@@ -3,19 +3,26 @@ const { log } = require("../../services/log");
 const handleApiErrors = require("./apiError");
 const process = require("process");
 
-const app = express();
-const port = process.env.API_PORT ?? 3000;
+function initApi(client) {
+	const app = express();
+	const port = process.env.API_PORT ?? 3000;
+	
+	app.client = client;
 
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+	app.use(express.urlencoded({ extended: false }));
+	app.use(express.json());
+	
+	const routes = require("./routeManager");
+	routes(app);
+	
+	handleApiErrors(app);
+	
+	app.listen(port, () => {
+		log(`Serveur http en écoute sur le port ${port}.`, "api");
+	});
 
-const routes = require("./routeManager");
-routes(app);
+	return app;
+}
 
-handleApiErrors(app);
 
-app.listen(port, () => {
-	log(`Serveur http en écoute sur le port ${port}.`, "api");
-});
-
-module.exports = app;
+module.exports = initApi;

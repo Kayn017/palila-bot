@@ -7,7 +7,6 @@ function init() {
 
 }
 function shutdown() {
-	console.log("ba");
 	for(const [, worker] of Object.entries(workers)) {
 		worker.terminate();
 	}

@@ -34,6 +34,7 @@
 		"erlpack": "discord/erlpack",
 		"express": "^4.17.1",
 		"libsodium-wrappers": "^0.7.9",
+		"mime-types": "^2.1.35",
 		"pg": "^8.7.1",
 		"pg-hstore": "^2.3.4",
 		"redis": "^4.0.1",

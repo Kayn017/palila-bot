@@ -23,7 +23,7 @@ async function initDatabase() {
 		db[modelName].associate(db);
 	});
 	
-	await sequelize.sync();
+	await sequelize.sync({ alter: true });
 
 	return db;
 }
