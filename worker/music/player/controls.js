@@ -22,12 +22,11 @@ async function play(connection) {
 
 	const resource = createAudioResource(stream);
 
-	player.once("error", error => {
+	player.on("error", error => {
 		err(error, "music worker", undefined, error.stack);
 	});
 
-	player.once("stateChange", (oldState, newState) => {
-
+	player.on("stateChange", (oldState, newState) => {
 		if(newState.status === "idle" && nowPlayingSong()) {
 			debug("Fin de la musique", "music worker");
 			nextSong();
