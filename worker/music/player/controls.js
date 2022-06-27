@@ -4,13 +4,13 @@ const { MESSAGE_TYPES } = require("../../../services/worker");
 const { err, debug } = require("../../../services/log");
 const player = require("./player");
 const { nowPlayingSong, nextSong } = require("./queue");
+const loadDriver = require("../drivers");
 
 async function play(connection) {
 
 	const url = nowPlayingSong().url;
 
 	// on charge le driver correspondant a l'url
-	const loadDriver = require("../drivers");
 	const driver = loadDriver(url);
 
 	if(!driver)
@@ -18,7 +18,7 @@ async function play(connection) {
 
 	debug("Driver chargé !", "music worker");
 
-	const stream = driver.getReadableStream(url);
+	const stream = await driver.getReadableStream(url);
 
 	const resource = createAudioResource(stream);
 

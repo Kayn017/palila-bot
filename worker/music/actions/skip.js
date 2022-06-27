@@ -8,7 +8,6 @@ module.exports = (connection) => {
 
 	if(!queue.nowPlayingSong()) {
 		controls.stop();
-		// parentPort.postMessage({ type: MESSAGE_TYPES.response, message: "Fin de la file d'attente !" });
 		return;
 	}
 

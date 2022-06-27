@@ -13,6 +13,10 @@ async function execute(interaction, options) {
 
 	let infos = await postMessageAndAwaitResponse(interaction.worker, { action: "play", url: options[0].value });
 
+	if(infos.type === MESSAGE_TYPES.error) {
+		return interaction.editReply({ content: infos.message, ephemeral: true });
+	}
+
 	if(infos.type === MESSAGE_TYPES.response) {
 		infos = infos.message;
 	}

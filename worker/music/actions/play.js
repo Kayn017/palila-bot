@@ -2,12 +2,11 @@ const player = require("../player");
 const { parentPort } = require("worker_threads");
 const { MESSAGE_TYPES } = require("../../../services/worker");
 const { debug } = require("../../../services/log");
- 
+const loadDriver = require("../drivers"); 
 
 module.exports = async (connection, { url }) => {
 
 	// on charge le driver correspondant a l'url
-	const loadDriver = require("../drivers");
 	const driver = loadDriver(url);
 
 	if(!driver)
