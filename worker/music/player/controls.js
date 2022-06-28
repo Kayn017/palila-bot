@@ -29,8 +29,9 @@ async function play(connection) {
 	player.on("stateChange", (oldState, newState) => {
 		if(newState.status === "idle" && nowPlayingSong()) {
 			debug("Fin de la musique", "music worker");
-			nextSong();
-			play(connection);
+
+			if(!nextSong())
+				play(connection);
 		}
 	});
 
