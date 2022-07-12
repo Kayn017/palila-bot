@@ -3,4 +3,4 @@
 Un super bot permettant de faire pleins de trucs !
 
 
-Utilise redis et postgres
+Utilise redis et mariadb

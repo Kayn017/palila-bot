@@ -1,15 +1,15 @@
 version: "3.9"
 
 services:
-  postgres:
-    image: "postgres"
+  mariadb:
+    image: "mariadb"
     restart: always
     ports: 
-    - "${POSTGRES_PORT}:5432"
+    - "${MARIADB_PORT}:3306"
     environment:
-      POSTGRES_USER: ${POSTGRES_USERNAME}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DATABASE}
+      MARIADB_USER: ${MARIADB_USERNAME}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_DB: ${MARIADB_DATABASE}
   redis:
     image: "redis"
     restart: always
@@ -21,19 +21,19 @@ services:
   palila:
     build: .
     links: 
-     - postgres
+     - mariadb
      - redis
     env_file:
       - .env
     environment:
-      - POSTGRES_PORT=5432
+      - MARIADB_PORT=3306
       - REDIS_PORT=6379
     volumes:
       - ./files:/usr/bot/files
       - ./cache:/usr/bot/cache
       - ./log:/usr/bot/log
     depends_on:
-      postgres:
+      mariadb:
         condition: service_started
       redis:
         condition: service_started

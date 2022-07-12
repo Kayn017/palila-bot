@@ -29,7 +29,7 @@ module.exports = sequelize => {
 			defaultValue: 0
 		},
 		voteHistory: {
-			type: DataTypes.JSONB,
+			type: DataTypes.JSON,
 			allowNull: false,
 			defaultValue: []
 		}

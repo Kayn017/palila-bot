@@ -57,7 +57,7 @@ async function downloadCitation(interaction, options) {
 		await download(file.url, filePath);
 	}
 	catch (e) {
-		err("Impossible de télécharger la citation", "citation.js", interaction, e.stack);
+		err("Impossible de télécharger la citation", "citation", interaction, e.stack);
 		return interaction.reply({ content: "Etrange.... Je n'ai pas pu télécharger ta citation", ephemeral: true });
 	}
 
@@ -82,13 +82,17 @@ async function sendCitation(interaction, options) {
 	let person = options.find(o => o.name === "personne")?.value;
 	const content = options.find(o => o.name === "contenu")?.value;
 
-	const whereObject = {};
+	const whereObject = {
+		deleteDate: {
+			[Op.eq]: null
+		}
+	};
 
 	if(person) {
 		person = capitalizeFirstLetter(person.replaceAll(" ", ""));
 
 		whereObject.person = {
-			[Op.like]: "%" + person + "%"
+			[Op.iLike]: "%" + person + "%"
 		};
 	}
 
@@ -114,7 +118,7 @@ async function sendCitation(interaction, options) {
 
 	// check if attachment size is more than the bot can send
 	if(fs.statSync(citation.fileLocation).size <= 8 * 1024 * 1024) {
-		return interaction.reply(
+		interaction.reply(
 			{ 
 				files: [{
 					name: path.basename(citation.fileLocation),
@@ -125,10 +129,29 @@ async function sendCitation(interaction, options) {
 		);
 	}
 	else {
-		return interaction.reply({ content: `http://${process.env.API_BASE_PATH}:${process.env.API_PORT}/citations/${citation.id}` });
+		interaction.reply({ content: `http://${process.env.API_BASE_PATH}:${process.env.API_PORT}/citations/${citation.id}` });
 	}
 
+	if(interaction.channel.isDMBased())
+		return;
 	
+	createDeleteReaction(interaction, citation);
+}
+
+async function createDeleteReaction(interaction, citation) {
+	const response = await interaction.fetchReply();
+
+	try {
+		await response.react("🚽");
+	}
+	catch(e) {
+		err("Impossible de réagir sur ce message", "citation", interaction, e.stack);
+		return;
+	}
+
+
+
+
 }
 
 async function middleware() {
