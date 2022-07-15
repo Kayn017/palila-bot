@@ -138,7 +138,7 @@ async function sendCitation(interaction, options) {
 	createDeleteReaction(interaction, citation);
 }
 
-async function createDeleteReaction(interaction, citation) {
+async function createDeleteReaction(interaction) {
 	const response = await interaction.fetchReply();
 
 	try {

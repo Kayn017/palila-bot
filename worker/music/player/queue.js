@@ -1,4 +1,5 @@
 let queue = [];
+let nowPlayingStream;
 
 function addToQueue(infos) {
 	queue.push(infos);
@@ -13,6 +14,7 @@ function nowPlayingSong() {
 }
 
 function nextSong() {
+	endNowPlayingStream();
 	queue.shift();
 	return queue.length === 0;
 }
@@ -30,11 +32,21 @@ function getQueue() {
 	return queue;
 }
 
+function setNowPlayingStream(stream) {
+	nowPlayingStream = stream;
+}
+
+function endNowPlayingStream() {
+	nowPlayingStream.destroy();
+}
+
 module.exports = {
 	addToQueue,
 	getQueue,
 	clearQueue,
 	nowPlayingSong,
 	nextSong,
-	positionInQueue
+	positionInQueue,
+	setNowPlayingStream,
+	endNowPlayingStream
 };

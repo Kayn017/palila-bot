@@ -7,7 +7,7 @@ const loadDriver = require("../drivers");
 module.exports = async (connection, { url }) => {
 
 	// on charge le driver correspondant a l'url
-	const driver = loadDriver(url);
+	const driver = await loadDriver(url);
 
 	if(!driver)
 		return parentPort.postMessage({ type: MESSAGE_TYPES.error, message: "URL invalide" });
@@ -15,7 +15,13 @@ module.exports = async (connection, { url }) => {
 	debug("Driver chargé !", "music worker");
 
 	// enfin, on renvoie les infos de la musique qu'on joue au thread principal
-	const music = await driver.getInfosFromURL(url);
+	let music;
+	try {
+		music = await driver.getInfosFromURL(url);
+	}
+	catch(e) {
+		return parentPort.postMessage({ type: MESSAGE_TYPES.error, message: e.message });
+	} 
 	
 	// on ajoute la musique a la file d'attente
 	player.queue.addToQueue(music);
@@ -26,8 +32,15 @@ module.exports = async (connection, { url }) => {
 
 	// et on joue la musique si elle est la première dans la file d'attente
 	if(player.queue.getQueue().length === 1) {
-		player.controls.play(connection);
+		const res = await player.controls.play(connection);
+
+		if(res) {
+			parentPort.postMessage({ type: MESSAGE_TYPES.response, message: infos });
+		}
+
+		return;
 	}
 
 	parentPort.postMessage({ type: MESSAGE_TYPES.response, message: infos });
+	return;
 };
