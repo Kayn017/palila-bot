@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-function loadDriver(url) {
+async function loadDriver(url) {
 
 	const drivers = fs.readdirSync(__dirname).filter(name => !name.endsWith(".js"));
 
@@ -9,7 +9,7 @@ function loadDriver(url) {
 
 		const driver = require(path.join(__dirname, driverName));
 
-		if(driver.triggerByURL(url)) {
+		if(await driver.triggerByURL(url)) {
 			return driver;
 		}
 	}

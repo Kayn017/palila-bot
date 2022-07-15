@@ -3,7 +3,7 @@ const { createAudioResource } = require("@discordjs/voice");
 const { MESSAGE_TYPES } = require("../../../services/worker");
 const { err, debug } = require("../../../services/log");
 const player = require("./player");
-const { nowPlayingSong, nextSong } = require("./queue");
+const { nowPlayingSong, nextSong, setNowPlayingStream } = require("./queue");
 const loadDriver = require("../drivers");
 
 async function play(connection) {
@@ -11,14 +11,23 @@ async function play(connection) {
 	const url = nowPlayingSong().url;
 
 	// on charge le driver correspondant a l'url
-	const driver = loadDriver(url);
+	const driver = await loadDriver(url);
 
-	if(!driver)
-		return parentPort.postMessage({ type: MESSAGE_TYPES.error, message: "URL invalide" });
-
+	if(!driver) {
+		parentPort.postMessage({ type: MESSAGE_TYPES.error, message: "URL invalide" });
+		return false;
+	}
+		
 	debug("Driver chargé !", "music worker");
 
 	const stream = await driver.getReadableStream(url);
+
+	if(!stream) {
+		parentPort.postMessage({ type: MESSAGE_TYPES.error, message: "Impossible de lire la video. Vérifiez si la vidéo est publique et accessible depuis la France." });
+		return false;
+	}
+
+	setNowPlayingStream(stream);
 
 	const resource = createAudioResource(stream);
 
@@ -42,7 +51,7 @@ async function play(connection) {
 
 	connection.subscribe(player);	
 
-	return;
+	return true;
 }
 
 function pause() {

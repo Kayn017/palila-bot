@@ -26,6 +26,15 @@ async function middleware(interaction) {
 		interaction.worker = workers[interaction.member.voice.channelId];
 
 		return new Promise((resolve) => {
+
+			interaction.worker.on("close", () => {
+				delete workers[interaction.member.voice.channelId];
+			});
+
+			interaction.worker.on("error", () => {
+				delete workers[interaction.member.voice.channelId];
+			});
+
 			interaction.worker.on("online", () => {
 				debug("Worker lancé", "music");
 				resolve();
