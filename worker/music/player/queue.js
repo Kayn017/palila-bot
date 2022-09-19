@@ -6,7 +6,7 @@ function addToQueue(infos) {
 }
 
 function clearQueue() {
-	queue = [];
+	queue = [queue[0]];
 }
 
 function nowPlayingSong() {
@@ -37,6 +37,10 @@ function setNowPlayingStream(stream) {
 }
 
 function endNowPlayingStream() {
+
+	if(nowPlayingStream.end) {
+		nowPlayingStream.end();
+	}
 	nowPlayingStream.destroy();
 }
 
