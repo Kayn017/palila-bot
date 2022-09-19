@@ -1,3 +1,5 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
 module.exports = {
 	name: "history",
 	description: "Affiche l'historique des votes d'une personne",
@@ -5,7 +7,7 @@ module.exports = {
 	author: "Kayn",
 	options: [{
 		name: "personne",
-		type: "USER",
+		type: ApplicationCommandOptionType.User,
 		description: "Personne dont on veut voir l'historique",
 		required: false,
 		choices: [],

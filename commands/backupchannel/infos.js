@@ -1,4 +1,4 @@
-const { Intents, Permissions } = require("discord.js");
+const { GatewayIntentBits, PermissionFlagsBits, ApplicationCommandOptionType } = require("discord.js");
 
 module.exports = {
 	name: "backupchannel",
@@ -7,20 +7,20 @@ module.exports = {
 	author: "Kayn",
 	options: [{
 		name: "salon",
-		type: "CHANNEL",
+		type: ApplicationCommandOptionType.Channel,
 		description: "Salon à télécharger",
 		required: false,
 		choices: []
 	}],
 
 	intents: [
-		Intents.FLAGS.GUILD_MESSAGES,
-		Intents.FLAGS.DIRECT_MESSAGES
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.DirectMessages
 	],
 	permissions: [
-		Permissions.FLAGS.READ_MESSAGE_HISTORY,
-		Permissions.FLAGS.VIEW_CHANNEL,
-		Permissions.FLAGS.SEND_MESSAGES
+		PermissionFlagsBits.ReadMessageHistory,
+		PermissionFlagsBits.ViewChannel,
+		PermissionFlagsBits.SendMessages
 	],
 	globalCommand: true,
 };

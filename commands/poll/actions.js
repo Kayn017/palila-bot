@@ -5,6 +5,7 @@ const color = process.env.COLOR;
 const { LocalCache } = require("../../services/cache");
 const { debug } = require("../../services/log");
 const { DEFAULT_DURATION } = require("./consts");
+const { ButtonStyle } = require("discord.js");
 
 const cache = LocalCache.get("poll");
 
@@ -65,48 +66,48 @@ async function execute(interaction, options) {
 	const endDate = new Date(Date.now() + pollDuration);
 	const endDateString = `${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear()} à ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}`;
 
-	const embed = new Discord.MessageEmbed();
+	const embed = new Discord.EmbedBuilder();
 
 	embed.setTitle(title);
-	embed.setAuthor(interaction.user.username, interaction.user.avatarURL());
+	embed.setAuthor({ name: interaction.user.username, iconURL: interaction.user.avatarURL() });
 	embed.setColor(color);
 	embed.setDescription("Votez sur les boutons ci-dessous !");
 	embed.addField("Date de fin du sondage", endDateString);
 
 	// préparation des boutons
-	const row = new Discord.MessageActionRow();
+	const row = new Discord.ActionRowBuilder();
 
 	row.addComponents(
-		new Discord.MessageButton()
+		new Discord.ButtonBuilder()
 			.setCustomId(choice1)
 			.setLabel(`${choice1} : 0`)
-			.setStyle("PRIMARY"),
-		new Discord.MessageButton()
+			.setStyle(ButtonStyle.Primary),
+		new Discord.ButtonBuilder()
 			.setCustomId(choice2)
 			.setLabel(`${choice2} : 0`)
-			.setStyle("PRIMARY")
+			.setStyle(ButtonStyle.Primary)
 	);
 
 	if (choice3)
 		row.addComponents(
-			new Discord.MessageButton()
+			new Discord.ButtonBuilder()
 				.setCustomId(choice3)
 				.setLabel(`${choice3} : 0`)
-				.setStyle("PRIMARY")
+				.setStyle(ButtonStyle.Primary)
 		);
 	if (choice4)
 		row.addComponents(
-			new Discord.MessageButton()
+			new Discord.ButtonBuilder()
 				.setCustomId(choice4)
 				.setLabel(`${choice4} : 0`)
-				.setStyle("PRIMARY")
+				.setStyle(ButtonStyle.Primary)
 		);
 	if (choice5)
 		row.addComponents(
-			new Discord.MessageButton()
+			new Discord.ButtonBuilder()
 				.setCustomId(choice5)
 				.setLabel(`${choice5} : 0`)
-				.setStyle("PRIMARY")
+				.setStyle(ButtonStyle.Primary)
 		);
 
 	let response;
@@ -208,14 +209,14 @@ function updateVote(pollID, voterID, vote) {
 function sendResults(voteMessage) {
 	const votes = cache.get(voteMessage.id)?.votes ?? {};
 
-	const embed = new Discord.MessageEmbed();
+	const embed = new Discord.EmbedBuilder();
 
 	embed.setColor(color);
 	embed.setTitle(`Résultat du sondage : ${voteMessage.embeds[0].title}`);
-	embed.setAuthor(
-		voteMessage.interaction.user.username,
-		voteMessage.interaction.user.avatarURL()
-	);
+	embed.setAuthor({
+		name: voteMessage.interaction.user.username,
+		iconURL: voteMessage.interaction.user.avatarURL()
+	});
 
 	for (const button of voteMessage.components[0].components) {
 		embed.addField(button.customId, `${votes[button.customId] ?? 0} vote(s)`, true);

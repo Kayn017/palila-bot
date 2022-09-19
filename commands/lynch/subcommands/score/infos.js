@@ -1,3 +1,5 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
 module.exports = {
 	name: "score",
 	description: "Affiche le score du joueur",
@@ -5,7 +7,7 @@ module.exports = {
 	author: "Kayn",
 	options: [{
 		name: "personne",
-		type: "USER",
+		type: ApplicationCommandOptionType.User,
 		description: "Personne dont on veut voir le score",
 		required: false,
 		choices: [],

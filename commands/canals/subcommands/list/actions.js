@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const process = require("process");
 
 function init() {
@@ -20,7 +20,7 @@ async function execute(interaction) {
 	if(canals.length < 1)
 		desc = "Aucun canal créé !";
 
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 		.setColor(process.env.COLOR)
 		.setTitle("Liste des canaux")
 		.setDescription(desc);

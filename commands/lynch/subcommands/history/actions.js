@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 
 function init() {
 
@@ -34,7 +34,7 @@ async function execute(interaction, options) {
 
 	const tenLastVotes = lynchScore.voteHistory.slice(Math.max( lynchScore.voteHistory.length - 10, 0));
 
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 		.setTitle(user.id === interaction.user.id ? "Vos 10 derniers votes" : `Les 10 derniers votes de ${user.username}`)
 		.setColor(process.env.COLOR);
 

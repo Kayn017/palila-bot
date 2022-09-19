@@ -1,4 +1,4 @@
-const { Intents, Permissions } = require("discord.js");
+const { GatewayIntentBits, PermissionFlagsBits, ApplicationCommandOptionType } = require("discord.js");
 
 module.exports = {
 	name: "nickname",
@@ -7,15 +7,15 @@ module.exports = {
 	author: "Kayn",
 	options: [{
 		name: "surnom",
-		type: "STRING",
+		type: ApplicationCommandOptionType.String,
 		description: "Nouveau surnom",
 		required: false
 	}],
 	intents: [
-		Intents.FLAGS.GUILD_MEMBERS
+		GatewayIntentBits.GuildMembers
 	],
 	permissions: [
-		Permissions.FLAGS.CHANGE_NICKNAME
+		PermissionFlagsBits.ChangeNickname
 	],
 	globalCommand: true
 };

@@ -1,12 +1,12 @@
-const { Intents } = require("discord.js");
+const { GatewayIntentBits } = require("discord.js");
 
 module.exports = {
 	name: "music",
 	description: "",
 	author: "Kayn",
 	intents: [
-		Intents.FLAGS.GUILD_VOICE_STATES,
-		Intents.FLAGS.GUILDS
+		GatewayIntentBits.GuildVoiceStates,
+		GatewayIntentBits.Guilds
 	],
 	exitAfterLaunch: false
 };

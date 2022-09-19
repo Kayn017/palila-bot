@@ -1,4 +1,4 @@
-const { Intents, Permissions } = require("discord.js");
+const { GatewayIntentBits, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
 	name: "list",
@@ -7,10 +7,10 @@ module.exports = {
 	author: "Kayn",
 	options: [],
 	intents: [
-		Intents.FLAGS.GUILDS
+		GatewayIntentBits.Guilds
 	],
 	permissions: [
-		Permissions.FLAGS.MANAGE_ROLES
+		PermissionFlagsBits.ManageRoles
 	],
 	globalCommand: false
 };

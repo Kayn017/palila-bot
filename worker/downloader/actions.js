@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { err, log } = require("../../services/log");
 const fs = require("fs");
 const path = require("path");
@@ -13,7 +13,7 @@ async function execute(client, options) {
 
 	log(`Lancement d'une backup du channel ${channel.name} sur le serveur ${channel.guild.name}`, "downloader");
 
-	let embed = new MessageEmbed()
+	let embed = new EmbedBuilder()
 		.setTitle("Backup du channel en cours...")
 		.setColor(process.env.COLOR)
 		.setFields(

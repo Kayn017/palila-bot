@@ -1,3 +1,5 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
 module.exports = {
 	name: "delete",
 	description: "Supprime un canal (utilisateur god only)",
@@ -5,7 +7,7 @@ module.exports = {
 	author: "Kayn",
 	options: [{
 		name: "canal",
-		type: "STRING",
+		type: ApplicationCommandOptionType.String,
 		description: "Canal a supprimer",
 		required: true,
 		choices: []

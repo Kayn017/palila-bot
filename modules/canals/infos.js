@@ -1,4 +1,4 @@
-const { Permissions, Intents } = require("discord.js");
+const { GatewayIntentBits, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
 	name: "canals",
@@ -6,12 +6,11 @@ module.exports = {
 	explication: "",
 	author: "Kayn",
 	intents: [
-		Intents.FLAGS.GUILD_MESSAGES,
-		Intents.FLAGS.GUILD_MESSAGES,
-		Intents.FLAGS.GUILD_WEBHOOKS
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.GuildWebhooks
 	],
 	permissions: [
-		Permissions.FLAGS.SEND_MESSAGES,
-		Permissions.FLAGS.VIEW_CHANNEL
+		PermissionFlagsBits.SendMessages,
+		PermissionFlagsBits.ViewChannel
 	],
 };

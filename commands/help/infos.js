@@ -1,3 +1,5 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
 module.exports = {
 	name: "help",
 	description: "L'aide de ce bot",
@@ -5,7 +7,7 @@ module.exports = {
 	author: "Kayn",
 	options: [{
 		name: "commande",
-		type: "STRING",
+		type: ApplicationCommandOptionType.String,
 		description: "Nom de la commande dont vous voulez voir l'aide",
 		required: false,
 		choices: []

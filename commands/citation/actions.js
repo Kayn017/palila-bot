@@ -5,6 +5,7 @@ const { capitalizeFirstLetter } = require("../../services/string");
 const { download } = require("../../services/http");
 const { Op } = require("sequelize");
 const { getRandomInt } = require("../../services/numbers");
+const { ChannelType } = require("discord.js");
 
 function init() {
 
@@ -132,7 +133,7 @@ async function sendCitation(interaction, options) {
 		interaction.reply({ content: `http://${process.env.API_BASE_PATH}:${process.env.API_PORT}/citations/${citation.id}` });
 	}
 
-	if(interaction.channel.isDMBased())
+	if(interaction.channel.type === ChannelType.DM)
 		return;
 	
 	createDeleteReaction(interaction, citation);

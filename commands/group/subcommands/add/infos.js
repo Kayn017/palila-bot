@@ -1,4 +1,4 @@
-const { Permissions } = require("discord.js");
+const { PermissionFlagsBits, ApplicationCommandOptionType } = require("discord.js");
 
 module.exports = {
 	name: "add",
@@ -8,7 +8,7 @@ module.exports = {
 	options: [
 		{
 			name: "groupe",
-			type: "STRING",
+			type: ApplicationCommandOptionType.String,
 			description: "Groupe à s'ajouter",
 			required: true,
 			choices: [],
@@ -16,7 +16,7 @@ module.exports = {
 	],
 	intents: [],
 	permissions: [
-		Permissions.FLAGS.MANAGE_ROLES
+		PermissionFlagsBits.ManageRoles
 	],
 	globalCommand: false,
 };

@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { postMessageAndAwaitResponse, MESSAGE_TYPES } = require("../../../../services/worker");
 
 function init() {
@@ -19,7 +19,7 @@ async function execute(interaction) {
 	if(infos.message.length === 0) 
 		return interaction.editReply({ content: "Aucune musique dans la liste de lecture", ephemeral: true });
 
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 		.setTitle("File d'attente")
 		.addField("En cours de lecture", infos.message[0].title)
 		.setColor(process.env.COLOR);

@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const process = require("process");
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
 			res[entry.number] = entry.createdAt;
 		}
 		
-		let response = new MessageEmbed()
+		let response = new EmbedBuilder()
 			.setColor(process.env.COLOR)
 			.setTitle("Durée depuis le dernier tirage");
 

@@ -1,4 +1,4 @@
-const { Intents, Permissions } = require("discord.js");
+const { GatewayIntentBits, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
 	name: "jokes",
@@ -6,9 +6,9 @@ module.exports = {
 	explication: "",
 	author: "Kayn & TinouHD & M4x1m3 & Augustin",
 	intents: [
-		Intents.FLAGS.GUILD_MESSAGES
+		GatewayIntentBits.GuildMessages
 	],
 	permissions: [
-		Permissions.FLAGS.SEND_MESSAGES
+		PermissionFlagsBits.SendMessages
 	],
 };

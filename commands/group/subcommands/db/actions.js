@@ -1,6 +1,6 @@
 const { isGod } = require("../../../../services/permissions");
 const config = require("../../../../services/config");
-const { Permissions } = require("discord.js");
+const { PermissionFlagsBits } = require("discord.js");
 
 function init() {
 
@@ -15,7 +15,7 @@ async function middleware(interaction) {
 	const god = await isGod(interaction.user.id);
 	const admin = (await config.get("command", "config", interaction.guild.id, "adminRoles"))?.includes(interaction.user.id);
 
-	if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR, true) && !god && !admin) {
+	if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator, true) && !god && !admin) {
 		interaction.reply({
 			content: "Vous n'avez pas les droits pour executer cette commande.",
 			ephemeral: true,

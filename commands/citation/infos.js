@@ -1,3 +1,5 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
 module.exports = {
 	name: "citation",
 	description: "Renvoie une citation prise hors contexte",
@@ -5,17 +7,17 @@ module.exports = {
 	author: "Kayn",
 	options: [{
 		name: "citation",
-		type: "ATTACHMENT",
+		type: ApplicationCommandOptionType.Attachment,
 		description: "citation à ajouter",
 		required: false
 	}, {
 		name: "personne",
-		type: "STRING",
+		type: ApplicationCommandOptionType.String,
 		description: "personne concernée par la citation",
 		required: false 
 	}, {
 		name: "contenu",
-		type: "STRING",
+		type: ApplicationCommandOptionType.String,
 		description: "ce qui est écrit ou dis dans la citation",
 		required: false
 	}],

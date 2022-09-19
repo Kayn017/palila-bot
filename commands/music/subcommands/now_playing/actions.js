@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { postMessageAndAwaitResponse, MESSAGE_TYPES } = require("../../../../services/worker");
 const { err } = require("../../../../services/log");
 
@@ -26,7 +26,7 @@ async function execute(interaction) {
 		infos = infos.message;
 	}
 
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 		.setTitle("Musique actuellement en lecture")
 		.addField("Titre", infos.title, true)
 		.addField("Auteur", infos.author, true)

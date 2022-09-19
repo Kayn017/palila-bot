@@ -3,7 +3,7 @@ const axios = require("axios");
 const process = require("process");
 const config = require("../../services/config");
 const { err } = require("../../services/log");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { reactWithNumbers } = require("../../services/reaction");
 const { emojiToNumber, numberToEmoji } = require("../../services/numbers");
 const emojis = require("../../assets/emojis.json");
@@ -274,7 +274,7 @@ async function sendRank(channel) {
 		}
 	}
 
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 		.setTitle("Classement actuel")
 		.addField("Résultat d'aujourd'hui", `Le chiffre du jour est le ${todayResult} !`)
 		.setColor(process.env.COLOR)

@@ -20,7 +20,7 @@ function shutdown() {
 
 }
 async function execute(interaction, options) {
-	const embed = new Discord.MessageEmbed();
+	const embed = new Discord.EmbedBuilder();
 	embed.setColor(this.color);
 
 	if (options.length === 0) {

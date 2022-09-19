@@ -1,4 +1,4 @@
-const { Intents, Permissions } = require("discord.js");
+const { GatewayIntentBits, PermissionFlagsBits, ApplicationCommandOptionType } = require("discord.js");
 
 module.exports = {
 	name: "play",
@@ -7,15 +7,15 @@ module.exports = {
 	author: "Kayn",
 	options: [{
 		name: "url",
-		type: "STRING",
+		type: ApplicationCommandOptionType.String,
 		description: "Lien de la musique a jouer",
 		required: true
 	}],
 	intents: [
-		Intents.FLAGS.GUILD_VOICE_STATES
+		GatewayIntentBits.GuildVoiceStates
 	],
 	permissions: [
-		Permissions.FLAGS.SPEAK,
+		PermissionFlagsBits.Speak,
 	],
 	globalCommand: true,
 };

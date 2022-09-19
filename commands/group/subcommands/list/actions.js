@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const process = require("process");
 
 function init() {
@@ -12,9 +12,9 @@ async function execute(interaction) {
 
 	const groups = await interaction.client.db.Group.findAll({ where: { guildId } });
 
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 		.setColor(process.env.COLOR)
-		.setAuthor(interaction.member.displayName, interaction.user.avatarURL());
+		.setAuthor({ name: interaction.member.displayName, iconURL: interaction.user.avatarURL() });
 
 	let list = "";
 

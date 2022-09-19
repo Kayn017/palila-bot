@@ -1,5 +1,5 @@
 const process = require("process");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { fatalError } = require("../../services/log");
 
 function handleError(client) {
@@ -12,7 +12,7 @@ function handleError(client) {
 			for (const god of gods) {
 				const user = await client.users.fetch(god.discordid);
 
-				const errorMessage = new MessageEmbed();
+				const errorMessage = new EmbedBuilder();
 				errorMessage.setTitle("FATAL ERROR");
 				errorMessage.addField("Message", err.message);
 				errorMessage.addField("Stack", err.stack ?? "Pas de stack");

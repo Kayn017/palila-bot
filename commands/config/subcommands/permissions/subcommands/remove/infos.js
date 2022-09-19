@@ -1,4 +1,4 @@
-const { Intents } = require("discord.js");
+const { GatewayIntentBits, ApplicationCommandOptionType } = require("discord.js");
 
 module.exports = {
 	name: "remove",
@@ -7,12 +7,12 @@ module.exports = {
 	author: "Kayn",
 	options: [{
 		name: "role",
-		type: "ROLE",
+		type: ApplicationCommandOptionType.Role,
 		description: "Rôle à retirer.",
 		required: true
 	}],
 	intents: [
-		Intents.FLAGS.GUILDS
+		GatewayIntentBits.Guilds
 	],
 	permissions: [],
 	globalCommand: true

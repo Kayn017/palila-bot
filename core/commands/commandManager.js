@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { Collection } = require("discord.js");
+const { Collection, ApplicationCommandOptionType } = require("discord.js");
 const { log } = require("../../services/log");
 const process = require("process");
 
@@ -113,7 +113,7 @@ function initOptions(command) {
 
 			option.name = name;
 			option.description = subcmd.description;
-			option.type = subcmd.subcommands ? "SUB_COMMAND_GROUP" : "SUB_COMMAND";
+			option.type = subcmd.subcommands ? ApplicationCommandOptionType.SubcommandGroup : ApplicationCommandOptionType.Subcommand;
 			option.options = initOptions(subcmd);
 
 			options.push(option);

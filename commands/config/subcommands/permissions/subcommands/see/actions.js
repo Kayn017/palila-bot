@@ -14,7 +14,7 @@ async function execute(interaction) {
 	if (!roles)
 		return interaction.reply({ content: "Aucun autre rôle n'a les droits pour modifier le bot. Seuls les administrateurs et les gods peuvent configurer le bot." });
 
-	const embed = new Discord.MessageEmbed()
+	const embed = new Discord.EmbedBuilder()
 		.setColor(process.env.COLOR)
 		.setTitle("Liste des roles admin de ce serveur");
 

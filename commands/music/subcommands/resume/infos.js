@@ -1,4 +1,4 @@
-const { Intents, Permissions } = require("discord.js");
+const { GatewayIntentBits, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
 	name: "resume",
@@ -7,10 +7,10 @@ module.exports = {
 	author: "Kayn",
 	options: [],
 	intents: [
-		Intents.FLAGS.GUILD_VOICE_STATES
+		GatewayIntentBits.GuildVoiceStates
 	],
 	permissions: [
-		Permissions.FLAGS.SPEAK,
+		PermissionFlagsBits.Speak
 	],
 	globalCommand: true,
 };

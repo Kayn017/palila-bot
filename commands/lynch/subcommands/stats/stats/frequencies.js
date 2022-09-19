@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const process = require("process");
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
 
 		history.forEach(history => frequencies[history.number] ? frequencies[history.number]++ : frequencies[history.number] = 1);
 
-		let response = new MessageEmbed()
+		let response = new EmbedBuilder()
 			.setTitle("Fréquence des nombres")
 			.setColor(process.env.COLOR);		
 

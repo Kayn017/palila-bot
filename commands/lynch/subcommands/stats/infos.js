@@ -1,3 +1,5 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
 module.exports = {
 	name: "stats",
 	description: "Pleins de stats sur la loterie de lynch",
@@ -5,13 +7,13 @@ module.exports = {
 	author: "Kayn",
 	options: [{
 		name: "personne",
-		type: "USER",
+		type: ApplicationCommandOptionType.User,
 		description: "Personne dont on veut voir (peut être) une stat",
 		required: false,
 		choices: [],
 	}, {
 		name: "stat",
-		type: "STRING",
+		type: ApplicationCommandOptionType.String,
 		description: "La stat a afficher",
 		choices: []
 	}],

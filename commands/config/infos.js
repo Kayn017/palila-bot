@@ -1,4 +1,4 @@
-const { Intents } = require("discord.js");
+const { GatewayIntentBits } = require("discord.js");
 
 module.exports = {
 	name: "config",
@@ -7,7 +7,7 @@ module.exports = {
 	author: "Kayn",
 	options: [],
 	intents: [
-		Intents.FLAGS.GUILDS
+		GatewayIntentBits.Guilds
 	],
 	permissions: [],
 	configurations: [],

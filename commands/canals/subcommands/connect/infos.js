@@ -1,3 +1,5 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
 module.exports = {
 	name: "connect",
 	description: "Connecte un channel à un canal",
@@ -5,14 +7,14 @@ module.exports = {
 	author: "Kayn",
 	options: [{
 		name: "canal",
-		type: "STRING",
+		type: ApplicationCommandOptionType.String,
 		description: "Canal a connecter",
 		required: true,
 		choices: []
 	},
 	{
 		name: "salon",
-		type: "CHANNEL",
+		type: ApplicationCommandOptionType.Channel,
 		description: "Channel a connecter",
 		required: false
 	}],

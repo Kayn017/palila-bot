@@ -3,7 +3,7 @@ const process = require("process");
 require("dotenv").config();
 
 const client = new Discord.Client({
-	intents: Discord.Intents.FLAGS.GUILDS
+	intents: Discord.GatewayIntentBits.Guilds
 });
 
 client.login(process.env.TOKEN).then( () => {

@@ -1,3 +1,5 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
 module.exports = {
 	name: "command",
 	description: "Configure les commandes du bot",
@@ -5,14 +7,14 @@ module.exports = {
 	author: "Kayn",
 	options: [{
 		name: "propriete",
-		type: "STRING",
+		type: ApplicationCommandOptionType.String,
 		description: "Propriété à configurer",
 		required: true,
 		choices: []
 	},
 	{
 		name: "valeur",
-		type: "STRING",
+		type: ApplicationCommandOptionType.String,
 		description: "Valeur de la propriété",
 		required: true,
 		choices: []

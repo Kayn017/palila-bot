@@ -1,3 +1,5 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
 module.exports = {
 	name: "create",
 	description: "Créé un canal",
@@ -5,7 +7,7 @@ module.exports = {
 	author: "Kayn",
 	options: [{
 		name: "nom",
-		type: "STRING",
+		type: ApplicationCommandOptionType.String,
 		description: "Nom du canal",
 		required: true
 	}],

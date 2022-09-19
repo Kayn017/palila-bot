@@ -1,4 +1,4 @@
-const { Intents, Permissions } = require("discord.js");
+const { GatewayIntentBits, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
 	name: "lynch",
@@ -6,12 +6,12 @@ module.exports = {
 	explication: "BEAUTIFUL BLUE SKIES AND GOLDEN SUNSHINE ALL ALONG THE WAY",
 	author: "Kayn",
 	intents: [
-		Intents.FLAGS.GUILD_MESSAGES,
-		Intents.FLAGS.GUILD_MESSAGE_REACTIONS
+		GatewayIntentBits.GuildMessageReactions,
+		GatewayIntentBits.GuildMessages
 	],
 	permissions: [
-		Permissions.FLAGS.SEND_MESSAGES,
-		Permissions.FLAGS.VIEW_CHANNEL,
-		Permissions.FLAGS.ADD_REACTIONS
+		PermissionFlagsBits.SendMessages,
+		PermissionFlagsBits.ViewChannel,
+		PermissionFlagsBits.AddReactions
 	],
 };
