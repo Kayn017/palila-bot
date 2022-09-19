@@ -44,11 +44,11 @@
 		"pg-hstore": "^2.3.4",
 		"redis": "^4.0.1",
 		"rss-parser": "^3.12.0",
+		"scdl-core": "^1.1.0",
 		"sequelize": "^6.6.5",
-		"soundcloud-downloader": "^1.0.0",
 		"twitch-m3u8": "^1.1.5",
 		"utf-8-validate": "^5.0.7",
-		"ytdl-core": "^4.11.0",
+		"ytdl-core": "^4.11.2",
 		"zip-a-folder": "^1.1.0",
 		"zlib-sync": "^0.1.7"
 	},

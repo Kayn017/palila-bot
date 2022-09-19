@@ -1,4 +1,4 @@
-const scdl = require("soundcloud-downloader");
+const { SoundCloud } = require("scdl-core");
 
 /**
  * 
@@ -6,7 +6,14 @@ const scdl = require("soundcloud-downloader");
  * @returns {ReadableStream}
  */
 async function getReadableStream(url) {
-	return await scdl.default.download(url);
+	await SoundCloud.connect();
+	const stream = await SoundCloud.download(url);
+
+	stream.on("close", () => {
+		console.log("Coucou");
+	});
+
+	return stream;
 }
 
 module.exports = {
