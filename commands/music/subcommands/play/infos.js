@@ -8,7 +8,7 @@ module.exports = {
 	options: [{
 		name: "url",
 		type: "STRING",
-		description: "Lien ytb a jouer",
+		description: "Lien de la musique a jouer",
 		required: true
 	}],
 	intents: [
