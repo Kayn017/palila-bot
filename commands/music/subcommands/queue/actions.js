@@ -28,6 +28,10 @@ async function execute(interaction) {
 
 	for(const [ key, value ] of Object.entries(infos.message)) {
 		if(key === "0") continue;
+		if(key > 10) {
+			list += `${infos.message.length - key} musiques restantes...`;
+			break;
+		}
 
 		list += `**${key}** : ${value.title}\n`;
 	}

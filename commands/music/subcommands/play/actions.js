@@ -25,7 +25,7 @@ async function execute(interaction, options) {
 		.setTitle("Musique mise en file d'attente")
 		.addField("Titre", infos.title, true)
 		.addField("Auteur", infos.author, true)
-		.addField("Position dans la file d'attente", `${infos.position + 1}`)
+		.addField("Position dans la file d'attente", `${infos.position}`)
 		.setURL(infos.url)
 		.setImage(infos.cover)
 		.setColor(process.env.COLOR);
