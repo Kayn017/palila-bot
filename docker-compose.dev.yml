@@ -7,9 +7,10 @@ services:
     ports: 
     - "${MARIADB_PORT}:3306"
     environment:
-      MARIADB_USER: ${MARIADB_USERNAME}
+      MARIADB_USER: ${MARIADB_USER}
       MARIADB_PASSWORD: ${MARIADB_PASSWORD}
-      MARIADB_DB: ${MARIADB_DATABASE}
+      MARIADB_DATABASE: ${MARIADB_DB}
+      MARIADB_RANDOM_ROOT_PASSWORD: 1
   redis:
     image: "redis"
     restart: always

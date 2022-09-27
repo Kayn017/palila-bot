@@ -10,3 +10,4 @@ cache
 *.rdb
 files
 tmp
+yarn-error.log

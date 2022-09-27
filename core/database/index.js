@@ -3,7 +3,7 @@ const { debug } = require("../../services/log");
 const { Sequelize } = require("sequelize");
 
 async function initDatabase() {
-	const sequelize = new Sequelize(process.env.MARIADB_DATABASE, process.env.MARIADB_USERNAME, process.env.MARIADB_PASSWORD, {
+	const sequelize = new Sequelize(process.env.MARIADB_DB, process.env.MARIADB_USER, process.env.MARIADB_PASSWORD, {
 		host: process.env.MARIADB_HOST,
 		port: process.env.MARIADB_PORT,
 		dialect: "mariadb",
